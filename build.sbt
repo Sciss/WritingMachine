@@ -1,10 +1,12 @@
-name := "writingmachine"
+name            := "writingmachine"
 
-version := "0.10-SNAPSHOT"
+appbundleName   := "WritingMachine"
 
-organization := "de.sciss"
+organization    := "de.sciss"
 
-scalaVersion := "2.9.1"
+version         := "0.10-SNAPSHOT"
+
+scalaVersion    := "2.9.1"
 
 libraryDependencies ++= Seq(
    "de.sciss" %% "nuagespompe" % "0.10-SNAPSHOT"
@@ -14,3 +16,4 @@ retrieveManaged := true
 
 scalacOptions += "-deprecation"
 
+seq( appbundleSettings: _* )
