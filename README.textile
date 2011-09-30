@@ -1,0 +1,12 @@
+h1. Writing Machine
+
+Software for a generative realtime sound installation. (C)opyright 2011 by Hanns Holger Rutz. All rights reserved. Published under the GNU General Public License.
+
+h2. Programme Note
+
+The «Writing Machine» is based on the broad notion of "grapheme" as formulated by Jacques Derrida: The grapheme is the manifestation of the process of writing-as-trace, an infinite chain of signification (and an absence of "presence" or re-presence of an original signified). What I am interested in is to consider both the process of composition of a sound piece and its algorithmic unfolding in the performance as two interrelated forms of recursive writing-as-decision-making.
+
+Signification as endless chain of transitions highlights the différance and not the signified. The chain is reflected by the geometric shape of the circle. A poriferous circle, however, which acts as a system of consumption: The ubiquitous writing machine of the television is deconstructed into an uninterested database—ignoring all ideology surrounding its interpretation (what Derrida calls "metaphysics"). Phrases are constructed from this database which drift over time, forming ever new significations.
+
+The arrangement is that of a laboratory experiment—a tableau of petri dishes, put into vibration by piezo electric elements, and displaying heaps of graphite powder, the disintegrated mineral which borrows its name from graphein (to write). The realtime composition builds up a trace of the phrases which it generated, and in intervals exhibits them simultaneously as a spatially differentiated motion.
+

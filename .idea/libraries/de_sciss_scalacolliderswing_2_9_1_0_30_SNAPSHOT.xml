@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="de.sciss_scalacolliderswing_2.9.1_0.30-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib_managed/jars/de.sciss/scalacolliderswing_2.9.1/scalacolliderswing_2.9.1-0.30-SNAPSHOT.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

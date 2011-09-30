@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="de.sciss_soundprocesses_2.9.1_0.30-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib_managed/jars/de.sciss/soundprocesses_2.9.1/soundprocesses_2.9.1-0.30-SNAPSHOT.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/lib_managed/docs/de.sciss/soundprocesses_2.9.1/soundprocesses_2.9.1-0.30-SNAPSHOT-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/lib_managed/srcs/de.sciss/soundprocesses_2.9.1/soundprocesses_2.9.1-0.30-SNAPSHOT-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
