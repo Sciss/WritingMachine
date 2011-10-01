@@ -25,7 +25,7 @@ abstract class DifferanceAlgorithmImpl extends DifferanceAlgorithm {
          overwriter.perform( p1, ov, target )
       }
       phraseTrace.add( pNew )
-      val targets1 = Span.merge( targets )
+      val targets1 = Span.merge( targets.map( _.span ))
       targets1.sortBy( _.start ).reverse.foreach( thinner.remove( _ ))
       filler.perform
       phraseRef.set( pNew )

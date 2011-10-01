@@ -40,6 +40,15 @@
     <orderEntry type="library" name="de.sciss_scalaaudiowidgets_2.9.1_0.10" level="project" />
     <orderEntry type="library" name="de.sciss_audiowidgets_2.9.1_0.10" level="project" />
     <orderEntry type="library" name="org.scala-lang_scala-swing_2.9.1" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../lib_managed/jars/de.sciss/strugatzki_2.9.1/strugatzki_2.9.1-0.13.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
 
