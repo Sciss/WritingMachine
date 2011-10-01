@@ -3,7 +3,7 @@ package impl
 
 import de.sciss.synth.proc.Ref
 
-abstract class DifferanceAlgorithmImpl extends DifferanceAlgorithm {
+abstract class AbstractDifferanceAlgorithm extends DifferanceAlgorithm {
    def startPhrase: Phrase
 
    def spat: DifferanceSpat

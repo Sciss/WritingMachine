@@ -3,7 +3,7 @@ package impl
 
 import de.sciss.synth
 
-abstract class DifferanceDatabaseQueryImpl extends DifferanceDatabaseQuery with GraphemeUtil {
+abstract class AbstractDifferanceDatabaseQuery extends DifferanceDatabaseQuery with GraphemeUtil {
    import DifferanceDatabaseQuery._
 
    /**

@@ -3,7 +3,7 @@ package impl
 
 import de.sciss.synth.proc.{DSL, Proc, Ref}
 
-abstract class DifferanceSpatImpl extends DifferanceSpat {
+abstract class AbstractDifferanceSpat extends DifferanceSpat {
    def numChannels : Int
    def diffusion( chan: Int )( implicit tx: Tx ) : Proc
 

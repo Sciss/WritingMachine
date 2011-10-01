@@ -3,7 +3,7 @@ package impl
 
 import de.sciss.synth
 
-abstract class DifferanceOverwriteSelectorImpl
+abstract class AbstractDifferanceOverwriteSelector
 extends DifferanceOverwriteSelector with GraphemeUtil {
 
    /**
