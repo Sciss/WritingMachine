@@ -1,3 +1,8 @@
 package de.sciss.grapheme
 
-trait Phrase
+import de.sciss.synth.proc.Proc
+
+trait Phrase {
+   def length: Long
+   def player( implicit tx: Tx ) : Proc
+}

@@ -5,6 +5,7 @@ import de.sciss.synth.proc.Ref
 
 abstract class DifferanceAlgorithmImpl extends DifferanceAlgorithm {
    def startPhrase: Phrase
+
    def spat: DifferanceSpat
    def overwriteSelector: DifferanceOverwriteSelector
    def overwriter: DifferanceOverwriter
@@ -26,7 +27,7 @@ abstract class DifferanceAlgorithmImpl extends DifferanceAlgorithm {
       phraseTrace.add( pNew )
       val targets1 = Span.merge( targets )
       targets1.sortBy( _.start ).reverse.foreach( thinner.remove( _ ))
-      // filler...
+      filler.perform
       phraseRef.set( pNew )
    }
 }

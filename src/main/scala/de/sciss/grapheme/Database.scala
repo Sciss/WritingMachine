@@ -1,3 +1,5 @@
 package de.sciss.grapheme
 
-trait Database
+trait Database {
+
+}

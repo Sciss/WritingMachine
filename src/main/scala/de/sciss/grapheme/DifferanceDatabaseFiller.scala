@@ -1,3 +1,5 @@
 package de.sciss.grapheme
 
-trait DifferanceDatabaseFiller
+trait DifferanceDatabaseFiller {
+   def perform( implicit tx: Tx ) : Unit
+}
