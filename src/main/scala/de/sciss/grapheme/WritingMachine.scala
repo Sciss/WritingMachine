@@ -44,6 +44,12 @@ object WritingMachine {
       val cfg = NuagesLauncher.SettingsBuilder()
       cfg.beforeShutdown   = quit _
       cfg.doneAction       = booted _
+      val o                = cfg.serverOptions
+      val masterChans      = (masterChannelOffset until (masterChannelOffset + masterNumChannels)).toIndexedSeq
+      o.outputBusChannels  = masterChans.max + 1
+      o.inputBusChannels   = tvChannelOffset + 1
+      cfg.masterChannels   = Some( masterChans )
+      cfg.collector        = true
       NuagesLauncher( cfg )
    }
 
@@ -53,11 +59,7 @@ object WritingMachine {
 
    def booted( r: NuagesLauncher.Ready ) {
       ProcTxn.atomic { implicit tx =>
-         initProcs
+         Init( r )
       }
-   }
-
-   def initProcs( implicit tx: Tx ) {
-
    }
 }
