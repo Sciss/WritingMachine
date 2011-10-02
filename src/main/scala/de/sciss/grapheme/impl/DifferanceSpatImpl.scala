@@ -3,7 +3,7 @@ package impl
 
 import collection.immutable.{IndexedSeq => IIdxSeq}
 import de.sciss.synth
-import synth.proc.{LinWarp, ParamSpec, DSL, Proc}
+import synth.proc.{DSL, Proc}
 
 object DifferanceSpatImpl {
    def apply( collector: Proc )( implicit tx: Tx ) : DifferanceSpat = {

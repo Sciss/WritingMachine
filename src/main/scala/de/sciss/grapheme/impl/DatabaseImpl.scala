@@ -19,20 +19,32 @@ object DatabaseImpl {
          case Some( f ) =>
             new DatabaseImpl( AudioFile.openRead( f ))
          case None =>
+            sys.error( "TODO" )
       }
-
-      sys.error( "TODO" )
    }
 }
 class DatabaseImpl private ( firstFile: AudioFile ) extends AbstractDatabase {
    val removalFadeMotion      = MotionImpl.exprand( 0.100, 1.000 )
-   val removalSpectralMotion  = MotionImpl.linrand( 0.2, 0.8 )
+   val removalSpectralMotion  = MotionImpl.linrand( 0.20, 0.80 )
    val removalMarginMotion    = MotionImpl.exprand( 0.250, 2.500 )
 
-   def performRemovals( instrs: IIdxSeq[ RemovalInstruction ])( implicit tx: Tx ) { sys.error( "TODO" )}
+   def performRemovals( instrs: IIdxSeq[ RemovalInstruction ])( implicit tx: Tx ) {
+      Console.err.println( "DatabaseImpl -> performRemovals : TODO" )
+   }
 
-   def bestRemoval( span: Span, margin: Long, weight: Double, fade: Long )( implicit tx: Tx ) : RemovalInstruction =
-      sys.error( "TODO" )
+   def bestRemoval( span: Span, margin: Long, weight: Double, fade: Long )( implicit tx: Tx ) : RemovalInstruction = {
+      Console.err.println( "DatabaseImpl -> bestRemoval : TODO" )
+      RemovalInstruction( span, fade, fade )
+   }
+
+   def append( af: AudioFile, length: Long )( implicit tx: Tx ) {
+      Console.err.println( "DatabaseImpl -> append : TODO" )
+   }
+
+   def length : Long = {
+      Console.err.println( "DatabaseImpl -> length : TODO" )
+      0L
+   }
 
    private val fileRef = Ref( firstFile )
 }
