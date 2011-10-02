@@ -2,6 +2,7 @@ package de.sciss.grapheme
 package impl
 
 import de.sciss.synth
+import collection.immutable.{IndexedSeq => IIdxSeq}
 
 abstract class AbstractDifferanceOverwriteSelector
 extends DifferanceOverwriteSelector with GraphemeUtil {
@@ -42,11 +43,11 @@ extends DifferanceOverwriteSelector with GraphemeUtil {
 
    def bestPart( phrase: Phrase, center: Long, minLen: Long, maxLen: Long, weight: Double ) : Span
 
-   def selectParts( phrase: Phrase )( implicit tx: Tx ) : Seq[ OverwriteInstruction ] = {
+   def selectParts( phrase: Phrase )( implicit tx: Tx ) : IIdxSeq[ OverwriteInstruction ] = {
       import synth._
 
       val num        = frequencyMotion.step.toInt
-      Seq.fill( num ) {
+      IIdxSeq.fill( num ) {
          val stretch = stretchMotion.step
          val spect   = spectralMotion.step
          val fragDur = fragmentDurationMotion.step
