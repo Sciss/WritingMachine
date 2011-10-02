@@ -37,7 +37,10 @@ object WritingMachine {
    val tvChannelOffset     = 0
 
    def main( args: Array[ String ]) {
-      launch()
+      args.toSeq match {
+         case Seq( "--fut1" ) => Futures.test1()
+         case _ => launch()
+      }
    }
 
    def launch() {
