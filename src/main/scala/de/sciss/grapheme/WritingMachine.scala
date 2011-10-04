@@ -38,7 +38,7 @@ object WritingMachine {
 
    def main( args: Array[ String ]) {
       args.toSeq match {
-         case Seq( "--fut1" ) => Futures.test1()
+//         case Seq( "--fut1" ) => Futures.test1()
          case _ => launch()
       }
    }

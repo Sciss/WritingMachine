@@ -6,5 +6,5 @@ object DifferanceDatabaseQuery {
 trait DifferanceDatabaseQuery {
    import DifferanceDatabaseQuery._
 
-   def find( phrase: Phrase, overwrite: OverwriteInstruction )( implicit tx: Tx ) : Match
+   def find( phrase: Phrase, overwrite: OverwriteInstruction )( implicit tx: Tx ) : FutureResult[ Match ]
 }

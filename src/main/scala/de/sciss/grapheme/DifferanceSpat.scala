@@ -1,5 +1,5 @@
 package de.sciss.grapheme
 
 trait DifferanceSpat {
-   def rotateAndProject( phrase: Phrase )( implicit tx: Tx ) : Unit
+   def rotateAndProject( phrase: Phrase )( implicit tx: Tx ) : FutureResult[ Unit ]
 }

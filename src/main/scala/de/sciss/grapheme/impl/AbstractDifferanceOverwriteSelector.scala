@@ -41,9 +41,9 @@ extends DifferanceOverwriteSelector with GraphemeUtil {
     */
    def frequencyMotion : Motion
 
-   def bestPart( phrase: Phrase, center: Long, minLen: Long, maxLen: Long, weight: Double ) : Span
+   def bestPart( phrase: Phrase, center: Long, minLen: Long, maxLen: Long, weight: Double ) : FutureResult[ Span ]
 
-   def selectParts( phrase: Phrase )( implicit tx: Tx ) : IIdxSeq[ OverwriteInstruction ] = {
+   def selectParts( phrase: Phrase )( implicit tx: Tx ) : FutureResult[ IIdxSeq[ OverwriteInstruction ]] = {
       import synth._
 
       val num        = frequencyMotion.step.toInt
@@ -58,9 +58,11 @@ extends DifferanceOverwriteSelector with GraphemeUtil {
          val posPow  = positionMotion.step
          val pos     = random.pow( posPow ).linlin( 0, 1, 0, phrase.length ).toLong
 
-         val span    = bestPart( phrase, pos, minFrag, maxFrag, spect )
-         val newLen  = (span.length * stretch).toLong
-         OverwriteInstruction( span, newLen )
+         val futSpan = bestPart( phrase, pos, minFrag, maxFrag, spect )
+         futSpan map { span =>
+            val newLen  = (span.length * stretch).toLong
+            OverwriteInstruction( span, newLen )
+         }
       }
    }
 }

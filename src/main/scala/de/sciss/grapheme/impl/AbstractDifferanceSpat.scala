@@ -9,7 +9,7 @@ abstract class AbstractDifferanceSpat extends DifferanceSpat {
 
    private val chanRef = Ref( -1 )
 
-   def rotateAndProject( phrase: Phrase )( implicit tx: Tx ) {
+   def rotateAndProject( phrase: Phrase )( implicit tx: Tx ) : FutureResult[ Unit ] = {
       val chan = (chanRef() + 1) % numChannels
       chanRef.set( chan )
 
@@ -18,5 +18,7 @@ abstract class AbstractDifferanceSpat extends DifferanceSpat {
       val pDiff   = diffusion( chan )
       pProc ~> pDiff
       pProc.play
+
+      FutureResult.now( () )  // XXX TODO react to phrase having being played completely
    }
 }

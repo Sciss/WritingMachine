@@ -11,10 +11,10 @@ abstract class AbstractDifferanceDatabaseFiller extends DifferanceDatabaseFiller
    def television : Television
 //   def fileSpace : FileSpace
 
-   def perform( implicit tx: Tx ) {
+   def perform( implicit tx: Tx ) : FutureResult[ Unit ] = {
       val length  = secondsToFrames( durationMotion.step )
 //      val f       = fileSpace.newFile
 //      val af      = openMonoWrite( f )
-      val futDb   = television.capture( length )
+      television.capture( length )
    }
 }
