@@ -18,7 +18,6 @@ abstract class AbstractDifferanceSpat extends DifferanceSpat {
       val pDiff   = diffusion( chan )
       pProc ~> pDiff
       pProc.play
-
-      FutureResult.now( () )  // XXX TODO react to phrase having being played completely
+      pProc.futureStopped
    }
 }

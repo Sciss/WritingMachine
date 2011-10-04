@@ -10,10 +10,12 @@ package object grapheme {
 
    def Ref[ A : ClassManifest ]( init: A ) = proc.Ref( init )
 
-   def atomic[ A ]( fun: Tx => A ) : A = {
+   def atomic[ A ]( info: => String )( fun: Tx => A ) : A = {
       sys.error( "TODO" )
    }
 
    implicit def wrapFutureResultSeq[ A ]( fs: IIdxSeq[ FutureResult[ A ]]) : FutureResult[ IIdxSeq[ A ]] =
       FutureResult.enrich( fs )
+
+   implicit def enrichProc( p: proc.Proc ) : RichProc = RichProc( p )
 }
