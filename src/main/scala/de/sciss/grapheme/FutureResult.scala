@@ -26,7 +26,8 @@
 package de.sciss.grapheme
 
 import collection.immutable.{IndexedSeq => IIdxSeq}
-import actors.{Futures, Actor, Future}
+import actors.sciss.FutureActor
+import actors.{Futures, Future}
 
 trait FutureResult[ A ] {
    def isSet : Boolean
@@ -41,34 +42,25 @@ object FutureResult {
    def enrich[ A ]( f: IIdxSeq[ FutureResult[ A ]]) : FutureResult[ IIdxSeq[ A ]] = sys.error( "TODO" )
    def now[ A ]( value: A )( implicit tx: Tx ) : FutureResult[ A ] = sys.error( "TODO" )
    def unitSeq( fs: FutureResult[ _ ]* ) : FutureResult[ Unit ] = sys.error( "TODO" )
-//   def event[ A ]() : Event[ A ] = Impl.event[ A ]()
 
    trait Event[ A ] extends FutureResult[ A ] {
       def set( result: A ) : Unit
    }
 
+//   private final case class Set[ A ]( value :A )
+
    def event[ A ]() : FutureResult.Event[ A ] = new FutureResult.Event[ A ] with Basic[ A ] {
-      final case class Set( value : A )
-      case object Get
+      case class Set( value: A ) // warning: don't make this final -- scalac bug
 
-      val act = Actor.actor {
-         import Actor._
-         react {
-            case set @ Set( value ) => react {
-               case Get => reply( set )
-            }
+      val c = FutureActor.newChannel[ A ]()
+      val peer: FutureActor[ A ] = new FutureActor[ A ]({ syncVar =>
+         peer.react {
+            case Set( value ) => syncVar.set( value )
          }
-      }
+      }, c )
+      peer.start()
 
-      val peer = Futures.future {
-         import Actor._
-         act ! Get
-         receive {
-            case Set( value ) => value
-         }
-      }
-
-      def set( value: A ) { act ! Set( value )}
+      def set( value: A ) { peer ! Set( value )}
    }
 
    def wrap[ A ]( fut: Future[ A ]) : FutureResult[ A ] = new FutureResult[ A ] with Basic[ A ] {

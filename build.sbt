@@ -17,6 +17,6 @@ libraryDependencies ++= Seq(
 
 retrieveManaged := true
 
-scalacOptions += "-deprecation"
+scalacOptions ++= Seq( "-deprecation", "-unchecked" )
 
 seq( appbundleSettings: _* )
