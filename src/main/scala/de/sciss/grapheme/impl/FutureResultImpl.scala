@@ -1,5 +1,5 @@
 /*
- *  FutureResult.scala
+ *  FutureResultImpl.scala
  *  (WritingMachine)
  *
  *  Copyright (c) 2011 Hanns Holger Rutz. All rights reserved.
@@ -24,22 +24,26 @@
  */
 
 package de.sciss.grapheme
+package impl
 
-import collection.immutable.{IndexedSeq => IIdxSeq}
-import impl.{FutureResultImpl => Impl}
+import actors.sciss.FutureActor
+import actors.Actor
 
-trait FutureResult[ A ] {
-   def map[ B ]( fun: A => B ) : FutureResult[ B ]
-   def flatMap[ B ]( fun: A => FutureResult[ B ]) : FutureResult[ B ]
-}
+object FutureResultImpl {
+   private final case class Set( value: AnyRef )
 
-object FutureResult {
-   def enrich[ A ]( f: IIdxSeq[ FutureResult[ A ]]) : FutureResult[ IIdxSeq[ A ]] = sys.error( "TODO" )
-   def now[ A ]( value: A )( implicit tx: Tx ) : FutureResult[ A ] = sys.error( "TODO" )
-   def unitSeq( fs: FutureResult[ _ ]* ) : FutureResult[ Unit ] = sys.error( "TODO" )
-   def event[ A ]() : Event[ A ] = Impl.event[ A ]()
-
-   trait Event[ A ] extends FutureResult[ A ] {
-      def set( result: A ) : Unit
+   def event[ A ]() : FutureResult.Event[ A ] = {
+      val c       = FutureActor.newChannel[ A ]()
+      val fut     = new FutureActor[ A ]( sync => {
+         import Actor._
+         react {
+            case Set( value ) => sync.set( value.asInstanceOf[ A ])
+         }
+      }, c )
+      new FutureResult.Event[ A ] {
+         def set( value: A ) {
+            fut ! Set( value.asInstanceOf[ AnyRef ])
+         }
+      }
    }
 }
