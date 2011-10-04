@@ -29,12 +29,19 @@ import impl.DifferanceSpatImpl
 import de.sciss.nuages.{NuagesLauncher}
 
 object Init {
+   private val instanceRef = Ref.empty[ Init ]
+
+   def instance( implicit tx: Tx ) : Init = instanceRef()
+
    def apply( r: NuagesLauncher.Ready )( implicit tx: Tx ) : Init = {
+      require( instanceRef() == null )
       val coll = r.frame.panel.collector.getOrElse( sys.error( "Requires nuages to use collector" ))
       val spat = DifferanceSpatImpl( coll )
-      new Init( spat )
+      val i    = new Init( spat )
+      instanceRef.set( i )
+      i
    }
 }
-class Init private ( spat: DifferanceSpat ) {
+final class Init private ( val spat: DifferanceSpat ) {
 
 }

@@ -25,6 +25,12 @@
 
 package de.sciss.grapheme
 
+import impl.DifferanceSpatImpl
+import de.sciss.synth.proc.Proc
+
+object DifferanceSpat {
+   def apply( collector: Proc )( implicit tx: Tx ) : DifferanceSpat = DifferanceSpatImpl( collector )
+}
 trait DifferanceSpat {
    def rotateAndProject( phrase: Phrase )( implicit tx: Tx ) : FutureResult[ Unit ]
 }

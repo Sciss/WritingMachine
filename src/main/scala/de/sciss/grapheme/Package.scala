@@ -33,7 +33,10 @@ package object grapheme {
 //   type Future[ A ] = scala.actors.Future[ A ]
    type Ref[ A ] = proc.Ref[ A ]
 
-   def Ref[ A : ClassManifest ]( init: A ) = proc.Ref( init )
+   object Ref {
+      def apply[ A : ClassManifest ]( init: A ) : Ref[ A ] = proc.Ref( init )
+      def empty[ A : ClassManifest ] : Ref[ A ] = proc.Ref.make[ A ]
+   }
 
    def atomic[ A ]( info: => String )( fun: Tx => A ) : A = {
       sys.error( "TODO" )
