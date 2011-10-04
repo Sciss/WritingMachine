@@ -26,7 +26,12 @@
 package de.sciss.grapheme
 
 import de.sciss.synth.proc.Proc
+import impl.PhraseImpl
+import java.io.File
 
+object Phrase {
+   def fromFile( file: File )( implicit tx: Tx ) : Phrase = PhraseImpl.fromFile( file )
+}
 trait Phrase {
    def length: Long
    def player( implicit tx: Tx ) : Proc

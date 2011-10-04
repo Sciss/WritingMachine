@@ -1,0 +1,5 @@
+import de.sciss.grapheme._
+val init = Init.instance
+val spat = init.spat
+val phrase = Phrase.fromFile( new java.io.File( "/Users/hhrutz/Desktop/SP_demo/tapes/Affoldra_RoomLp.aif" ))
+spat.rotateAndProject( phrase )

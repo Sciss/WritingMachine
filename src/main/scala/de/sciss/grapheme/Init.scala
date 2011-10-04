@@ -25,7 +25,6 @@
 
 package de.sciss.grapheme
 
-import impl.DifferanceSpatImpl
 import de.sciss.nuages.{NuagesLauncher}
 
 object Init {
@@ -36,7 +35,7 @@ object Init {
    def apply( r: NuagesLauncher.Ready )( implicit tx: Tx ) : Init = {
       require( instanceRef() == null )
       val coll = r.frame.panel.collector.getOrElse( sys.error( "Requires nuages to use collector" ))
-      val spat = DifferanceSpatImpl( coll )
+      val spat = DifferanceSpat( coll )
       val i    = new Init( spat )
       instanceRef.set( i )
       i

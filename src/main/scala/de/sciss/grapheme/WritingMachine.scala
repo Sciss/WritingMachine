@@ -29,6 +29,11 @@ import de.sciss.nuages.NuagesLauncher
 import de.sciss.synth.proc.ProcTxn
 
 object WritingMachine {
+   val logPanel            = false
+   val masterChannelOffset = 0
+   val masterNumChannels   = 9
+   val tvChannelOffset     = 0
+
    val name          = "WritingMachine"
    val version       = 0.10
    val copyright     = "(C)opyright 2011 Hanns Holger Rutz"
@@ -42,10 +47,6 @@ object WritingMachine {
    def printInfo() {
       println( "\n" + name + " v" + versionString + "\n" + copyright + ". All rights reserved.\n" )
    }
-
-   val masterChannelOffset = 0
-   val masterNumChannels   = 9
-   val tvChannelOffset     = 0
 
    def main( args: Array[ String ]) {
       args.toSeq match {
@@ -64,6 +65,8 @@ object WritingMachine {
       o.inputBusChannels   = tvChannelOffset + 1
       cfg.masterChannels   = Some( masterChans )
       cfg.collector        = true
+      val c                = cfg.controlSettings
+      c.log                = logPanel
       NuagesLauncher( cfg )
    }
 
