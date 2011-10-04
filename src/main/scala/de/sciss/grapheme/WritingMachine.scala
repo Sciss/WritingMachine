@@ -21,9 +21,6 @@
  *
  *  For further information, please contact Hanns Holger Rutz at
  *  contact@sciss.de
- *
- *
- *  Changelog:
  */
 
 package de.sciss.grapheme
@@ -32,6 +29,20 @@ import de.sciss.nuages.NuagesLauncher
 import de.sciss.synth.proc.ProcTxn
 
 object WritingMachine {
+   val name          = "WritingMachine"
+   val version       = 0.10
+   val copyright     = "(C)opyright 2011 Hanns Holger Rutz"
+   val isSnapshot    = true
+
+   def versionString = {
+      val s = (version + 0.001).toString.substring( 0, 4 )
+      if( isSnapshot ) s + "-SNAPSHOT" else s
+   }
+
+   def printInfo() {
+      println( "\n" + name + " v" + versionString + "\n" + copyright + ". All rights reserved.\n" )
+   }
+
    val masterChannelOffset = 0
    val masterNumChannels   = 9
    val tvChannelOffset     = 0
