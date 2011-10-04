@@ -31,8 +31,9 @@ abstract class AbstractDifferanceAlgorithm extends DifferanceAlgorithm {
       atomic { tx1 =>
          val ovs     = instrs.sortBy( _.span.start )
          val futTgt  = ovs.map( ov => databaseQuery.find( p, ov )( tx1 )) : FutureResult[ IIdxSeq[ DifferanceDatabaseQuery.Match ]]
+         val pNow    = FutureResult.now( p )( tx1 )
          val futPNew= futTgt flatMap { targets =>
-            (ovs zip targets).foldRight( FutureResult.now( p )) { case ((ov, target), futP1) =>
+            (ovs zip targets).foldRight( pNow ) { case ((ov, target), futP1) =>
                atomic( tx2 => futP1.flatMap( p1 => overwriter.perform( p1, ov, target )( tx2 )))
             }
          }
@@ -43,7 +44,7 @@ abstract class AbstractDifferanceAlgorithm extends DifferanceAlgorithm {
             atomic { tx4 =>
                phraseRef.set( pNew )( tx4 )
                phraseTrace.add( pNew )( tx4 )
-               FutureResult.now( () )
+               FutureResult.now( () )( tx4 )
             }
          }
          val futUnit2 = futThin flatMap { _ => atomic( tx5 => filler.perform( tx5 ))}

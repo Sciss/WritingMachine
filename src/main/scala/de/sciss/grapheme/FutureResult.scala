@@ -9,6 +9,6 @@ trait FutureResult[ A ] {
 
 object FutureResult {
    def enrich[ A ]( f: IIdxSeq[ FutureResult[ A ]]) : FutureResult[ IIdxSeq[ A ]] = sys.error( "TODO" )
-   def now[ A ]( value: A ) : FutureResult[ A ] = sys.error( "TODO" )
+   def now[ A ]( value: A )( implicit tx: Tx ) : FutureResult[ A ] = sys.error( "TODO" )
    def unitSeq( fs: FutureResult[ _ ]* ) :FutureResult[ Unit ] = sys.error( "TODO" )
 }
