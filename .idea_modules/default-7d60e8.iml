@@ -30,8 +30,6 @@
     <orderEntry type="library" name="de.sciss_scalaaudiowidgets_2.9.1_0.10" level="project" />
     <orderEntry type="library" name="de.sciss_scalacollider_2.9.1_0.30-SNAPSHOT" level="project" />
     <orderEntry type="library" name="de.sciss_scalacolliderswing_2.9.1_0.30-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="de.sciss_scalainterpreterpane_2.9.1_0.18" level="project" />
-    <orderEntry type="library" name="de.sciss_scalaosc_2.9.1_0.30-SNAPSHOT" level="project" />
     <orderEntry type="library" name="de.sciss_soundprocesses_2.9.1_0.30-SNAPSHOT" level="project" />
     <orderEntry type="library" name="de.sciss_wolkenpumpe_2.9.1_0.30-SNAPSHOT" level="project" />
     <orderEntry type="library" name="jsyntaxpane_jsyntaxpane_0.9.5-b29" level="project" />
@@ -41,6 +39,24 @@
     <orderEntry type="library" name="org.scala-tools_scala-stm_2.9.1_0.3" level="project" />
     <orderEntry type="library" name="org.scalatest_scalatest_2.9.1_1.6.1" level="project" />
     <orderEntry type="library" name="scala-2.9.1" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../lib_managed/jars/de.sciss/scalaosc_2.9.1/scalaosc_2.9.1-0.30.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../lib_managed/jars/de.sciss/scalainterpreterpane_2.9.1/scalainterpreterpane_2.9.1-0.18.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
 

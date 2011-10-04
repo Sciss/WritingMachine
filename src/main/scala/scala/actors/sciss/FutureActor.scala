@@ -5,10 +5,10 @@ import concurrent.SyncVar
 import scheduler.DaemonScheduler
 
 /**
- * `scala.actors` unfortunately is largely misdesigned. One problem with `Futures` is that
- * `FutureActor` is private, not extensible, and on top of that, `Future` has package private
- * fields that cannot be accessed, unless we hijack package `scala.actors`.
- */
+* `scala.actors` unfortunately is largely misdesigned. One problem with `Futures` is that
+* `FutureActor` is private, not extensible, and on top of that, `Future` has package private
+* fields that cannot be accessed, unless we hijack package `scala.actors`.
+*/
 object FutureActor {
    def newChannel[ A ]() : Channel[ A ] = new Channel[ A ]( Actor.self( DaemonScheduler ))
 }
