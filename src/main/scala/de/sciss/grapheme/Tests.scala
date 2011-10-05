@@ -1,5 +1,7 @@
 package de.sciss.grapheme
 
+import java.io.File
+
 object Tests {
    def main( args: Array[ String ]) {
       args.headOption match {
@@ -7,7 +9,25 @@ object Tests {
          case Some( "--fut2" ) => future2()
          case Some( "--fut3" ) => future3()
          case Some( "--fut4" ) => future4()
+         case Some( "--segm" ) => segm()
          case _ => sys.error( "Illegal arguments : " + args )
+      }
+   }
+
+   def segm() {
+      import actors.Actor
+      import Actor._
+
+      val sel     = DifferanceOverwriteSelector()
+      val spanFut = atomic( "Phrase.fromFile" ) { implicit tx =>
+         val phrase = Phrase.fromFile( new File( "/Users/hhrutz/Desktop/from_mnemo/Amazonas.aif" ))
+         sel.selectParts( phrase )
+      }
+      actor {
+         println( "==== Waiting for Overwrites ====")
+         val ovs = spanFut.apply()
+         println( "==== Overwrite Instructions ====")
+         ovs.foreach( println _ )
       }
    }
 

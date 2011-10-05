@@ -26,7 +26,11 @@
 package de.sciss.grapheme
 
 import collection.immutable.{IndexedSeq => IIdxSeq}
+import impl.{DifferanceOverwriteSelectorImpl => Impl}
 
+object DifferanceOverwriteSelector {
+   def apply() : DifferanceOverwriteSelector = Impl()
+}
 trait DifferanceOverwriteSelector {
    def selectParts( phrase: Phrase )( implicit tx: Tx ) : FutureResult[ IIdxSeq[ OverwriteInstruction ]]
 }
