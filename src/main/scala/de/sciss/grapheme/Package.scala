@@ -42,8 +42,8 @@ package object grapheme {
       proc.ProcTxn.atomic { tx => fun( tx )}
    }
 
-   implicit def wrapFutureResultSeq[ A ]( fs: IIdxSeq[ FutureResult[ A ]]) : FutureResult[ IIdxSeq[ A ]] =
-      FutureResult.enrich( fs )
+//   implicit def wrapFutureResultSeq[ A ]( fs: IIdxSeq[ FutureResult[ A ]]) : FutureResult[ IIdxSeq[ A ]] =
+//      FutureResult.enrich( fs )
 
    implicit def enrichProc( p: proc.Proc ) : RichProc = RichProc( p )
 }

@@ -73,7 +73,7 @@ extends DifferanceOverwriteSelector with GraphemeUtil {
       import synth._
 
       val num        = frequencyMotion.step.toInt
-      IIdxSeq.fill( num ) {
+      val seq        = IIdxSeq.fill( num ) {
          val stretch = stretchMotion.step
          val spect   = spectralMotion.step
          val fragDur = fragmentDurationMotion.step
@@ -90,5 +90,7 @@ extends DifferanceOverwriteSelector with GraphemeUtil {
             OverwriteInstruction( span, newLen )
          }
       }
+//      FutureResult.seq( seq: _* )
+      sys.error( "TODO" )
    }
 }
