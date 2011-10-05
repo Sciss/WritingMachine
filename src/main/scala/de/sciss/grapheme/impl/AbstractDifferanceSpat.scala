@@ -43,6 +43,10 @@ abstract class AbstractDifferanceSpat extends DifferanceSpat {
       val pDiff   = diffusion( chan )
       pProc ~> pDiff
       pProc.play
-      pProc.futureStopped
+      pProc.futureStopped.map { _ =>
+         atomic( "AbstractDifferanceSpat : dispose phrase proc" ) { implicit tx =>
+            pProc.remove
+         }
+      }
    }
 }
