@@ -39,7 +39,7 @@ package object grapheme {
    }
 
    def atomic[ A ]( info: => String )( fun: Tx => A ) : A = {
-      sys.error( "TODO" )
+      proc.ProcTxn.atomic { tx => fun( tx )}
    }
 
    implicit def wrapFutureResultSeq[ A ]( fs: IIdxSeq[ FutureResult[ A ]]) : FutureResult[ IIdxSeq[ A ]] =

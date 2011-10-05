@@ -28,7 +28,7 @@ package impl
 
 import java.io.File
 import de.sciss.synth
-import synth.proc.{Proc, ProcFactory, ProcDemiurg}
+import synth.proc.{Proc, ProcFactory}
 
 object PhraseImpl {
    def fromFile( file: File )( implicit tx: Tx ) : Phrase = {
@@ -48,7 +48,7 @@ object PhraseImpl {
                // Done.kr( disk )
                val me   = Proc.local
                Done.kr( Line.kr( dur = spec.numFrames.toDouble / SampleRate.ir )).react {
-                  me.stop
+                  atomic( "PhraseImpl : stop proc" ) { implicit tx => me.stop }
                }
                Mix.mono( disk )
             }
