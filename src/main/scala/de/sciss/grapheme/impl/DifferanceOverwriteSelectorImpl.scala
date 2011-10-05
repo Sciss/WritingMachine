@@ -1,5 +1,5 @@
 /*
- *  Motion.scala
+ *  DifferanceOverwriteSelectorImpl.scala
  *  (WritingMachine)
  *
  *  Copyright (c) 2011 Hanns Holger Rutz. All rights reserved.
@@ -24,21 +24,22 @@
  */
 
 package de.sciss.grapheme
+package impl
 
-import impl.{MotionImpl => Impl}
-
-object Motion {
-   def constant( value: Double ) : Motion = Impl.constant( value )
-   def linrand( lo: Double, hi: Double ) : Motion = Impl.linrand( lo, hi )
-   def exprand( lo: Double, hi: Double ) : Motion = Impl.exprand( lo, hi )
-   def sine( lo: Double, hi: Double, period: Int ) : Motion = Impl.sine( lo, hi, period )
-
-   def linlin( in: Motion, inLo: Double, inHi: Double, outLo: Double, outHi: Double ) : Motion =
-      Impl.linlin( in, inLo, inHi, outLo, outHi )
-
-   def linexp( in: Motion, inLo: Double, inHi: Double, outLo: Double, outHi: Double ) : Motion =
-      Impl.linexp( in, inLo, inHi, outLo, outHi )
+object DifferanceOverwriteSelectorImpl {
+   def apply() : DifferanceOverwriteSelector = new  DifferanceOverwriteSelectorImpl()
 }
-trait Motion {
-   def step( implicit tx: Tx ) : Double
+final class DifferanceOverwriteSelectorImpl () extends AbstractDifferanceOverwriteSelector {
+   val stretchMotion             = Motion.linexp( Motion.sine( 0, 1, 30 ), 0, 1, 0.5, 2.0 )
+   val fragmentDurationMotion    = Motion.exprand( 0.5, 4.0 )
+   val fragmentDeviationMotion   = Motion.constant( 0.5 )
+   val positionMotion            = Motion.constant( 1 )
+   val frequencyMotion           = Motion.constant( 4 )
+   val spectralMotion            = Motion.linrand( 0.25, 0.75 )
+
+   def bestPart( phrase: Phrase, center: Long, minLen: Long, maxLen: Long, weight: Double ) : FutureResult[ Span ] = {
+
+
+      sys.error( "TODO" )
+   }
 }

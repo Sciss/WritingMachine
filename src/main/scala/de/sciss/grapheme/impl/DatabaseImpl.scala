@@ -49,9 +49,9 @@ object DatabaseImpl {
    }
 }
 class DatabaseImpl private ( firstFile: AudioFile ) extends AbstractDatabase {
-   val removalFadeMotion      = MotionImpl.exprand( 0.100, 1.000 )
-   val removalSpectralMotion  = MotionImpl.linrand( 0.20, 0.80 )
-   val removalMarginMotion    = MotionImpl.exprand( 0.250, 2.500 )
+   val removalFadeMotion      = Motion.exprand( 0.100, 1.000 )
+   val removalSpectralMotion  = Motion.linrand( 0.20, 0.80 )
+   val removalMarginMotion    = Motion.exprand( 0.250, 2.500 )
 
    def performRemovals( instrs: IIdxSeq[ RemovalInstruction ])( implicit tx: Tx ) {
       Console.err.println( "DatabaseImpl -> performRemovals : TODO" )

@@ -26,10 +26,19 @@
 package de.sciss.grapheme
 package impl
 
+import de.sciss.synth
+
 object MotionImpl {
-   def constant( value: Double ) : Motion = new Constant( value )
-   def linrand( lo: Double, hi: Double ) : Motion = new LinRand( lo, hi )
-   def exprand( lo: Double, hi: Double ) : Motion = new ExpRand( lo, hi )
+   def constant( value: Double ) : Motion = Constant( value )
+   def linrand( lo: Double, hi: Double ) : Motion = LinRand( lo, hi )
+   def exprand( lo: Double, hi: Double ) : Motion = ExpRand( lo, hi )
+   def sine( lo: Double, hi: Double, period: Int ) : Motion = Sine( lo, hi, period )
+
+   def linlin( in: Motion, inLo: Double, inHi: Double, outLo: Double, outHi: Double ) : Motion =
+      LinLin( in, inLo, inHi, outLo, outHi )
+
+   def linexp( in: Motion, inLo: Double, inHi: Double, outLo: Double, outHi: Double ) : Motion =
+      LinExp( in, inLo, inHi, outLo, outHi )
 
    private final case class Constant( value: Double ) extends Motion {
       def step( implicit tx: Tx ) : Double = value
@@ -43,5 +52,33 @@ object MotionImpl {
    private final case class ExpRand( lo: Double, hi: Double ) extends Motion with GraphemeUtil {
       val factor = math.log( hi / lo )
       def step( implicit tx: Tx ) : Double = math.exp( random * factor ) * lo
+   }
+
+   private final case class Sine( lo: Double, hi: Double, period: Int ) extends Motion {
+      val phase   = Ref( 0 )
+      val mul     = (hi - lo) / 2
+      val add     = mul + lo
+      val factor  = math.Pi * 2 / period
+      def step( implicit tx: Tx ) : Double = {
+         val p = phase()
+         phase.set( (p + 1) % period )
+         math.sin( p * factor ) * mul + add
+      }
+   }
+
+   private final case class LinLin( in: Motion, inLo: Double, inHi: Double, outLo: Double, outHi: Double )
+   extends Motion {
+      def step( implicit tx: Tx ) : Double = {
+         import synth._
+         in.step.linlin( inLo, inHi, outLo, outHi )
+      }
+   }
+
+   private final case class LinExp( in: Motion, inLo: Double, inHi: Double, outLo: Double, outHi: Double )
+   extends Motion {
+      def step( implicit tx: Tx ) : Double = {
+         import synth._
+         in.step.linexp( inLo, inHi, outLo, outHi )
+      }
    }
 }
