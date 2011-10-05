@@ -24,7 +24,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="de.sciss_audiowidgets_2.9.1_0.10" level="project" />
-    <orderEntry type="library" name="de.sciss_nuagespompe_2.9.1_0.10-SNAPSHOT" level="project" />
     <orderEntry type="library" name="de.sciss_prefuse-core_0.21" level="project" />
     <orderEntry type="library" name="de.sciss_scalaaudiofile_2.9.1_0.20" level="project" />
     <orderEntry type="library" name="de.sciss_scalaaudiowidgets_2.9.1_0.10" level="project" />
@@ -52,6 +51,15 @@
       <library>
         <CLASSES>
           <root url="jar://$MODULE_DIR$/../lib_managed/jars/de.sciss/scalainterpreterpane_2.9.1/scalainterpreterpane_2.9.1-0.18.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../lib_managed/jars/de.sciss/nuagespompe_2.9.1/nuagespompe_2.9.1-0.10.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
