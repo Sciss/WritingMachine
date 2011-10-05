@@ -76,51 +76,54 @@ final class DifferanceOverwriteSelectorImpl () extends AbstractDifferanceOverwri
       val strugFut = phrase.asStrugatzkiInput
       strugFut.flatMap { metaInput =>
          atomic( "DifferanceOverwriteSelectorImpl : start strugatzki" ) { implicit tx =>
-            val extr             = FeatureExtraction.Settings.fromXMLFile( metaInput )
-            val spec             = AudioFile.readSpec( extr.audioInput )
-            val set              = FeatureSegmentation.SettingsBuilder()
-            set.databaseFolder   = strugatzkiDatabase
-            set.metaInput        = metaInput
-            val corrLen          = secondsToFrames( correlationMotion.step )
-            val maxLenH          = maxLen / 2
-            val start            = max( 0L, center - maxLenH - corrLen )
-            val stop             = min( spec.numFrames, start + maxLen + corrLen + corrLen )
-            set.span             = Some( SSpan( start, stop ))
-            set.corrLen          = corrLen
-            set.temporalWeight   = weight.toFloat
-            set.normalize        = true
-            set.numBreaks        = 2
-            set.minSpacing       = 0
             val res              = FutureResult.event[ Span ]()
-            val segm             = FeatureSegmentation( set ) {
-               case FeatureSegmentation.Aborted =>
-                  println( "DifferanceOverwriteSelector : Ouch. Aborted. Need to handle this case!" )
-                  res.set( Span( 0, 0 ) )
+            tx.afterCommit { _ =>
+println( "Juhuuu. Starting FeatureSegmentation for " + metaInput )
+               val extr             = FeatureExtraction.Settings.fromXMLFile( metaInput )
+               val spec             = AudioFile.readSpec( extr.audioInput )
+               val set              = FeatureSegmentation.SettingsBuilder()
+               set.databaseFolder   = strugatzkiDatabase
+               set.metaInput        = metaInput
+               val corrLen          = secondsToFrames( correlationMotion.step )
+               val maxLenH          = maxLen / 2
+               val start            = max( 0L, center - maxLenH - corrLen )
+               val stop             = min( spec.numFrames, start + maxLen + corrLen + corrLen )
+               set.span             = Some( SSpan( start, stop ))
+               set.corrLen          = corrLen
+               set.temporalWeight   = weight.toFloat
+               set.normalize        = true
+               set.numBreaks        = 2
+               set.minSpacing       = 0
+               val segm             = FeatureSegmentation( set ) {
+                  case FeatureSegmentation.Aborted =>
+                     println( "DifferanceOverwriteSelector : Ouch. Aborted. Need to handle this case!" )
+                     res.set( Span( 0L, min( spec.numFrames, secondsToFrames( 1.0 ))))
 
-               case FeatureSegmentation.Failure( e ) =>
-                  println( "DifferanceOverwriteSelector : Ouch. Failure. Need to handle this case!" )
-                  e.printStackTrace()
-                  res.set( Span( 0, 0 ) )
+                  case FeatureSegmentation.Failure( e ) =>
+                     println( "DifferanceOverwriteSelector : Ouch. Failure. Need to handle this case!" )
+                     e.printStackTrace()
+                     res.set( Span( 0L, min( spec.numFrames, secondsToFrames( 1.0 ))))
 
-               case FeatureSegmentation.Success( coll ) =>
-                  val b    = if( coll( 0 ).sim.isNaN ) coll( 1 ) else coll( 0 )
-                  val len  = (random * (maxLen - minLen) + minLen).toLong
-                  val s    = if( b.pos <= center ) {
-                     val stop0   = max( center, b.pos + len/2 )
-                     val start   = max( 0L, stop0 - len )
-                     val stop    = min( spec.numFrames, start + len )
-                     Span( start, stop )
-                  } else {
-                     val start0  = min( center, b.pos - len/2 )
-                     val stop    = min( spec.numFrames, start0 + len )
-                     val start   = max( 0L, stop - len )
-                     Span( start, stop )
-                  }
-                  res.set( s )
+                  case FeatureSegmentation.Success( coll ) =>
+                     val b    = if( coll( 0 ).sim.isNaN ) coll( 1 ) else coll( 0 )
+                     val len  = (random * (maxLen - minLen) + minLen).toLong
+                     val s    = if( b.pos <= center ) {
+                        val stop0   = max( center, b.pos + len/2 )
+                        val start   = max( 0L, stop0 - len )
+                        val stop    = min( spec.numFrames, start + len )
+                        Span( start, stop )
+                     } else {
+                        val start0  = min( center, b.pos - len/2 )
+                        val stop    = min( spec.numFrames, start0 + len )
+                        val start   = max( 0L, stop - len )
+                        Span( start, stop )
+                     }
+                     res.set( s )
 
-               case FeatureSegmentation.Progress( p ) =>
+                  case FeatureSegmentation.Progress( p ) =>
+               }
+               segm.start()
             }
-            tx.afterCommit( _ => segm.start() )
             res
          }
       }

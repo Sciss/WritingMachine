@@ -45,4 +45,10 @@ trait GraphemeUtil {
       AudioFile.openWrite( f, AudioFileSpec( AudioFileType.IRCAM, SampleFormat.Float, 1, sampleRate ))
 
    protected final def strugatzkiDatabase = WritingMachine.strugatzkiDatabase
+
+   protected final def createTempFile( suffix: String ) : File = {
+      val res = File.createTempFile( "wm", suffix )
+      res.deleteOnExit()
+      res
+   }
 }

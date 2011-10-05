@@ -29,6 +29,7 @@ package impl
 import java.io.File
 import de.sciss.synth
 import synth.proc.{Proc, ProcFactory}
+import de.sciss.strugatzki.FeatureExtraction
 
 object PhraseImpl {
    def fromFile( file: File )( implicit tx: Tx ) : Phrase = {
@@ -58,9 +59,35 @@ object PhraseImpl {
       new Impl( fact, spec.numFrames )
    }
 
-   private class Impl( fact: ProcFactory, val length: Long ) extends Phrase {
+   private class Impl( fact: ProcFactory, val length: Long ) extends Phrase with GraphemeUtil {
       def player( implicit tx: Tx ) : Proc = fact.make
 
-      def asStrugatzkiInput( implicit tx: Tx ) : FutureResult[ File ] = sys.error( "TODO" )
+      def asStrugatzkiInput( implicit tx: Tx ) : FutureResult[ File ] = {
+         val res = FutureResult.event[ File ]()
+         tx.afterCommit { _ =>
+            val set           = FeatureExtraction.SettingsBuilder()
+            set.audioInput
+            set.featureOutput = createTempFile( ".aif" )
+            val meta          = createTempFile( ".xml" )
+            set.metaOutput    = Some( meta )
+            val fe            = FeatureExtraction( set ) {
+               case FeatureExtraction.Aborted =>
+                  println( "PhraseImpl asStrugatzkiInputOuch :. Aborted. Need to handle this case!" )
+                  res.set( meta )
+
+               case FeatureExtraction.Failure( e ) =>
+                  println( "PhraseImpl asStrugatzkiInput : Ouch. Failure. Need to handle this case!" )
+                  e.printStackTrace()
+                  res.set( meta )
+
+               case FeatureExtraction.Success( _ ) =>
+                  res.set( meta )
+
+               case FeatureExtraction.Progress( p ) =>
+            }
+            fe.start()
+         }
+         res
+      }
    }
 }
