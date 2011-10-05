@@ -72,7 +72,7 @@ abstract class AbstractDifferanceDatabaseQuery extends DifferanceDatabaseQuery w
    }
 
    def findMatch( rank: Int, phrase: Phrase, punchIn: Span, punchOut: Span,
-                  minPunch: Long, maxPunch: Long, weight: Double ) : FutureResult[ Match ]
+                  minPunch: Long, maxPunch: Long, weight: Double )( implicit tx: Tx ) : FutureResult[ Match ]
 
    def find( phrase: Phrase, overwrite: OverwriteInstruction )( implicit tx: Tx ) : FutureResult[ Match ] = {
       val spect      = spectralMotion.step

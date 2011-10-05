@@ -54,22 +54,17 @@ class DatabaseImpl private ( firstFile: AudioFile ) extends AbstractDatabase {
    val removalMarginMotion    = Motion.exprand( 0.250, 2.500 )
 
    def performRemovals( instrs: IIdxSeq[ RemovalInstruction ])( implicit tx: Tx ) {
-      Console.err.println( "DatabaseImpl -> performRemovals : TODO" )
+      sys.error( "TODO" )
    }
 
-   def bestRemoval( span: Span, margin: Long, weight: Double, fade: Long )( implicit tx: Tx ) : RemovalInstruction = {
-      Console.err.println( "DatabaseImpl -> bestRemoval : TODO" )
-      RemovalInstruction( span, fade, fade )
-   }
+   def bestRemoval( span: Span, margin: Long, weight: Double, fade: Long )( implicit tx: Tx ) : RemovalInstruction =
+      sys.error( "TODO" )
 
-   def append( af: AudioFile, length: Long )( implicit tx: Tx ) {
-      Console.err.println( "DatabaseImpl -> append : TODO" )
-   }
+   def append( af: AudioFile, length: Long )( implicit tx: Tx ) { sys.error( "TODO" )}
 
-   def length : Long = {
-      Console.err.println( "DatabaseImpl -> length : TODO" )
-      0L
-   }
+   def length : Long = sys.error( "TODO" )
+
+   def asStrugatziDatabase( implicit tx: Tx ) : FutureResult[ File ] = sys.error( "TODO" )
 
    private val fileRef = Ref( firstFile )
 }

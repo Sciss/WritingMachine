@@ -15,20 +15,19 @@ object Tests {
    }
 
    def segm() {
-      import actors.Actor
-      import Actor._
-
       val sel     = DifferanceOverwriteSelector()
       val spanFut = atomic( "Phrase.fromFile" ) { implicit tx =>
          val phrase = Phrase.fromFile( new File( "/Users/hhrutz/Desktop/from_mnemo/Amazonas.aif" ))
          sel.selectParts( phrase )
       }
-      new Actor {
+      // make a real one... Actor.actor {} produces a daemon actor,
+      // which gets GC'ed and thus makes the VM prematurely quit
+      new actors.Actor {
          start()
          def act() {
             println( "==== Waiting for Overwrites ====")
             val ovs = spanFut.apply()
-            println( "==== Overwrite Instructions ====")
+            println( "==== Results ====")
             ovs.foreach( println _ )
          }
       }

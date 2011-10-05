@@ -27,6 +27,7 @@ package de.sciss.grapheme
 
 import collection.immutable.{IndexedSeq => IIdxSeq}
 import de.sciss.synth.io.AudioFile
+import java.io.File
 
 trait Database {
    def length: Long
@@ -34,4 +35,10 @@ trait Database {
 //   def randomPhrase( length: Long )( implicit tx: Tx ) : Phrase
    def remove( spans: IIdxSeq[ Span ])( implicit tx: Tx ) : Unit
    def append( source: AudioFile, length: Long )( implicit tx: Tx ) : Unit
+
+   /**
+    * Returns a directory carrying the strugatzki meta files of
+    * the database.
+    */
+   def asStrugatziDatabase( implicit tx: Tx ) : FutureResult[ File ]
 }
