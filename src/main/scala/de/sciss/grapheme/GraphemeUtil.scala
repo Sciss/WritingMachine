@@ -43,4 +43,6 @@ trait GraphemeUtil {
 
    protected final def openMonoWrite( f: File ) : AudioFile =
       AudioFile.openWrite( f, AudioFileSpec( AudioFileType.IRCAM, SampleFormat.Float, 1, sampleRate ))
+
+   protected final def strugatzkiDatabase = WritingMachine.strugatzkiDatabase
 }

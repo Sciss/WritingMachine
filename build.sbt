@@ -12,7 +12,7 @@ resolvers += "Clojars Repository" at "http://clojars.org/repo"
 
 libraryDependencies ++= Seq(
    "de.sciss" %% "nuagespompe" % "0.10",
-   "de.sciss" %% "strugatzki" % "0.13"
+   "de.sciss" %% "strugatzki" % "0.14-SNAPSHOT"
 )
 
 retrieveManaged := true

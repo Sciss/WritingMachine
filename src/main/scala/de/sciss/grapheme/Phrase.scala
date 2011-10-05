@@ -35,6 +35,7 @@ object Phrase {
 trait Phrase {
    def length: Long
    def player( implicit tx: Tx ) : Proc
+   def asStrugatzkiInput( implicit tx: Tx ) : FutureResult[ File ]
 
 //   /**
 //    * Plays this phrase into a given diffusion proc

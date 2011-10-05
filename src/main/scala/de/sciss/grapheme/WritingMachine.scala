@@ -27,12 +27,14 @@ package de.sciss.grapheme
 
 import de.sciss.nuages.NuagesLauncher
 import de.sciss.synth.proc.ProcTxn
+import java.io.File
 
 object WritingMachine {
    val logPanel            = false
    val masterChannelOffset = 0
    val masterNumChannels   = 9
    val tvChannelOffset     = 0
+   val strugatzkiDatabase  = new File( "/Users/hhrutz/Documents/devel/LeereNull/feature/" )
 
    val name          = "WritingMachine"
    val version       = 0.10

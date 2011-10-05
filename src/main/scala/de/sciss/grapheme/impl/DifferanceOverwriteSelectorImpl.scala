@@ -26,6 +26,10 @@
 package de.sciss.grapheme
 package impl
 
+import de.sciss.synth.io.AudioFile
+import de.sciss.strugatzki.{FeatureSegmentation, FeatureExtraction, Span => SSpan}
+import collection.immutable.{IndexedSeq => IIdxSeq}
+
 object DifferanceOverwriteSelectorImpl {
    def apply() : DifferanceOverwriteSelector = new  DifferanceOverwriteSelectorImpl()
 }
@@ -37,9 +41,67 @@ final class DifferanceOverwriteSelectorImpl () extends AbstractDifferanceOverwri
    val frequencyMotion           = Motion.constant( 4 )
    val spectralMotion            = Motion.linrand( 0.25, 0.75 )
 
-   def bestPart( phrase: Phrase, center: Long, minLen: Long, maxLen: Long, weight: Double ) : FutureResult[ Span ] = {
+   /**
+    * Length of correlation in seconds
+    */
+   val correlationMotion         = Motion.exprand( 0.250, 1.250 )
 
+   val numBreaks                 = 200
 
-      sys.error( "TODO" )
+   /**
+    * Note that currently Strugatzki doesn't allow a 'punchOut' for segmentation.
+    * Our algorithm thus proceeds as follows:
+    *
+    * - determine the correlation length from motion
+    * - search span start is max( 0, center - maxLen/2 - corrLen )
+    * - search span stop is min( fileLen, span start + maxLen + 2*corrLen )
+    * - find an arbitrary number of breaks (e.g. 200)
+    * - set min spacing to span length / num breaks
+    * - with each break from the result:
+    *   - go through the possible punch-out candidates (e.g. those that
+    *     are spaced so that minLen and maxLen are met)
+    *   - from the candidates keep track of the best choice (highest dissimilarity)
+    */
+   def bestPart( phrase: Phrase, center: Long, minLen: Long, maxLen: Long, weight: Double )
+               ( implicit tx: Tx ) : FutureResult[ Span ] = {
+      val strugFut = phrase.asStrugatzkiInput
+      strugFut.flatMap { metaInput =>
+         atomic( "DifferanceOverwriteSelectorImpl : start strugatzki" ) { implicit tx =>
+            val extr             = FeatureExtraction.Settings.fromXMLFile( metaInput )
+            val spec             = AudioFile.readSpec( extr.audioInput )
+            val set              = FeatureSegmentation.SettingsBuilder()
+            set.databaseFolder   = strugatzkiDatabase
+            set.metaInput        = metaInput
+            val corrLen          = secondsToFrames( correlationMotion.step )
+            val maxLenH          = maxLen / 2
+            val start            = max( 0L, center - maxLenH - corrLen )
+            val stop             = min( spec.numFrames, start + maxLen + corrLen + corrLen )
+            set.span             = Some( SSpan( start, stop ))
+            set.corrLen          = corrLen
+            set.temporalWeight   = weight.toFloat
+            set.normalize        = true
+            set.numBreaks        = 200
+            set.minSpacing       = 0
+            val res              = FutureResult.event[ Span ]()
+            val segm             = FeatureSegmentation( set ) {
+               case FeatureSegmentation.Aborted =>
+                  println( "DifferanceOverwriteSelector : Ouch. Aborted. Need to handle this case!" )
+                  res.set( Span( 0, 0 ) )
+               case FeatureSegmentation.Failure( e ) =>
+                  println( "DifferanceOverwriteSelector : Ouch. Failure. Need to handle this case!" )
+                  e.printStackTrace()
+                  res.set( Span( 0, 0 ) )
+               case FeatureSegmentation.Success( coll ) =>
+                  handleResult( res, coll )
+               case FeatureSegmentation.Progress( p ) =>
+            }
+            tx.afterCommit( _ => segm.start() )
+            res
+         }
+      }
+   }
+
+   private def handleResult( res: FutureResult.Event[ Span ], coll: IndexedSeq[ FeatureSegmentation.Break ]) {
+
    }
 }

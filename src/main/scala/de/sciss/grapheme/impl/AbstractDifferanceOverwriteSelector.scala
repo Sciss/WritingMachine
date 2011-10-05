@@ -66,7 +66,8 @@ extends DifferanceOverwriteSelector with GraphemeUtil {
     */
    def frequencyMotion : Motion
 
-   def bestPart( phrase: Phrase, center: Long, minLen: Long, maxLen: Long, weight: Double ) : FutureResult[ Span ]
+   def bestPart( phrase: Phrase, center: Long, minLen: Long, maxLen: Long, weight: Double )
+               ( implicit tx: Tx ) : FutureResult[ Span ]
 
    def selectParts( phrase: Phrase )( implicit tx: Tx ) : FutureResult[ IIdxSeq[ OverwriteInstruction ]] = {
       import synth._

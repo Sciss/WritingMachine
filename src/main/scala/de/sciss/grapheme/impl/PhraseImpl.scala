@@ -60,5 +60,7 @@ object PhraseImpl {
 
    private class Impl( fact: ProcFactory, val length: Long ) extends Phrase {
       def player( implicit tx: Tx ) : Proc = fact.make
+
+      def asStrugatzkiInput( implicit tx: Tx ) : FutureResult[ File ] = sys.error( "TODO" )
    }
 }
