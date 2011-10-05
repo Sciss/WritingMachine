@@ -23,11 +23,14 @@ object Tests {
          val phrase = Phrase.fromFile( new File( "/Users/hhrutz/Desktop/from_mnemo/Amazonas.aif" ))
          sel.selectParts( phrase )
       }
-      actor {
-         println( "==== Waiting for Overwrites ====")
-         val ovs = spanFut.apply()
-         println( "==== Overwrite Instructions ====")
-         ovs.foreach( println _ )
+      new Actor {
+         start()
+         def act() {
+            println( "==== Waiting for Overwrites ====")
+            val ovs = spanFut.apply()
+            println( "==== Overwrite Instructions ====")
+            ovs.foreach( println _ )
+         }
       }
    }
 

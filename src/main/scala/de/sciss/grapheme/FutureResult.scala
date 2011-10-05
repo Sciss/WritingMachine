@@ -41,8 +41,15 @@ trait FutureResult[ A ] {
 object FutureResult {
 //   def enrich[ A ]( f: IIdxSeq[ FutureResult[ A ]]) : FutureResult[ IIdxSeq[ A ]] = sys.error( "TODO" )
 
-   def now[ A ]( value: A )( implicit tx: Tx ) : FutureResult[ A ] = sys.error( "TODO" )
-   def unitSeq( fs: FutureResult[ _ ]* ) : FutureResult[ Unit ] = sys.error( "TODO" )
+   def now[ A ]( value: A )( implicit tx: Tx ) : FutureResult[ A ] = {
+      val ev = event[ A ]()  // hmmmm... too much effort?
+      ev.set( value )
+      ev
+   }
+
+//   def unitSeq( fs: FutureResult[ _ ]* ) : FutureResult[ Unit ] = sys.error( "TODO" )
+
+   def par( fs: FutureResult[ _ ]* ) : FutureResult[ Unit ] = sys.error( "TODO" )
 
 //   /**
 //    * Strictly sequentially resolves the futures, that is, it awaits the result of the

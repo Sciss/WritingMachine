@@ -90,7 +90,7 @@ abstract class AbstractDifferanceAlgorithm extends DifferanceAlgorithm {
          }
          val futUnit2 = futThin flatMap { _ =>
             atomic( "DifferanceAlgorithm : filler.perform" )( tx5 => filler.perform( tx5 ))}
-         FutureResult.unitSeq( futUnit1, futUnit2, fut0 )
+         FutureResult.par( futUnit1, futUnit2, fut0 )
       }
    }
 }

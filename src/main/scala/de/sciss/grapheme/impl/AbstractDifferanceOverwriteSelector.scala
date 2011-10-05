@@ -70,27 +70,36 @@ extends DifferanceOverwriteSelector with GraphemeUtil {
                ( implicit tx: Tx ) : FutureResult[ Span ]
 
    def selectParts( phrase: Phrase )( implicit tx: Tx ) : FutureResult[ IIdxSeq[ OverwriteInstruction ]] = {
-      import synth._
-
       val num        = frequencyMotion.step.toInt
-      val seq        = IIdxSeq.fill( num ) {
-         val stretch = stretchMotion.step
-         val spect   = spectralMotion.step
-         val fragDur = fragmentDurationMotion.step
-         val fragDev = fragmentDeviationMotion.step
-         val minFrag = secondsToFrames( fragDur / (1 + fragDev) )
-         val maxFrag = secondsToFrames( fragDur * (1 + fragDev) )
+      val ovrNow     = FutureResult.now( IIdxSeq.empty[ OverwriteInstruction ])
+      selectPartsWith( ovrNow, phrase, num )
+   }
 
-         val posPow  = positionMotion.step
-         val pos     = random.pow( posPow ).linlin( 0, 1, 0, phrase.length ).toLong
+   private def selectPartsWith( ovrNow: FutureResult[ IIdxSeq[ OverwriteInstruction ]], phrase: Phrase,
+                                num : Int ) : FutureResult[ IIdxSeq[ OverwriteInstruction ]] = {
+      (0 until num).foldLeft( ovrNow ) { case (futPred, i) =>
+         futPred.flatMap { coll =>
+            val (stretch, futSpan) = atomic( "AbstractDifferanceOverwriteSelector selectParts" ) { tx1 =>
+               import synth._
 
-         val futSpan = bestPart( phrase, pos, minFrag, maxFrag, spect )
-         futSpan map { span =>
-            val newLen  = (span.length * stretch).toLong
-            OverwriteInstruction( span, newLen )
+               val stre    = stretchMotion.step( tx1 )
+               val spect   = spectralMotion.step( tx1 )
+               val fragDur = fragmentDurationMotion.step( tx1 )
+               val fragDev = fragmentDeviationMotion.step( tx1 )
+               val minFrag = secondsToFrames( fragDur / (1 + fragDev) )
+               val maxFrag = secondsToFrames( fragDur * (1 + fragDev) )
+
+               val posPow  = positionMotion.step( tx1 )
+               val pos     = random( tx1 ).pow( posPow ).linlin( 0, 1, 0, phrase.length ).toLong
+
+               (stre, bestPart( phrase, pos, minFrag, maxFrag, spect )( tx1 ))
+            }
+            futSpan.map { span =>
+               val newLen  = (span.length * stretch).toLong
+               val ins     = OverwriteInstruction( span, newLen )
+               coll :+ ins
+            }
          }
       }
-//      FutureResult.seq( seq: _* )
-      sys.error( "TODO" )
    }
 }

@@ -56,17 +56,17 @@ object PhraseImpl {
          }
       }
 
-      new Impl( fact, spec.numFrames )
+      new Impl( file, fact, spec.numFrames )
    }
 
-   private class Impl( fact: ProcFactory, val length: Long ) extends Phrase with GraphemeUtil {
+   private class Impl( file: File, fact: ProcFactory, val length: Long ) extends Phrase with GraphemeUtil {
       def player( implicit tx: Tx ) : Proc = fact.make
 
       def asStrugatzkiInput( implicit tx: Tx ) : FutureResult[ File ] = {
          val res = FutureResult.event[ File ]()
          tx.afterCommit { _ =>
             val set           = FeatureExtraction.SettingsBuilder()
-            set.audioInput
+            set.audioInput    = file
             set.featureOutput = createTempFile( ".aif" )
             val meta          = createTempFile( ".xml" )
             set.metaOutput    = Some( meta )

@@ -47,7 +47,7 @@ trait GraphemeUtil {
    protected final def strugatzkiDatabase = WritingMachine.strugatzkiDatabase
 
    protected final def createTempFile( suffix: String ) : File = {
-      val res = File.createTempFile( "wm", suffix )
+      val res = File.createTempFile( "grapheme", suffix )
       res.deleteOnExit()
       res
    }
