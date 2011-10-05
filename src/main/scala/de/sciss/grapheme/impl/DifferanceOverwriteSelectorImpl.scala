@@ -55,6 +55,15 @@ final class DifferanceOverwriteSelectorImpl () extends AbstractDifferanceOverwri
     * - determine the correlation length from motion
     * - search span start is max( 0, center - maxLen/2 - corrLen )
     * - search span stop is min( fileLen, span start + maxLen + 2*corrLen )
+    * - find one break
+    * - return a span around that break (is possible covering center) for
+    *   a random length between minLen and maxLen
+    *
+    * Previous, more complicated idea:
+    *
+    * - determine the correlation length from motion
+    * - search span start is max( 0, center - maxLen/2 - corrLen )
+    * - search span stop is min( fileLen, span start + maxLen + 2*corrLen )
     * - find an arbitrary number of breaks (e.g. 200)
     * - set min spacing to span length / num breaks
     * - with each break from the result:
@@ -80,28 +89,40 @@ final class DifferanceOverwriteSelectorImpl () extends AbstractDifferanceOverwri
             set.corrLen          = corrLen
             set.temporalWeight   = weight.toFloat
             set.normalize        = true
-            set.numBreaks        = 200
+            set.numBreaks        = 2
             set.minSpacing       = 0
             val res              = FutureResult.event[ Span ]()
             val segm             = FeatureSegmentation( set ) {
                case FeatureSegmentation.Aborted =>
                   println( "DifferanceOverwriteSelector : Ouch. Aborted. Need to handle this case!" )
                   res.set( Span( 0, 0 ) )
+
                case FeatureSegmentation.Failure( e ) =>
                   println( "DifferanceOverwriteSelector : Ouch. Failure. Need to handle this case!" )
                   e.printStackTrace()
                   res.set( Span( 0, 0 ) )
+
                case FeatureSegmentation.Success( coll ) =>
-                  handleResult( res, coll )
+                  val b    = if( coll( 0 ).sim.isNaN ) coll( 1 ) else coll( 0 )
+                  val len  = (random * (maxLen - minLen) + minLen).toLong
+                  val s    = if( b.pos <= center ) {
+                     val stop0   = max( center, b.pos + len/2 )
+                     val start   = max( 0L, stop0 - len )
+                     val stop    = min( spec.numFrames, start + len )
+                     Span( start, stop )
+                  } else {
+                     val start0  = min( center, b.pos - len/2 )
+                     val stop    = min( spec.numFrames, start0 + len )
+                     val start   = max( 0L, stop - len )
+                     Span( start, stop )
+                  }
+                  res.set( s )
+
                case FeatureSegmentation.Progress( p ) =>
             }
             tx.afterCommit( _ => segm.start() )
             res
          }
       }
-   }
-
-   private def handleResult( res: FutureResult.Event[ Span ], coll: IndexedSeq[ FeatureSegmentation.Break ]) {
-
    }
 }
