@@ -25,14 +25,14 @@
 
 package de.sciss.grapheme
 
-import collection.immutable.{IndexedSeq => IIdxSeq}
 import actors.sciss.FutureActor
 import actors.{Futures, Future}
+import concurrent.stm.Txn
 
 trait FutureResult[ A ] {
    def isSet : Boolean
    def apply() : A
-   def respond( fun: A => Unit ) : Unit
+//   def respond( fun: A => Unit ) : Unit
    def map[ B ]( fun: A => B ) : FutureResult[ B ]
    def flatMap[ B ]( fun: A => FutureResult[ B ]) : FutureResult[ B ]
    private[grapheme] def peer : Future[ A ]
@@ -94,8 +94,11 @@ object FutureResult {
 
       def isSet : Boolean = peer.isSet
 
-      def apply() : A = peer.apply()
+      def apply() : A = {
+         require( Txn.findCurrent.isEmpty, "Must not call future-apply within an active transaction" )
+         peer.apply()
+      }
 
-      def respond( fun: A => Unit ) { peer.respond( fun )}
+//      def respond( fun: A => Unit ) { peer.respond( fun )}
    }
 }

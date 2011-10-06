@@ -26,6 +26,8 @@
 package de.sciss.grapheme
 package impl
 
+import java.io.File
+
 abstract class AbstractDifferanceDatabaseFiller extends DifferanceDatabaseFiller {
    import GraphemeUtil._
 
@@ -40,10 +42,10 @@ abstract class AbstractDifferanceDatabaseFiller extends DifferanceDatabaseFiller
 
    def perform( implicit tx: Tx ) : FutureResult[ Unit ] = {
       val length  = secondsToFrames( durationMotion.step )
-//      val f       = fileSpace.newFile
-//      val af      = openMonoWrite( f )
-      television.capture( length ).map { file =>
-         database.append( file, 0L, length )
-      }
+      television.capture( length ).flatMap( f => performWithFile( f, length ))
+   }
+
+   private def performWithFile( file: File, length: Long ) : FutureResult[ Unit ] = {
+      atomic( "AbstractDifferanceDatabaseFiller appending" )( tx1 => database.append( file, 0L, length )( tx1 ))
    }
 }
