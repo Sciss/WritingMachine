@@ -131,9 +131,12 @@ extends AbstractDatabase with ExtractionImpl {
       sys.error( "TODO" )
 
    def append( appFile: File, offset: Long, length: Long )( implicit tx: Tx ) : FutureResult[ Unit ] = {
-//      val oldFileO  = specRef().map( _._1 )
       val oldFileO  = stateRef().spec.map( _._1 )
-      threadFuture( "Database append" )( appendBody( oldFileO, appFile, offset, length ))
+      threadFuture( "Database append" ) {
+         atomic( "Database append tx" ) { implicit tx =>
+            appendBody( oldFileO, appFile, offset, length )
+         }
+      }
    }
 
    private def appendBody( oldFileO: Option[ File ], appFile: File, offset: Long, length: Long )( implicit tx: Tx ) {
@@ -156,14 +159,11 @@ extends AbstractDatabase with ExtractionImpl {
                   }
                }
                afApp.copyTo( afNew, length )
-               atomic( "Database append finalize" ) { tx1 =>
-//                  extrRef.set( None )( tx1 )
-                  val oldState   = stateRef.swap( State( Some( (fNew, afNew.spec) ), None ))
-                  val oldFileO2  = oldState.spec.map( _._1 )
-                  tx1.afterCommit { _ =>
-                     oldFileO2.foreach { fOld2 =>
-                        deleteDir( fOld2.getParentFile )
-                     }
+               val oldState   = stateRef.swap( State( Some( (fNew, afNew.spec) ), None ))
+               val oldFileO2  = oldState.spec.map( _._1 )
+               tx.afterCommit { _ =>
+                  oldFileO2.foreach { fOld2 =>
+                     deleteDir( fOld2.getParentFile )
                   }
                }
             } finally {
