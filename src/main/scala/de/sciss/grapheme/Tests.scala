@@ -52,12 +52,12 @@ object Tests {
          DifferanceDatabaseFiller( d, tv )( tx1 )
       }
       segmAndThen { ovs =>
-         atomic( "check db" ) { tx1 =>
-            val fillFut = fill.perform( tx1 )
-            println( "==== Waiting for Filling ====")
-            fillFut()
-            println( "==== Filling done ====" )
+         val fillFut = atomic( "fill db" ) { tx1 =>
+            fill.perform( tx1 )
          }
+         println( "==== Waiting for Filling ====")
+         fillFut()
+         println( "==== Filling done ====" )
       }
    }
 

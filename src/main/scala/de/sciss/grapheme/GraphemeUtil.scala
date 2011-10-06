@@ -29,6 +29,22 @@ import java.io.File
 import de.sciss.synth.io.{SampleFormat, AudioFileType, AudioFileSpec, AudioFile}
 
 object GraphemeUtil {
+   var logTransactions = true
+
+   def logNoTx( text: => String ) {
+      if( logTransactions ) logPrint( text )
+   }
+
+   def logTx( text: => String )( implicit tx: Tx ) {
+      if( logTransactions ) tx.afterCommit( _ => logPrint( text ))
+   }
+
+   private def logPrint( text: String ) {
+      println( timeString() + " " + text )
+   }
+
+   def timeString() = (new java.util.Date()).toString
+
    def random( implicit tx: Tx ) : Double = math.random // XXX
    def sampleRate : Double = 44100.0
 
@@ -58,6 +74,7 @@ object GraphemeUtil {
          new Thread( name ) {
             start()
             override def run() {
+               logNoTx( "threadFuture started : " + name )
                ev.set( code )
             }
          }

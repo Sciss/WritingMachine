@@ -39,7 +39,10 @@ package object grapheme {
    }
 
    def atomic[ A ]( info: => String )( fun: Tx => A ) : A = {
-      proc.ProcTxn.atomic { tx => fun( tx )}
+      proc.ProcTxn.atomic { tx =>
+         GraphemeUtil.logTx( info )( tx )
+         fun( tx )
+      }
    }
 
 //   implicit def wrapFutureResultSeq[ A ]( fs: IIdxSeq[ FutureResult[ A ]]) : FutureResult[ IIdxSeq[ A ]] =
