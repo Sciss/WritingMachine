@@ -29,7 +29,6 @@ package impl
 import java.io.File
 import de.sciss.synth
 import synth.proc.{Proc, ProcFactory}
-import de.sciss.strugatzki.FeatureExtraction
 
 object PhraseImpl {
    def fromFile( file: File )( implicit tx: Tx ) : Phrase = {
@@ -60,8 +59,21 @@ object PhraseImpl {
    }
 
    private class Impl( file: File, fact: ProcFactory, val length: Long ) extends Phrase with ExtractionImpl {
+      import GraphemeUtil._
+
+      private val featureRef = Ref( Option.empty[ File ])
+
       def player( implicit tx: Tx ) : Proc = fact.make
 
-      def asStrugatzkiInput( implicit tx: Tx ) : FutureResult[ File ] = extract( file )
+      def asStrugatzkiInput( implicit tx: Tx ) : FutureResult[ File ] = featureRef() match {
+         case Some( res ) => futureOf( res )
+         case None =>
+            extract( file ).map { res =>
+               atomic( "PhraseImpl caching feature extraction" ) { implicit tx =>
+                  featureRef.set( Some( res ))
+               }
+               res
+            }
+      }
    }
 }

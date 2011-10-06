@@ -50,14 +50,20 @@ object DatabaseImpl {
       // left-overs from aborted apps
       subs.drop( 1 ).foreach( deleteDir( _ ))
 
-      val (extr, spec ) = subs.headOption match {
+      val (spec, extr) = subs.headOption match {
          case Some( sub ) =>
-            val f = new File( sub, xmlName )
-            if( f.isFile ) {
+            val fExtr   = new File( sub, xmlName )
+            val fNorm   = new File( sub, normName )
+            if( fExtr.isFile && fNorm.isFile ) {
                try {
-                  val extr = FeatureExtraction.Settings.fromXMLFile( f )
-                  val spec = AudioFile.readSpec( extr.audioInput )
-                  (Some( extr ), Some( (extr.audioInput, spec) ))
+                  val extr       = FeatureExtraction.Settings.fromXMLFile( fExtr )
+                  val spec       = AudioFile.readSpec( extr.audioInput )
+                  val normSpec   = AudioFile.readSpec( fNorm )
+                  if( normSpec.numFrames == 1 ) {  // make sure this is there and was fully written
+                     (Some( (extr.audioInput, spec) ), Some( fExtr ))
+                  } else {
+                     (None, None)
+                  }
                } catch {
                   case e =>
                      e.printStackTrace()
@@ -68,7 +74,7 @@ object DatabaseImpl {
          case None => (None, None)
       }
 
-      new DatabaseImpl( dir, normFile, extr, spec )
+      new DatabaseImpl( dir, normFile, State( spec, extr ))
    }
 
    /*
@@ -81,15 +87,17 @@ object DatabaseImpl {
    }
 
 //   final case class Entry( extr: FeatureExtraction.Settings, spec: AudioFileSpec )
+   final case class State( spec: Option[ (File, AudioFileSpec) ], extr: Option[ File ])
 }
-class DatabaseImpl private ( dir: File, normFile: File, extr0: Option[ FeatureExtraction.Settings ],
-                             spec0: Option[ (File, AudioFileSpec) ])
+class DatabaseImpl private ( dir: File, normFile: File, state0: DatabaseImpl.State )
 extends AbstractDatabase with ExtractionImpl {
    import GraphemeUtil._
    import DatabaseImpl._
 
-   private val extrRef        = Ref( extr0 )
-   private val specRef        = Ref( spec0 )
+//   private val extrRef        = Ref( extr0 )
+//   private val specRef        = Ref( spec0 )
+   private val stateRef       = Ref( state0 )
+
 //   private val folderRef      = Ref( grapheme0.flatMap( _.extr.metaOutput ).map( _.getParentFile )
 //      .getOrElse( createDir( dir )))
 
@@ -105,7 +113,8 @@ extends AbstractDatabase with ExtractionImpl {
       sys.error( "TODO" )
 
    def append( appFile: File, offset: Long, length: Long )( implicit tx: Tx ) : FutureResult[ Unit ] = {
-      val oldFileO   = specRef().map( _._1 )
+//      val oldFileO  = specRef().map( _._1 )
+      val oldFileO  = stateRef().spec.map( _._1 )
       threadFuture( "Database append" )( appendBody( oldFileO, appFile, offset, length ))
    }
 
@@ -130,8 +139,9 @@ extends AbstractDatabase with ExtractionImpl {
                }
                afApp.copyTo( afNew, length )
                atomic( "Database append finalize" ) { tx1 =>
-                  extrRef.set( None )( tx1 )
-                  val oldFileO2 = specRef.swap( Some( (fNew, afNew.spec) ))( tx1 ).map( _._1 )
+//                  extrRef.set( None )( tx1 )
+                  val oldState   = stateRef.swap( State( Some( (fNew, afNew.spec) ), None ))
+                  val oldFileO2  = oldState.spec.map( _._1 )
                   tx1.afterCommit { _ =>
                      oldFileO2.foreach { fOld2 =>
                         deleteDir( fOld2.getParentFile )
@@ -152,14 +162,21 @@ extends AbstractDatabase with ExtractionImpl {
       }
    }
 
-   def length( implicit tx: Tx ) : Long = specRef().map( _._2.numFrames ).getOrElse( 0L )
+   def length( implicit tx: Tx ) : Long = stateRef().spec.map( _._2.numFrames ).getOrElse( 0L )
 
    def asStrugatziDatabase( implicit tx: Tx ) : FutureResult[ File ] = {
-      extrRef() match {
-         case Some( extr ) => futureOf( extr.metaOutput.get.getParentFile ) // XXX Option.get not so sweet
+      sys.error( "TODO : copy feat_norm" )
+      val state = stateRef()
+      state.extr match {
+         case Some( meta ) => futureOf( meta.getParentFile )
          case None =>
-            val tup = specRef().getOrElse( sys.error( "Database contains no file" ))
-            extract( tup._1 )
+            val audioInput = state.spec.map( _._1 ).getOrElse( sys.error( "Database contains no file" ))
+            extract( audioInput ).map { meta =>
+               atomic( "DatabaseImpl saving feature extraction cache" ) { implicit tx =>
+                  stateRef.set( state.copy( extr = Some( meta )))
+               }
+               meta.getParentFile
+            }
       }
    }
 }
