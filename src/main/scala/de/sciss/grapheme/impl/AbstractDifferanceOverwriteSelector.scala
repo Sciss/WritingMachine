@@ -72,7 +72,7 @@ extends DifferanceOverwriteSelector {
 
    def selectParts( phrase: Phrase )( implicit tx: Tx ) : FutureResult[ IIdxSeq[ OverwriteInstruction ]] = {
       val num        = frequencyMotion.step.toInt
-      val ovrNow     = FutureResult.now( IIdxSeq.empty[ OverwriteInstruction ])
+      val ovrNow     = futureOf( IIdxSeq.empty[ OverwriteInstruction ])
       selectPartsWith( ovrNow, phrase, num )
    }
 

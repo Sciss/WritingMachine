@@ -36,47 +36,69 @@ object Tests {
          case Some( "--fut3" )   => future3()
          case Some( "--fut4" )   => future4()
          case Some( "--segm" )   => segm()
+         case Some( "--fill" )  => segmAndFill()
          case Some( "--parts" )  => findParts()
          case _ => sys.error( "Illegal arguments : " + args )
       }
    }
 
    def segm() {
-      segmAndThen { _ => }
+      segmAndThen { (_, _) => }
+   }
+
+   def segmAndFill() {
+      segmAndFillAndThen { (_, _, _) => }
    }
 
    def findParts() {
-      val fill = atomic( "open db" ) { tx1 =>1
+      segmAndFillAndThen { (phrase, fill, ovs) =>
+//         val tgtNow  = FutureResult.now( IIdxSeq.empty[ DifferanceDatabaseQuery.Match ])( tx1 )
+//         val futTgt  = ovs.foldLeft( tgtNow ) { case (futTgt1, ov) =>
+//            futTgt1.flatMap { coll =>
+//               atomic( "DifferanceAlgorithm : databaseQuery" ) { tx2 =>
+//                  val futOne = databaseQuery.find( p, ov )( tx2 )
+//                  futOne.map { m =>
+//                     coll :+ m
+//                  }
+//               }
+//            }
+//         }
+      }
+   }
+
+   def segmAndFillAndThen( fun: (Phrase, IIdxSeq[ OverwriteInstruction ], DifferanceDatabaseFiller) => Unit ) {
+      val fill = atomic( "Test open db" ) { tx1 =>
          val d    = Database( new File( "audio_work", "database" ))( tx1 )
          val tv   = Television.fromFile( new File( new File( "audio_work", "test" ), "aljazeera1.aif" ))
          DifferanceDatabaseFiller( d, tv )( tx1 )
       }
-      segmAndThen { ovs =>
-         val fillFut = atomic( "fill db" ) { tx1 =>
+      segmAndThen { (phrase, ovs) =>
+         val fillFut = atomic( "Test fill db" ) { tx1 =>
             fill.perform( tx1 )
          }
-         println( "==== Waiting for Filling ====")
+         println( "Test ==== Waiting for Filling ====")
          fillFut()
-         println( "==== Filling done ====" )
+         println( "Test ==== Filling done ====" )
+         fun( phrase, ovs, fill )
       }
    }
 
-   def segmAndThen( fun: IIdxSeq[ OverwriteInstruction ] => Unit ) {
+   def segmAndThen( fun: (Phrase, IIdxSeq[ OverwriteInstruction ]) => Unit ) {
       val sel     = DifferanceOverwriteSelector()
-      val spanFut = atomic( "Phrase.fromFile" ) { implicit tx =>
-         val phrase = Phrase.fromFile( new File( "/Users/hhrutz/Desktop/from_mnemo/Amazonas.aif" ))
-         sel.selectParts( phrase )
+      val (phrase, spanFut) = atomic( "Test phrase.fromFile" ) { implicit tx =>
+         val p = Phrase.fromFile( new File( "/Users/hhrutz/Desktop/from_mnemo/Amazonas.aif" ))
+         (p, sel.selectParts( p ))
       }
       // make a real one... Actor.actor {} produces a daemon actor,
       // which gets GC'ed and thus makes the VM prematurely quit
       new actors.Actor {
          start()
          def act() {
-            println( "==== Waiting for Overwrites ====")
+            println( "Test ==== Waiting for Overwrites ====")
             val ovs = spanFut.apply()
-            println( "==== Results ====")
+            println( "Test ==== Results ====")
             ovs.foreach( println _ )
-            fun( ovs )
+            fun( phrase, ovs )
          }
       }
    }
@@ -90,15 +112,15 @@ object Tests {
 
       actor {
          val ev = FutureResult.event[ Int ]()
-         println( "spawing actor 2" )
+         println( "Test spawing actor 2" )
          actor {
             reactWithin( 3000L ) {
                case TIMEOUT => ev.set( 33 )
             }
          }
-         println( "entering await" )
+         println( "Test entering await" )
          val res = ev.apply()
-         println( "result = " + res )
+         println( "Test result = " + res )
       }
    }
 
@@ -111,16 +133,16 @@ object Tests {
 
       actor {
          val ev = FutureResult.event[ Int ]()
-         println( "spawing actor 2" )
+         println( "Test spawing actor 2" )
          actor {
             ev.set( 33 )
          }
-         println( "sleeping" )
+         println( "Test sleeping" )
          receiveWithin( 3000L ) {
             case TIMEOUT =>
-               println( "entering await" )
+               println( "Test entering await" )
                val res = ev.apply()
-               println( "result = " + res )
+               println( "Test result = " + res )
          }
       }
    }
@@ -140,9 +162,9 @@ object Tests {
                case TIMEOUT => ev.set( 33 )
             }
          }
-         println( "entering await" )
+         println( "Test entering await" )
          val res = evP1.apply()
-         println( "result = " + res )
+         println( "Test result = " + res )
       }
    }
 
@@ -160,7 +182,7 @@ object Tests {
             actor {
                reactWithin( 3000L ) {
                   case TIMEOUT =>
-                     println( "Setting ev2" )
+                     println( "Test Setting ev2" )
                      ev2.set( i * i )
                }
             }
@@ -169,13 +191,13 @@ object Tests {
          actor {
             reactWithin( 3000L ) {
                case TIMEOUT =>
-                  println( "Setting ev" )
+                  println( "Test Setting ev" )
                   ev.set( 33 )
             }
          }
-         println( "entering await" )
+         println( "Test entering await" )
          val res = evm.apply()
-         println( "result = " + res )
+         println( "Test result = " + res )
       }
    }
 }

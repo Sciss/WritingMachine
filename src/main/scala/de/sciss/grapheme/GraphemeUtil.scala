@@ -68,6 +68,8 @@ object GraphemeUtil {
       res
    }
 
+   def futureOf[ A ]( value: A ) : FutureResult[ A ] = FutureResult.now( value )
+
    def threadFuture[ A ]( name: String )( code: => A )( implicit tx: Tx ) : FutureResult[ A ] = {
       val ev = FutureResult.event[ A ]()
       tx.afterCommit { _ =>

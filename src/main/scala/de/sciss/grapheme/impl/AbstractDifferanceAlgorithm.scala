@@ -30,6 +30,8 @@ import collection.breakOut
 import collection.immutable.{IndexedSeq => IIdxSeq}
 
 abstract class AbstractDifferanceAlgorithm extends DifferanceAlgorithm {
+   import GraphemeUtil._
+
    def startPhrase: Phrase
 
    def spat: DifferanceSpat
@@ -53,10 +55,9 @@ abstract class AbstractDifferanceAlgorithm extends DifferanceAlgorithm {
 
    private def mapOverwrites( p: Phrase, fut0: FutureResult[ Unit ] )
                             ( instrs: IIdxSeq[ OverwriteInstruction ]) : FutureResult[ Unit ] = {
-      atomic( "DifferanceAlgorithm : mapOverwrites" ) { tx1 =>
+//      atomic( "DifferanceAlgorithm : mapOverwrites" ) { tx1 =>
          val ovs     = instrs.sortBy( _.span.start )
-//         val futTgt  = ovs.map( ov => databaseQuery.find( p, ov )( tx1 )) : FutureResult[ IIdxSeq[ DifferanceDatabaseQuery.Match ]]
-         val tgtNow  = FutureResult.now( IIdxSeq.empty[ DifferanceDatabaseQuery.Match ])( tx1 )
+         val tgtNow  = futureOf( IIdxSeq.empty[ DifferanceDatabaseQuery.Match ])
          val futTgt  = ovs.foldLeft( tgtNow ) { case (futTgt1, ov) =>
             futTgt1.flatMap { coll =>
                atomic( "DifferanceAlgorithm : databaseQuery" ) { tx2 =>
@@ -67,8 +68,8 @@ abstract class AbstractDifferanceAlgorithm extends DifferanceAlgorithm {
                }
             }
          }
-         val pNow    = FutureResult.now( p )( tx1 )
-         val futPNew= futTgt flatMap { targets =>
+         val pNow    = futureOf( p )
+         val futPNew = futTgt flatMap { targets =>
             (ovs zip targets).foldRight( pNow ) { case ((ov, target), futP1) =>
                futP1.flatMap { p1 =>
                   atomic( "DifferanceAlgorithm : overwriter.perform" ) { tx2 =>
@@ -81,16 +82,16 @@ abstract class AbstractDifferanceAlgorithm extends DifferanceAlgorithm {
             atomic( "DifferanceAlgorithm : thinner.remove" )( tx3 =>
                thinner.remove( targets.map( _.span )( breakOut ))( tx3 ))
          }
-         val futUnit1 = futPNew flatMap { pNew =>
+         val futUnit1 = futPNew.map { pNew =>
             atomic( "DifferanceAlgorithm : update" ) { tx4 =>
                phraseRef.set( pNew )( tx4 )
                phraseTrace.add( pNew )( tx4 )
-               FutureResult.now( () )( tx4 )
+               ()
             }
          }
          val futUnit2 = futThin flatMap { _ =>
             atomic( "DifferanceAlgorithm : filler.perform" )( tx5 => filler.perform( tx5 ))}
          FutureResult.par( futUnit1, futUnit2, fut0 )
-      }
+//      }
    }
 }

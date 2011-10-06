@@ -77,7 +77,7 @@ object DatabaseImpl {
    private def deleteDir( dir: File ) : Boolean = {
       val arr  = dir.listFiles()
       val sub  = if( arr == null ) Nil else arr.toList
-      sub.forall( _.delete() )
+      sub.forall( _.delete() ) && dir.delete()
    }
 
    private def createDir( parent: File ) : File = {
@@ -163,7 +163,7 @@ extends AbstractDatabase {
 
    def asStrugatziDatabase( implicit tx: Tx ) : FutureResult[ File ] = {
       extrRef() match {
-         case Some( extr ) => FutureResult.now( extr.metaOutput.get.getParentFile ) // XXX Option.get not so sweet
+         case Some( extr ) => futureOf( extr.metaOutput.get.getParentFile ) // XXX Option.get not so sweet
          case None =>
             val tup = specRef().getOrElse( sys.error( "Database contains no file" ))
             performExtraction( tup._1 )

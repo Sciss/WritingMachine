@@ -41,7 +41,7 @@ trait FutureResult[ A ] {
 object FutureResult {
 //   def enrich[ A ]( f: IIdxSeq[ FutureResult[ A ]]) : FutureResult[ IIdxSeq[ A ]] = sys.error( "TODO" )
 
-   def now[ A ]( value: A )( implicit tx: Tx ) : FutureResult[ A ] = {
+   def now[ A ]( value: A ) : FutureResult[ A ] = {
       val ev = event[ A ]()  // hmmmm... too much effort?
       ev.set( value )
       ev
