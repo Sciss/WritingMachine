@@ -30,7 +30,8 @@ import de.sciss.synth
 import collection.immutable.{IndexedSeq => IIdxSeq}
 
 abstract class AbstractDifferanceOverwriteSelector
-extends DifferanceOverwriteSelector with GraphemeUtil {
+extends DifferanceOverwriteSelector {
+   import GraphemeUtil._
 
    /**
     * Temporal stretch factor (1 = preserve duration, <1 = shorten, >1 = elongate).

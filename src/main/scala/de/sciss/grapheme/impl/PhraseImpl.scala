@@ -59,7 +59,9 @@ object PhraseImpl {
       new Impl( file, fact, spec.numFrames )
    }
 
-   private class Impl( file: File, fact: ProcFactory, val length: Long ) extends Phrase with GraphemeUtil {
+   private class Impl( file: File, fact: ProcFactory, val length: Long ) extends Phrase {
+      import GraphemeUtil._
+
       def player( implicit tx: Tx ) : Proc = fact.make
 
       def asStrugatzkiInput( implicit tx: Tx ) : FutureResult[ File ] = {

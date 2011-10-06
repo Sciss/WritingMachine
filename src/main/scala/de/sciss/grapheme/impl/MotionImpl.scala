@@ -29,6 +29,8 @@ package impl
 import de.sciss.synth
 
 object MotionImpl {
+   import GraphemeUtil._
+
    def constant( value: Double ) : Motion = Constant( value )
    def linrand( lo: Double, hi: Double ) : Motion = LinRand( lo, hi )
    def exprand( lo: Double, hi: Double ) : Motion = ExpRand( lo, hi )
@@ -44,12 +46,12 @@ object MotionImpl {
       def step( implicit tx: Tx ) : Double = value
    }
 
-   private final case class LinRand( lo: Double, hi: Double ) extends Motion with GraphemeUtil {
+   private final case class LinRand( lo: Double, hi: Double ) extends Motion {
       val range = hi - lo
       def step( implicit tx: Tx ) : Double = random * range + lo
    }
 
-   private final case class ExpRand( lo: Double, hi: Double ) extends Motion with GraphemeUtil {
+   private final case class ExpRand( lo: Double, hi: Double ) extends Motion {
       val factor = math.log( hi / lo )
       def step( implicit tx: Tx ) : Double = math.exp( random * factor ) * lo
    }

@@ -35,6 +35,8 @@ object DifferanceOverwriteSelectorImpl {
    def apply() : DifferanceOverwriteSelector = new  DifferanceOverwriteSelectorImpl()
 }
 final class DifferanceOverwriteSelectorImpl () extends AbstractDifferanceOverwriteSelector {
+   import GraphemeUtil._
+
    val stretchMotion             = Motion.linexp( Motion.sine( 0, 1, 30 ), 0, 1, 0.5, 2.0 )
    val fragmentDurationMotion    = Motion.exprand( 0.5, 4.0 )
    val fragmentDeviationMotion   = Motion.constant( 0.5 )

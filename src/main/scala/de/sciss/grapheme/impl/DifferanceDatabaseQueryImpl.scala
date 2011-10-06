@@ -34,6 +34,7 @@ object DifferanceDatabaseQueryImpl {
    def apply( db: Database ) : DifferanceDatabaseQuery = new DifferanceDatabaseQueryImpl( db )
 }
 class DifferanceDatabaseQueryImpl private ( db: Database ) extends AbstractDifferanceDatabaseQuery {
+   import GraphemeUtil._
    import DifferanceDatabaseQuery._
 
    val matchDurationMotion    = Motion.exprand( 0.4, 4.0 )

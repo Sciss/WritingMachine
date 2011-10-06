@@ -28,7 +28,9 @@ package impl
 
 import collection.immutable.{IndexedSeq => IIdxSeq}
 
-abstract class AbstractDatabase extends Database with GraphemeUtil {
+abstract class AbstractDatabase extends Database {
+   import GraphemeUtil._
+
    /**
     * Maximum extension of removal spans to each side, in seconds.
     */

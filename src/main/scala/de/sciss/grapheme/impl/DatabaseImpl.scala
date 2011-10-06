@@ -92,6 +92,7 @@ object DatabaseImpl {
 class DatabaseImpl private ( dir: File, normFile: File, extr0: Option[ FeatureExtraction.Settings ],
                              spec0: Option[ (File, AudioFileSpec) ])
 extends AbstractDatabase {
+   import GraphemeUtil._
    import DatabaseImpl._
 
    private val extrRef        = Ref( extr0 )

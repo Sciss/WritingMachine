@@ -28,31 +28,31 @@ package de.sciss.grapheme
 import java.io.File
 import de.sciss.synth.io.{SampleFormat, AudioFileType, AudioFileSpec, AudioFile}
 
-trait GraphemeUtil {
-   protected final def random( implicit tx: Tx ) : Double = math.random // XXX
-   protected final def sampleRate : Double = 44100.0
+object GraphemeUtil {
+   def random( implicit tx: Tx ) : Double = math.random // XXX
+   def sampleRate : Double = 44100.0
 
-   protected final def random( top: Int )( implicit tx: Tx ) : Int = (random * top).toInt
-   protected final def secondsToFrames( secs: Double ) : Long = (secs * sampleRate + 0.5).toLong
-   protected final def max( i: Int, is: Int* ) : Int = is.foldLeft( i )( _ max _ )
-   protected final def max( n: Long, ns: Long* ) : Long = ns.foldLeft( n )( _ max _ )
-   protected final def max( d: Double, ds: Double* ) : Double = ds.foldLeft( d )( _ max _ )
-   protected final def min( i: Int, is: Int* ) : Int = is.foldLeft( i )( _ min _ )
-   protected final def min( n: Long, ns: Long* ) : Long = ns.foldLeft( n )( _ min _ )
-   protected final def min( d: Double, ds: Double* ) : Double = ds.foldLeft( d )( _ min _ )
+   def random( top: Int )( implicit tx: Tx ) : Int = (random * top).toInt
+   def secondsToFrames( secs: Double ) : Long = (secs * sampleRate + 0.5).toLong
+   def max( i: Int, is: Int* ) : Int = is.foldLeft( i )( _ max _ )
+   def max( n: Long, ns: Long* ) : Long = ns.foldLeft( n )( _ max _ )
+   def max( d: Double, ds: Double* ) : Double = ds.foldLeft( d )( _ max _ )
+   def min( i: Int, is: Int* ) : Int = is.foldLeft( i )( _ min _ )
+   def min( n: Long, ns: Long* ) : Long = ns.foldLeft( n )( _ min _ )
+   def min( d: Double, ds: Double* ) : Double = ds.foldLeft( d )( _ min _ )
 
-   protected final def openMonoWrite( f: File ) : AudioFile =
-      AudioFile.openWrite( f, AudioFileSpec( AudioFileType.IRCAM, SampleFormat.Float, 1, sampleRate ))
+   def openMonoWrite( f: File ) : AudioFile =
+      AudioFile.openWrite( f, AudioFileSpec( AudioFileType.AIFF, SampleFormat.Float, 1, sampleRate ))
 
-   protected final def strugatzkiDatabase = WritingMachine.strugatzkiDatabase
+   def strugatzkiDatabase = WritingMachine.strugatzkiDatabase
 
-   protected final def createTempFile( suffix: String ) : File = {
+   def createTempFile( suffix: String ) : File = {
       val res = File.createTempFile( "grapheme", suffix )
       res.deleteOnExit()
       res
    }
 
-   protected final def threadFuture[ A ]( name: String )( code: => A )( implicit tx: Tx ) : FutureResult[ A ] = {
+   def threadFuture[ A ]( name: String )( code: => A )( implicit tx: Tx ) : FutureResult[ A ] = {
       val ev = FutureResult.event[ A ]()
       tx.afterCommit { _ =>
          new Thread( name ) {

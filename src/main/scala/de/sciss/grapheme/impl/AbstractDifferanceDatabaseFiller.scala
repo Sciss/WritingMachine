@@ -26,7 +26,9 @@
 package de.sciss.grapheme
 package impl
 
-abstract class AbstractDifferanceDatabaseFiller extends DifferanceDatabaseFiller with GraphemeUtil {
+abstract class AbstractDifferanceDatabaseFiller extends DifferanceDatabaseFiller {
+   import GraphemeUtil._
+
    /**
     * Target database length in seconds.
     */
