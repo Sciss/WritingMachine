@@ -26,8 +26,9 @@
 package de.sciss.grapheme
 package impl
 
-import de.sciss.strugatzki.FeatureCorrelation
+import de.sciss.strugatzki.{FeatureCorrelation, Span => SSpan}
 import java.io.File
+import de.sciss.synth
 
 object DifferanceDatabaseQueryImpl {
    def apply( db: Database ) : DifferanceDatabaseQuery = new DifferanceDatabaseQueryImpl( db )
@@ -41,41 +42,59 @@ class DifferanceDatabaseQueryImpl private ( db: Database ) extends AbstractDiffe
    val stretchDeviationMotion = Motion.linrand( 0.2, 0.5 )
    val rankMotion             = Motion.linrand( 0, 11 )
 
+   val maxBoostMotion         = Motion.constant( 18 )
+   val minSpacingMotion       = Motion.constant( 0.5 )
+
    def findMatch( rank: Int, phrase: Phrase, punchIn: Span, punchOut: Span,
                   minPunch: Long, maxPunch: Long, weight: Double )( implicit tx: Tx ) : FutureResult[ Match ] = {
 
-      db.asStrugatziDatabase.flatMap( dir =>
-         findMatchIn( dir, rank, phrase, punchIn, punchOut, minPunch, maxPunch, weight ))
+      import synth._
+
+      val maxBoost   = maxBoostMotion.step.dbamp.toFloat
+      val minSpc     = secondsToFrames( minSpacingMotion.step )
+      val dirFut     = db.asStrugatziDatabase
+      val metaFut    = phrase.asStrugatzkiInput
+
+      dirFut.flatMap { dir =>
+         metaFut.flatMap { metaInput =>
+            findMatchIn( dir, metaInput, maxBoost, minSpc, rank, phrase, punchIn, punchOut,
+               minPunch, maxPunch, weight )
+         }
+      }
    }
 
-   private def findMatchIn( dir: File, rank: Int, phrase: Phrase, punchIn: Span, punchOut: Span,
-                  minPunch: Long, maxPunch: Long, weight: Double ) : FutureResult[ Match ] = {
+   private def findMatchIn( dir: File, metaInput: File, maxBoost: Float, minSpacing: Long, rank: Int, phrase: Phrase,
+                            punchIn: Span, punchOut: Span,
+                            minPunch: Long, maxPunch: Long, weight: Double ) : FutureResult[ Match ] = {
+
+      import FeatureCorrelation.{Match => _, _} // otherwise Match shadows DifferanceDatabaseQuery.Match
 
       val res              = FutureResult.event[ Match ]()
-      val set              = FeatureCorrelation.SettingsBuilder()
+      val set              = SettingsBuilder()
       set.databaseFolder   = dir
-      set.maxBoost         = sys.error( "TODO" )
-      set.maxPunch         = sys.error( "TODO" )
-      set.metaInput        = sys.error( "TODO" )
-      set.minPunch         = sys.error( "TODO" )
-      set.minSpacing       = sys.error( "TODO" )
-      set.normalize        = sys.error( "TODO" )
-      set.numMatches       = sys.error( "TODO" )
-      set.numPerFile       = sys.error( "TODO" )
-      set.punchIn          = sys.error( "TODO" )
-      set.punchOut         = sys.error( "TODO" )
+      set.normalize        = true
+      set.maxBoost         = maxBoost
+      set.metaInput        = metaInput
+      set.minSpacing       = minSpacing
+      set.numMatches       = rank + 1
+      set.numPerFile       = rank + 1
 
-      val fc               = FeatureCorrelation( set ) {
-         case FeatureCorrelation.Aborted =>
+      set.punchIn          = Punch( SSpan( punchIn.start, punchIn.stop ), weight.toFloat )
+      set.punchOut         = Some( Punch( SSpan( punchOut.start, punchOut.stop ), weight.toFloat ))
+      set.minPunch         = minPunch
+      set.maxPunch         = maxPunch
+
+      val process          = apply( set ) {
+         case Aborted =>
             println( "DifferanceDatabaseQuery : Ouch. Aborted. Need to handle this case!" )
             res.set( Match( Span( 0L, min( db.length, secondsToFrames( 1.0 ))), 1f, 1f ))
 
-         case FeatureCorrelation.Failure( e ) =>
+         case Failure( e ) =>
             println( "DifferanceDatabaseQuery : Ouch. Failure. Need to handle this case!" )
             e.printStackTrace()
             res.set( Match( Span( 0L, min( db.length, secondsToFrames( 1.0 ))), 1f, 1f ))
 
-         case FeatureCorrelation.Success( coll ) =>
+         case Success( coll ) =>
             println( "DifferanceDatabaseQuery : Ouch. Success. Need to handle this case!" )
             res.set( Match( Span( 0L, min( db.length, secondsToFrames( 1.0 ))), 1f, 1f ))
 
@@ -96,9 +115,9 @@ class DifferanceDatabaseQueryImpl private ( db: Database ) extends AbstractDiffe
 //            }
 //            res.set( s )
 
-         case FeatureCorrelation.Progress( p ) =>
+         case Progress( p ) =>
       }
-      fc.start()
+      process.start()
       res
    }
 }
