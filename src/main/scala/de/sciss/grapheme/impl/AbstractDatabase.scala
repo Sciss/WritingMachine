@@ -47,9 +47,9 @@ abstract class AbstractDatabase extends Database with GraphemeUtil {
 
    def bestRemoval( span: Span, margin: Long, weight: Double, fade: Long )( implicit tx: Tx ) : RemovalInstruction
 
-   def performRemovals( instrs: IIdxSeq[ RemovalInstruction ])( implicit tx: Tx ) : Unit
+   def performRemovals( instrs: IIdxSeq[ RemovalInstruction ])( implicit tx: Tx ) : FutureResult[ Unit ]
 
-   def remove( spans: IIdxSeq[ Span ])( implicit tx: Tx ) {
+   def remove( spans: IIdxSeq[ Span ])( implicit tx: Tx ) : FutureResult[ Unit ] = {
       val margin  = secondsToFrames( removalMarginMotion.step )
       val spect   = removalSpectralMotion.step
       val fade    = secondsToFrames( removalFadeMotion.step )

@@ -25,6 +25,8 @@
 
 package de.sciss.grapheme
 
+import java.io.File
+
 trait Television {
-   def capture( length: Long )( implicit tx: Tx ) : FutureResult[ Unit ]
+   def capture( length: Long )( implicit tx: Tx ) : FutureResult[ File ]
 }

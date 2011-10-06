@@ -87,37 +87,33 @@ class DifferanceDatabaseQueryImpl private ( db: Database ) extends AbstractDiffe
       val process          = apply( set ) {
          case Aborted =>
             println( "DifferanceDatabaseQuery : Ouch. Aborted. Need to handle this case!" )
-            res.set( Match( Span( 0L, min( db.length, secondsToFrames( 1.0 ))), 1f, 1f ))
+            res.set( failureMatch )
 
          case Failure( e ) =>
             println( "DifferanceDatabaseQuery : Ouch. Failure. Need to handle this case!" )
             e.printStackTrace()
-            res.set( Match( Span( 0L, min( db.length, secondsToFrames( 1.0 ))), 1f, 1f ))
+            res.set( failureMatch )
 
          case Success( coll ) =>
-            println( "DifferanceDatabaseQuery : Ouch. Success. Need to handle this case!" )
-            res.set( Match( Span( 0L, min( db.length, secondsToFrames( 1.0 ))), 1f, 1f ))
-
-//            val b    = if( coll( 0 ).sim.isNaN ) coll( 1 ) else coll( 0 )
-//            val len  = atomic( "DifferanceDatabaseQuery : success" ) { tx2 =>
-//               (random( tx2 ) * (maxLen - minLen) + minLen).toLong
-//            }
-//            val s    = if( b.pos <= center ) {
-//               val stop0   = max( center, b.pos + len/2 )
-//               val start   = max( 0L, stop0 - len )
-//               val stop    = min( spec.numFrames, start + len )
-//               Span( start, stop )
-//            } else {
-//               val start0  = min( center, b.pos - len/2 )
-//               val stop    = min( spec.numFrames, start0 + len )
-//               val start   = max( 0L, stop - len )
-//               Span( start, stop )
-//            }
-//            res.set( s )
+            val idx0 = min( coll.size - 1, rank )
+            val idx  = if( idx0 == 0 && coll( idx0 ).sim.isNaN ) idx0 + 1 else idx0
+            res.set( if( idx < 0 ) {
+               println( "DifferanceDatabaseQuery : Ouch. No matches. Need to handle this case!" )
+               failureMatch
+            } else {
+               val m = coll( idx )
+               Match( Span( m.punch.start, m.punch.stop ), m.boostIn, m.boostOut )
+            })
 
          case Progress( p ) =>
       }
       process.start()
       res
+   }
+
+   private def failureMatch = {
+      atomic( "DifferanceDatabaseQuery failureMatch" ) { tx1 =>
+         Match( Span( 0L, min( db.length( tx1 ), secondsToFrames( 1.0 ))), 1f, 1f )
+      }
    }
 }
