@@ -51,4 +51,13 @@ trait GraphemeUtil {
       res.deleteOnExit()
       res
    }
+
+   protected final def threadEvent[ A ]( name: String, ev: FutureResult.Event[ A ])( code: => A ) {
+      new Thread( name ) {
+         start()
+         override def run() {
+            ev.set( code )
+         }
+      }
+   }
 }

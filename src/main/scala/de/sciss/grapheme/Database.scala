@@ -33,7 +33,7 @@ trait Database {
 
 //   def randomPhrase( length: Long )( implicit tx: Tx ) : Phrase
    def remove( spans: IIdxSeq[ Span ])( implicit tx: Tx ) : FutureResult[ Unit ]
-   def append( source: File )( implicit tx: Tx ) : FutureResult[ Unit ]
+   def append( source: File, offset: Long, length: Long )( implicit tx: Tx ) : FutureResult[ Unit ]
 
    /**
     * Returns a directory carrying the strugatzki meta files of

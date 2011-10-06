@@ -41,7 +41,7 @@ abstract class AbstractDifferanceDatabaseFiller extends DifferanceDatabaseFiller
 //      val f       = fileSpace.newFile
 //      val af      = openMonoWrite( f )
       television.capture( length ).map { file =>
-         database.append( file )
+         database.append( file, 0L, length )
       }
    }
 }
