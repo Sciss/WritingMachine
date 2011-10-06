@@ -86,6 +86,24 @@ object DatabaseImpl {
       sub.forall( _.delete() ) && dir.delete()
    }
 
+   private def copyAudioFile( source: File, target: File )( implicit tx: Tx ) : FutureResult[ Unit ] = {
+      import GraphemeUtil._
+
+      threadFuture( "DatabaseImpl copy file " + source ) {
+         val afSrc = AudioFile.openRead( source )
+         try {
+            val afTgt = AudioFile.openWrite( target, afSrc.spec )
+            try {
+               afSrc.copyTo( afTgt, afSrc.numFrames )
+            } finally {
+               afTgt.close()
+            }
+         } finally {
+            afSrc.close()
+         }
+      }
+   }
+
 //   final case class Entry( extr: FeatureExtraction.Settings, spec: AudioFileSpec )
    final case class State( spec: Option[ (File, AudioFileSpec) ], extr: Option[ File ])
 }
@@ -165,18 +183,31 @@ extends AbstractDatabase with ExtractionImpl {
    def length( implicit tx: Tx ) : Long = stateRef().spec.map( _._2.numFrames ).getOrElse( 0L )
 
    def asStrugatziDatabase( implicit tx: Tx ) : FutureResult[ File ] = {
-      sys.error( "TODO : copy feat_norm" )
       val state = stateRef()
       state.extr match {
          case Some( meta ) => futureOf( meta.getParentFile )
          case None =>
             val audioInput = state.spec.map( _._1 ).getOrElse( sys.error( "Database contains no file" ))
-            extract( audioInput ).map { meta =>
-               atomic( "DatabaseImpl saving feature extraction cache" ) { implicit tx =>
-                  stateRef.set( state.copy( extr = Some( meta )))
-               }
-               meta.getParentFile
+            val sub        = audioInput.getParentFile
+            copyAudioFile( normFile, new File( sub, normName )).flatMap { _ =>
+               extractAndUpdate( audioInput, sub )
             }
+      }
+   }
+
+   private def extractAndUpdate( audioInput: File, sub: File ) : FutureResult[ File ] = {
+      atomic( "DatabaseImpl extract" ) { implicit tx =>
+         extract( audioInput, Some( sub )).map { meta =>
+            assert( meta.getParentFile == sub )
+            updateState( meta )
+            sub
+         }
+      }
+   }
+
+   private def updateState( meta: File ) {
+      atomic( "DatabaseImpl saving feature extraction cache" ) { implicit tx =>
+         stateRef.transform( _.copy( extr = Some( meta )))
       }
    }
 }

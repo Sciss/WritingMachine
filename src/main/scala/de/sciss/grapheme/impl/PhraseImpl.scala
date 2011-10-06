@@ -68,7 +68,7 @@ object PhraseImpl {
       def asStrugatzkiInput( implicit tx: Tx ) : FutureResult[ File ] = featureRef() match {
          case Some( res ) => futureOf( res )
          case None =>
-            extract( file ).map { res =>
+            extract( file, None ).map { res =>
                atomic( "PhraseImpl caching feature extraction" ) { implicit tx =>
                   featureRef.set( Some( res ))
                }

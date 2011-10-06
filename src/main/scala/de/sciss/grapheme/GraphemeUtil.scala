@@ -68,8 +68,8 @@ object GraphemeUtil {
 
    def strugatzkiDatabase = WritingMachine.strugatzkiDatabase
 
-   def createTempFile( suffix: String ) : File = {
-      val res = File.createTempFile( "grapheme", suffix, tmpDir )
+   def createTempFile( suffix: String, dir: Option[ File ]) : File = {
+      val res = File.createTempFile( "grapheme", suffix, dir.getOrElse( tmpDir ))
       res.deleteOnExit()
       res
    }
