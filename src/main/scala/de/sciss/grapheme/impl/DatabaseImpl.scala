@@ -111,53 +111,51 @@ extends AbstractDatabase {
       sys.error( "TODO" )
 
    def append( appFile: File, offset: Long, length: Long )( implicit tx: Tx ) : FutureResult[ Unit ] = {
-      val res        = FutureResult.event[ Unit ]()
       val oldFileO   = specRef().map( _._1 )
-      tx.afterCommit { _ =>
-         threadEvent( "Database append", res ) {
-            try {
-               val sub     = createDir( dir )
-               val fNew    = new File( sub, audioName )
-               val afApp   = AudioFile.openRead( appFile )
-               try {
-                  val afNew   = AudioFile.openWrite( fNew,
-                     AudioFileSpec( AudioFileType.AIFF, SampleFormat.Float, afApp.numChannels, afApp.sampleRate ))
-                  try {
-                     afApp.seek( offset )
-                     oldFileO.foreach { fOld =>
-                        val afOld   = AudioFile.openRead( fOld )
-                        try {
-                           require( afOld.numChannels == afApp.numChannels, "Database append - channel mismatch" )
-                           afOld.copyTo( afNew, afOld.numFrames )
-                        } finally {
-                           afOld.close()
-                        }
-                     }
-                     afApp.copyTo( afNew, length )
-                     atomic( "Database append finalize" ) { tx1 =>
-                        extrRef.set( None )( tx1 )
-                        val oldFileO2 = specRef.swap( Some( (fNew, afNew.spec) ))( tx1 ).map( _._1 )
-                        tx1.afterCommit { _ =>
-                           oldFileO2.foreach { fOld2 =>
-                              deleteDir( fOld2.getParentFile )
-                           }
-                        }
-                     }
-                  } finally {
-                     afNew.close()
-                  }
-               } finally {
-                  afApp.close()
-               }
+      threadFuture( "Database append" )( appendBody( oldFileO, appFile, offset, length ))
+   }
 
-            } catch {
-               case e =>
-                  println( "Database append - Ooops, should handle exceptions" )
-                  e.printStackTrace()
+   private def appendBody( oldFileO: Option[ File ], appFile: File, offset: Long, length: Long )( implicit tx: Tx ) {
+      try {
+         val sub     = createDir( dir )
+         val fNew    = new File( sub, audioName )
+         val afApp   = AudioFile.openRead( appFile )
+         try {
+            val afNew   = AudioFile.openWrite( fNew,
+               AudioFileSpec( AudioFileType.AIFF, SampleFormat.Float, afApp.numChannels, afApp.sampleRate ))
+            try {
+               afApp.seek( offset )
+               oldFileO.foreach { fOld =>
+                  val afOld   = AudioFile.openRead( fOld )
+                  try {
+                     require( afOld.numChannels == afApp.numChannels, "Database append - channel mismatch" )
+                     afOld.copyTo( afNew, afOld.numFrames )
+                  } finally {
+                     afOld.close()
+                  }
+               }
+               afApp.copyTo( afNew, length )
+               atomic( "Database append finalize" ) { tx1 =>
+                  extrRef.set( None )( tx1 )
+                  val oldFileO2 = specRef.swap( Some( (fNew, afNew.spec) ))( tx1 ).map( _._1 )
+                  tx1.afterCommit { _ =>
+                     oldFileO2.foreach { fOld2 =>
+                        deleteDir( fOld2.getParentFile )
+                     }
+                  }
+               }
+            } finally {
+               afNew.close()
             }
+         } finally {
+            afApp.close()
          }
+
+      } catch {
+         case e =>
+            println( "Database append - Ooops, should handle exceptions" )
+            e.printStackTrace()
       }
-      res
    }
 
    def length( implicit tx: Tx ) : Long = specRef().map( _._2.numFrames ).getOrElse( 0L )

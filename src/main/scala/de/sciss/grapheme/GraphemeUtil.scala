@@ -52,12 +52,16 @@ trait GraphemeUtil {
       res
    }
 
-   protected final def threadEvent[ A ]( name: String, ev: FutureResult.Event[ A ])( code: => A ) {
-      new Thread( name ) {
-         start()
-         override def run() {
-            ev.set( code )
+   protected final def threadFuture[ A ]( name: String )( code: => A )( implicit tx: Tx ) : FutureResult[ A ] = {
+      val ev = FutureResult.event[ A ]()
+      tx.afterCommit { _ =>
+         new Thread( name ) {
+            start()
+            override def run() {
+               ev.set( code )
+            }
          }
       }
+      ev
    }
 }

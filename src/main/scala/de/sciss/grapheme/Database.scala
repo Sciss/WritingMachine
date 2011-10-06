@@ -26,8 +26,12 @@
 package de.sciss.grapheme
 
 import collection.immutable.{IndexedSeq => IIdxSeq}
+import impl.{DatabaseImpl => Impl}
 import java.io.File
 
+object Database {
+   def apply( dir: File )( implicit tx: Tx ) : Database = Impl( dir )
+}
 trait Database {
    def length( implicit tx: Tx ): Long
 

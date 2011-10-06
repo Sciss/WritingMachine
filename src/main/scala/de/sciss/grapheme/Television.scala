@@ -25,8 +25,12 @@
 
 package de.sciss.grapheme
 
+import impl.{FileTelevisionImpl => FileImpl}
 import java.io.File
 
+object Television {
+   def fromFile( f: File ) : Television = FileImpl( f )
+}
 trait Television {
    def capture( length: Long )( implicit tx: Tx ) : FutureResult[ File ]
 }

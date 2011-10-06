@@ -1,6 +1,7 @@
 package de.sciss.grapheme
 
 import java.io.File
+import collection.immutable.{IndexedSeq => IIdxSeq}
 
 object Tests {
    def main( args: Array[ String ]) {
@@ -15,6 +16,24 @@ object Tests {
    }
 
    def segm() {
+      segmAndThen { _ => }
+   }
+
+   def findParts() {
+      val fill = atomic( "open db" ) { tx1 =>1
+         val d    = Database( new File( "audio_work", "database" ))( tx1 )
+         val tv   = Television.fromFile( new File( new File( "audio_work", "test" ), "aljazeera1.aif" ))
+         DifferanceDatabaseFiller( d, tv )( tx1 )
+      }
+      segmAndThen { ovs =>
+         atomic( "check db" ) { tx1 =>
+            val fillFut = fill.perform( tx1 )
+
+         }
+      }
+   }
+
+   def segmAndThen( fun: IIdxSeq[ OverwriteInstruction ] => Unit ) {
       val sel     = DifferanceOverwriteSelector()
       val spanFut = atomic( "Phrase.fromFile" ) { implicit tx =>
          val phrase = Phrase.fromFile( new File( "/Users/hhrutz/Desktop/from_mnemo/Amazonas.aif" ))
@@ -29,6 +48,7 @@ object Tests {
             val ovs = spanFut.apply()
             println( "==== Results ====")
             ovs.foreach( println _ )
+            fun( ovs )
          }
       }
    }

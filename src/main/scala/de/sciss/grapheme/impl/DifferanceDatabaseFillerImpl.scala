@@ -1,5 +1,5 @@
 /*
- *  DifferanceDatabaseFiller.scala
+ *  DifferanceDatabaseFillerImpl.scala
  *  (WritingMachine)
  *
  *  Copyright (c) 2011 Hanns Holger Rutz. All rights reserved.
@@ -24,12 +24,14 @@
  */
 
 package de.sciss.grapheme
+package impl
 
-import impl.{DifferanceDatabaseFillerImpl => Impl}
-
-object DifferanceDatabaseFiller {
-   def apply( db: Database, tv: Television )( implicit tx: Tx ) : DifferanceDatabaseFiller = Impl( db, tv )
+object DifferanceDatabaseFillerImpl {
+   def apply( db: Database, tv: Television )( implicit tx: Tx ) : DifferanceDatabaseFiller = {
+      new DifferanceDatabaseFillerImpl( db, tv )
+   }
 }
-trait DifferanceDatabaseFiller {
-   def perform( implicit tx: Tx ) : FutureResult[ Unit ]
+class DifferanceDatabaseFillerImpl private ( val database: Database, val television: Television )
+extends AbstractDifferanceDatabaseFiller {
+   val durationMotion = Motion.constant( 180.0 )
 }
