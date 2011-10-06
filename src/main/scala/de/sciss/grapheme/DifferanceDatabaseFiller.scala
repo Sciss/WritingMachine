@@ -31,5 +31,6 @@ object DifferanceDatabaseFiller {
    def apply( db: Database, tv: Television )( implicit tx: Tx ) : DifferanceDatabaseFiller = Impl( db, tv )
 }
 trait DifferanceDatabaseFiller {
+   def database : Database
    def perform( implicit tx: Tx ) : FutureResult[ Unit ]
 }

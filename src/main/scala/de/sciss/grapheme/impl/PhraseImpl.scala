@@ -59,37 +59,9 @@ object PhraseImpl {
       new Impl( file, fact, spec.numFrames )
    }
 
-   private class Impl( file: File, fact: ProcFactory, val length: Long ) extends Phrase {
-      import GraphemeUtil._
-
+   private class Impl( file: File, fact: ProcFactory, val length: Long ) extends Phrase with ExtractionImpl {
       def player( implicit tx: Tx ) : Proc = fact.make
 
-      def asStrugatzkiInput( implicit tx: Tx ) : FutureResult[ File ] = {
-         val res = FutureResult.event[ File ]()
-         tx.afterCommit { _ =>
-            val set           = FeatureExtraction.SettingsBuilder()
-            set.audioInput    = file
-            set.featureOutput = createTempFile( ".aif" )
-            val meta          = createTempFile( ".xml" )
-            set.metaOutput    = Some( meta )
-            val fe            = FeatureExtraction( set ) {
-               case FeatureExtraction.Aborted =>
-                  println( "PhraseImpl asStrugatzkiInputOuch :. Aborted. Need to handle this case!" )
-                  res.set( meta )
-
-               case FeatureExtraction.Failure( e ) =>
-                  println( "PhraseImpl asStrugatzkiInput : Ouch. Failure. Need to handle this case!" )
-                  e.printStackTrace()
-                  res.set( meta )
-
-               case FeatureExtraction.Success( _ ) =>
-                  res.set( meta )
-
-               case FeatureExtraction.Progress( p ) =>
-            }
-            fe.start()
-         }
-         res
-      }
+      def asStrugatzkiInput( implicit tx: Tx ) : FutureResult[ File ] = extract( file )
    }
 }

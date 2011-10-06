@@ -51,18 +51,25 @@ object Tests {
    }
 
    def findParts() {
-      segmAndFillAndThen { (phrase, fill, ovs) =>
-//         val tgtNow  = FutureResult.now( IIdxSeq.empty[ DifferanceDatabaseQuery.Match ])( tx1 )
-//         val futTgt  = ovs.foldLeft( tgtNow ) { case (futTgt1, ov) =>
-//            futTgt1.flatMap { coll =>
-//               atomic( "DifferanceAlgorithm : databaseQuery" ) { tx2 =>
-//                  val futOne = databaseQuery.find( p, ov )( tx2 )
-//                  futOne.map { m =>
-//                     coll :+ m
-//                  }
-//               }
-//            }
-//         }
+      import GraphemeUtil._
+
+      segmAndFillAndThen { (phrase, ovs, fill) =>
+         val query   = DifferanceDatabaseQuery( fill.database )
+         val tgtNow  = futureOf( IIdxSeq.empty[ DifferanceDatabaseQuery.Match ])
+         val futTgt  = ovs.foldLeft( tgtNow ) { case (futTgt1, ov) =>
+            futTgt1.flatMap { coll =>
+               atomic( "Test databaseQuery" ) { tx2 =>
+                  val futOne = query.find( phrase, ov )( tx2 )
+                  futOne.map { m =>
+                     coll :+ m
+                  }
+               }
+            }
+         }
+         println( "Test ==== Waiting for Matches ====")
+         val ms = futTgt()
+         println( "Test ==== Match Results ====")
+         ms.foreach( println _ )
       }
    }
 

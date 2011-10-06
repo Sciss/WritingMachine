@@ -91,7 +91,7 @@ object DatabaseImpl {
 }
 class DatabaseImpl private ( dir: File, normFile: File, extr0: Option[ FeatureExtraction.Settings ],
                              spec0: Option[ (File, AudioFileSpec) ])
-extends AbstractDatabase {
+extends AbstractDatabase with ExtractionImpl {
    import GraphemeUtil._
    import DatabaseImpl._
 
@@ -166,11 +166,7 @@ extends AbstractDatabase {
          case Some( extr ) => futureOf( extr.metaOutput.get.getParentFile ) // XXX Option.get not so sweet
          case None =>
             val tup = specRef().getOrElse( sys.error( "Database contains no file" ))
-            performExtraction( tup._1 )
+            extract( tup._1 )
       }
-   }
-
-   private def performExtraction( audioInput: File ) : FutureResult[ File ] = {
-      sys.error( "TODO" )
    }
 }
