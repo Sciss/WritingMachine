@@ -29,7 +29,13 @@ import java.io.File
 import de.sciss.synth.io.{SampleFormat, AudioFileType, AudioFileSpec, AudioFile}
 
 object GraphemeUtil {
-   var logTransactions = true
+   var logTransactions  = true
+   /**
+    * Important: there seem to be problems with communications between
+    * WritingMachine and scsynth when using `sys.props( "java.io.tmpdir" )`
+    * which gives you something terrible as `/var/folders/M9/M9W+ucwpFzaqGpC2mu3KZq0sUCc/-Tmp-/`
+    */
+   var tmpDir           = new File( "/tmp" )
 
    def logNoTx( text: => String ) {
       if( logTransactions ) logPrint( text )
@@ -63,9 +69,16 @@ object GraphemeUtil {
    def strugatzkiDatabase = WritingMachine.strugatzkiDatabase
 
    def createTempFile( suffix: String ) : File = {
-      val res = File.createTempFile( "grapheme", suffix )
+      val res = File.createTempFile( "grapheme", suffix, tmpDir )
       res.deleteOnExit()
       res
+   }
+
+   def createDir( parent: File, prefix: String ) : File = {
+      val f = File.createTempFile( prefix, "", parent )
+      f.delete()
+      require( f.mkdir(), "Could not create directory : " + f )
+      f
    }
 
    def futureOf[ A ]( value: A ) : FutureResult[ A ] = FutureResult.now( value )

@@ -80,13 +80,6 @@ object DatabaseImpl {
       sub.forall( _.delete() ) && dir.delete()
    }
 
-   private def createDir( parent: File ) : File = {
-      val f = File.createTempFile( dirPrefix, "", parent )
-      f.delete()
-      require( f.mkdir(), "Could not create directory : " + f )
-      f
-   }
-
 //   final case class Entry( extr: FeatureExtraction.Settings, spec: AudioFileSpec )
 }
 class DatabaseImpl private ( dir: File, normFile: File, extr0: Option[ FeatureExtraction.Settings ],
@@ -118,7 +111,7 @@ extends AbstractDatabase with ExtractionImpl {
 
    private def appendBody( oldFileO: Option[ File ], appFile: File, offset: Long, length: Long )( implicit tx: Tx ) {
       try {
-         val sub     = createDir( dir )
+         val sub     = createDir( dir, dirPrefix )
          val fNew    = new File( sub, audioName )
          val afApp   = AudioFile.openRead( appFile )
          try {

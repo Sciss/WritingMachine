@@ -28,6 +28,7 @@ package de.sciss.grapheme
 import de.sciss.nuages.NuagesLauncher
 import de.sciss.synth.proc.ProcTxn
 import java.io.File
+import de.sciss.strugatzki.{FeatureExtraction, Strugatzki}
 
 object WritingMachine {
    val logPanel            = false
@@ -84,6 +85,8 @@ init.spat.rotateAndProject( phrase )
    }
 
    def booted( r: NuagesLauncher.Ready ) {
+      Strugatzki.tmpDir = GraphemeUtil.tmpDir
+//      FeatureExtraction.verbose = true
       ProcTxn.atomic { implicit tx =>
          Init( r )
       }
