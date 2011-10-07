@@ -119,16 +119,16 @@ extends AbstractDatabase with ExtractionImpl {
 //   private val folderRef      = Ref( grapheme0.flatMap( _.extr.metaOutput ).map( _.getParentFile )
 //      .getOrElse( createDir( dir )))
 
-   val removalFadeMotion      = Motion.exprand( 0.100, 1.000 )
-   val removalSpectralMotion  = Motion.linrand( 0.20, 0.80 )
-   val removalMarginMotion    = Motion.exprand( 0.250, 2.500 )
-
-   def performRemovals( instrs: IIdxSeq[ RemovalInstruction ])( implicit tx: Tx ) : FutureResult[ Unit ] = {
-      sys.error( "TODO" )
-   }
-
-   def bestRemoval( span: Span, margin: Long, weight: Double, fade: Long )( implicit tx: Tx ) : RemovalInstruction =
-      sys.error( "TODO" )
+//   val removalFadeMotion      = Motion.exprand( 0.100, 1.000 )
+//   val removalSpectralMotion  = Motion.linrand( 0.20, 0.80 )
+//   val removalMarginMotion    = Motion.exprand( 0.250, 2.500 )
+//
+//   def performRemovals( instrs: IIdxSeq[ RemovalInstruction ])( implicit tx: Tx ) : FutureResult[ Unit ] = {
+//      sys.error( "TODO" )
+//   }
+//
+//   def bestRemoval( span: Span, margin: Long, weight: Double, fade: Long )( implicit tx: Tx ) : RemovalInstruction =
+//      sys.error( "TODO" )
 
    def append( appFile: File, offset: Long, length: Long )( implicit tx: Tx ) : FutureResult[ Unit ] = {
       val oldFileO  = stateRef().spec.map( _._1 )
@@ -137,6 +137,35 @@ extends AbstractDatabase with ExtractionImpl {
             appendBody( oldFileO, appFile, offset, length )
          }
       }
+   }
+
+   def remove( instrs: IIdxSeq[ RemovalInstruction ])( implicit tx: Tx ) : FutureResult[ Unit ] = {
+      val filtered   = instrs.filter( _.span.nonEmpty )
+      val sorted     = filtered.sortBy( _.span.start )
+
+      val merged     = {
+         var pred       = RemovalInstruction( Span( -1L, -1L ), 0L, 0L )
+         var res        = IIdxSeq.empty[ RemovalInstruction ]
+         sorted.foreach { succ =>
+            pred.merge( succ ) match {
+               case Some( m ) =>
+                  pred = m
+               case None =>
+                  res :+= pred
+                  pred = succ
+            }
+         }
+         if( pred.span.nonEmpty ) res :+= pred
+         res
+      }
+
+      threadFuture( "DatabaseImpl remove" ) {
+         removalBody( merged )
+      }
+   }
+
+   private def removalBody( entries: IIdxSeq[ RemovalInstruction ]) {
+      sys.error( "TODO" )
    }
 
    private def appendBody( oldFileO: Option[ File ], appFile: File, offset: Long, length: Long )( implicit tx: Tx ) {

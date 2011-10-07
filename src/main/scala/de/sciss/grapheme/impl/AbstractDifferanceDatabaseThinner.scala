@@ -28,20 +28,20 @@ package impl
 
 import collection.immutable.{IndexedSeq => IIdxSeq}
 
-object AbstractDifferanceDatabaseThinner {
-   private final case class Entry( span: Span, fadeIn: Long, fadeOut: Long ) {
-      def merge( b: Entry ) : Option[ Entry ] = {
-         if( span.overlaps( b.span )) {
-            val spanNew = span.unite( b.span )
-            Some( Entry( spanNew, if( spanNew.start == span.start ) fadeIn else b.fadeIn,
-                                  if( spanNew.stop == span.stop ) fadeOut else b.fadeOut ))
-         } else None
-      }
-   }
-}
+//object AbstractDifferanceDatabaseThinner {
+//   private final case class Entry( span: Span, fadeIn: Long, fadeOut: Long ) {
+//      def merge( b: Entry ) : Option[ Entry ] = {
+//         if( span.overlaps( b.span )) {
+//            val spanNew = span.unite( b.span )
+//            Some( Entry( spanNew, if( spanNew.start == span.start ) fadeIn else b.fadeIn,
+//                                  if( spanNew.stop == span.stop ) fadeOut else b.fadeOut ))
+//         } else None
+//      }
+//   }
+//}
 abstract class AbstractDifferanceDatabaseThinner extends DifferanceDatabaseThinner {
    import GraphemeUtil._
-   import AbstractDifferanceDatabaseThinner._
+//   import AbstractDifferanceDatabaseThinner._
 
    /**
     * Cross-fade punch-in duration in seconds
@@ -97,34 +97,9 @@ abstract class AbstractDifferanceDatabaseThinner extends DifferanceDatabaseThinn
          val fadeIn     = fiPre + fiPost
          val fadeOut    = foPre + foPost
 
-         Entry( spanTFd, fadeIn, fadeOut )
+         RemovalInstruction( spanTFd, fadeIn, fadeOut )
       }
 
-      val filtered   = instrs.filter( _.span.nonEmpty )
-      val sorted     = filtered.sortBy( _.span.start )
-
-      val merged     = {
-         var pred       = Entry( Span( -1L, -1L ), 0L, 0L )
-         var res        = IIdxSeq.empty[ Entry ]
-         sorted.foreach { succ =>
-            pred.merge( succ ) match {
-               case Some( m ) =>
-                  pred = m
-               case None =>
-                  res :+= pred
-                  pred = succ
-            }
-         }
-         if( pred.span.nonEmpty ) res :+= pred
-         res
-      }
-
-      threadFuture( "AbstractDifferanceDatabaseThinner removal" ) {
-         threadBody( merged )
-      }
-   }
-
-   private def threadBody( entries: IIdxSeq[ Entry ]) {
-
+      database.remove( instrs )
    }
 }
