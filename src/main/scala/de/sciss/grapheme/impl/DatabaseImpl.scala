@@ -161,105 +161,136 @@ extends AbstractDatabase with ExtractionImpl {
       }
 
       val oldFileO  = stateRef().spec.map( _._1 )
-
-      threadFuture( "DatabaseImpl remove" ) {
-         removalBody( oldFileO, merged )
+      oldFileO match {
+         case Some( f ) =>
+            threadFuture( "DatabaseImpl remove" ) {
+               // add a dummy instruction to the end, so we can easier traverse the list
+               removalBody( f, merged :+ RemovalInstruction( Span( len, len ), 0L ))
+            }
+         case None => futureOf( () )
       }
    }
 
-   private def removalBody( oldFileO: Option[ File ], entries: IIdxSeq[ RemovalInstruction ]) {
+   private def updateLoop( fun: AudioFile => Unit ) {
       try {
          val sub     = createDir( dir, dirPrefix )
          val fNew    = new File( sub, audioName )
          val afNew   = openMonoWrite( fNew )
          try {
-//            oldFileO.foreach { fOld =>
-//               val afOld   = AudioFile.openRead( fOld )
-//               try {
-//                  require( afOld.numChannels == afApp.numChannels, "Database append - channel mismatch" )
-//                  afOld.copyTo( afNew, afOld.numFrames )
-//               } finally {
-//                  afOld.close()
-//               }
-//            }
-//            afApp.copyTo( afNew, length )
-//            afNew.close()
-//            atomic( "Database append finalize" ) { tx =>
-//               val oldState   = stateRef.swap( State( Some( (fNew, afNew.spec) ), None ))( tx )
-//               val oldFileO2  = oldState.spec.map( _._1 )
-//               tx.afterCommit { _ =>
-//                  oldFileO2.foreach { fOld2 =>
-//                     deleteDir( fOld2.getParentFile )
-//                  }
-//               }
-//            }
+            fun( afNew )
+            afNew.close()
+            atomic( "Database update finalize" ) { tx =>
+               val oldState   = stateRef.swap( State( Some( (fNew, afNew.spec) ), None ))( tx )
+               val oldFileO2  = oldState.spec.map( _._1 )
+               tx.afterCommit { _ =>
+                  oldFileO2.foreach { fOld2 =>
+                     deleteDir( fOld2.getParentFile )
+                  }
+               }
+            }
          } finally {
             if( afNew.isOpen ) afNew.close()
          }
 
       } catch {
          case e =>
-            println( "Database removal - Ooops, should handle exceptions" )
+            println( "Database update - Ooops, should handle exceptions" )
             e.printStackTrace()
+      }
+   }
+
+   private def removalBody( fOld: File, entries: IIdxSeq[ RemovalInstruction ]) {
+      import DSP._
+
+      updateLoop { afNew =>
+         val afOld   = AudioFile.openRead( fOld )
+         var shrink  = 0L
+         var pos     = 0L
+         val lim     = SignalLimiter( secondsToFrames( 0.1 ).toInt )
+         val inBuf   = afOld.buffer( 8192 )
+         val fInBuf  = inBuf( 0 )
+         val outBuf  = afOld.buffer( 8192 )
+         val fOutBuf = outBuf( 0 )
+         var written = 0L
+         entries.foreach { entry =>
+            val start   = entry.span.start - shrink
+            // copy
+            while( pos < start ) {
+               val chunkLen   = min( start - pos, 8192 ).toInt
+               afOld.read( inBuf, 0, chunkLen )
+               val chunkLen2 = lim.process( fInBuf, 0, fOutBuf, 0, chunkLen )
+               afNew.write( outBuf, 0, chunkLen2 )
+               written += chunkLen2
+               pos += chunkLen
+            }
+            // fade
+            val fdLen   = entry.fade
+            if( fdLen > 0 ) {
+               var done    = 0L
+               val fo      = SignalFader( 0L, fdLen, 1f, 0f, 0.6666f )
+               val fi      = SignalFader( 0L, fdLen, 0f, 1f, 0.6666f )
+               while( done < fdLen ) {
+                  val chunkLen = min( fdLen - done, 8192 ).toInt
+                  afOld.seek( entry.span.start + done )
+                  afOld.read( inBuf, 0, chunkLen )
+                  afOld.seek( entry.span.stop - fdLen + done )
+                  afOld.read( outBuf, 0, chunkLen )
+                  fo.process( fInBuf, 0, fInBuf, 0, chunkLen )
+                  fi.process( fOutBuf, 0, fOutBuf, 0, chunkLen )
+                  add( fOutBuf, 0, fInBuf, 0, chunkLen )
+                  val chunkLen2 = lim.process( fInBuf, 0, fOutBuf, 0, chunkLen )
+                  afNew.write( outBuf, 0, chunkLen2 )
+                  written += chunkLen2
+                  done += chunkLen
+               }
+               pos += entry.fade
+            }
+            shrink += entry.span.length - entry.fade
+         }
+         clear( fInBuf, 0, 8192 )
+         while( written < pos ) {
+            val chunkLen   = math.min( pos - written, 8192 ).toInt
+            val chunkLen2  = lim.process( fInBuf, 0, fOutBuf, 0, chunkLen )
+            afNew.write( outBuf, 0, chunkLen2 )
+            written += chunkLen2
+         }
       }
    }
 
    private def appendBody( oldFileO: Option[ File ], appFile: File, offset: Long, len: Long ) {
       import DSP._
 
-      try {
-         val sub     = createDir( dir, dirPrefix )
-         val fNew    = new File( sub, audioName )
-         val afApp   = AudioFile.openRead( appFile )
+      updateLoop { afNew =>
+         val afApp = AudioFile.openRead( appFile )
          try {
-            val afNew   = openMonoWrite( fNew )
-            try {
-               afApp.seek( offset )
-               val fdLen = oldFileO.map( fOld => {
-                  val afOld   = AudioFile.openRead( fOld )
-                  try {
-                     require( afOld.numChannels == afApp.numChannels, "Database append - channel mismatch" )
-                     val _fdLen = min( afOld.numFrames, len, secondsToFrames( 0.1 )).toInt
-                     afOld.copyTo( afNew, afOld.numFrames - _fdLen )
-                     if( _fdLen > 0 ) {
-                        val fo      = SignalFader( 0L, _fdLen, 1f, 0f )  // make it linear, so we don't need a limiter
-                        val foBuf   = afOld.buffer( _fdLen )
-                        afOld.read( foBuf )
-                        fo.process( foBuf( 0 ), 0, foBuf( 0 ), 0, _fdLen )
-                        val fi      = SignalFader( 0L, _fdLen, 0f, 1f )
-                        val fiBuf   = afApp.buffer( _fdLen )
-                        afApp.read( fiBuf )
-                        fi.process( fiBuf( 0 ), 0, fiBuf( 0 ), 0, _fdLen )
-                        add( fiBuf( 0 ), 0, foBuf( 0 ), 0, _fdLen )
-                        afNew.write( fiBuf )
-                     }
-                     _fdLen
-                  } finally {
-                     afOld.close()
+            afApp.seek( offset )
+            val fdLen = oldFileO.map( fOld => {
+               val afOld   = AudioFile.openRead( fOld )
+               try {
+                  require( afOld.numChannels == afApp.numChannels, "Database append - channel mismatch" )
+                  val _fdLen = min( afOld.numFrames, len, secondsToFrames( 0.1 )).toInt
+                  afOld.copyTo( afNew, afOld.numFrames - _fdLen )
+                  if( _fdLen > 0 ) {
+                     val fo      = SignalFader( 0L, _fdLen, 1f, 0f )  // make it linear, so we don't need a limiter
+                     val foBuf   = afOld.buffer( _fdLen )
+                     afOld.read( foBuf )
+                     fo.process( foBuf( 0 ), 0, foBuf( 0 ), 0, _fdLen )
+                     val fi      = SignalFader( 0L, _fdLen, 0f, 1f )
+                     val fiBuf   = afApp.buffer( _fdLen )
+                     afApp.read( fiBuf )
+                     fi.process( fiBuf( 0 ), 0, fiBuf( 0 ), 0, _fdLen )
+                     add( fiBuf( 0 ), 0, foBuf( 0 ), 0, _fdLen )
+                     afNew.write( fiBuf )
                   }
-               }).getOrElse( 0 )
-               afApp.copyTo( afNew, len - fdLen )
-               afNew.close()
-               atomic( "Database append finalize" ) { tx =>
-                  val oldState   = stateRef.swap( State( Some( (fNew, afNew.spec) ), None ))( tx )
-                  val oldFileO2  = oldState.spec.map( _._1 )
-                  tx.afterCommit { _ =>
-                     oldFileO2.foreach { fOld2 =>
-                        deleteDir( fOld2.getParentFile )
-                     }
-                  }
+                  _fdLen
+               } finally {
+                  afOld.close()
                }
-            } finally {
-               if( afNew.isOpen ) afNew.close()
-            }
+            }).getOrElse( 0 )
+            afApp.copyTo( afNew, len - fdLen )
          } finally {
             afApp.close()
          }
-
-      } catch {
-         case e =>
-            println( "Database append - Ooops, should handle exceptions" )
-            e.printStackTrace()
       }
    }
 
