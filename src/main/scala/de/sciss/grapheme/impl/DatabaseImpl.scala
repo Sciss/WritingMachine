@@ -182,9 +182,9 @@ extends AbstractDatabase with ExtractionImpl {
 
    def length( implicit tx: Tx ) : Long = stateRef().spec.map( _._2.numFrames ).getOrElse( 0L )
 
-   def reader( implicit tx: Tx ) : FrameReader = {
+   def reader( implicit tx: Tx ) : FrameReader.Factory = {
       val f = stateRef().spec.map( _._1 ).getOrElse( sys.error( "Database contains no file" ))
-      FrameReader( f )
+      FrameReader.Factory( f )
    }
 
    def asStrugatziDatabase( implicit tx: Tx ) : FutureResult[ File ] = {

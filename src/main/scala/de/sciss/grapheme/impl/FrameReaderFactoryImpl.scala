@@ -1,5 +1,5 @@
 /*
- *  Phrase.scala
+ *  FrameReaderFactoryImpl.scala
  *  (WritingMachine)
  *
  *  Copyright (c) 2011 Hanns Holger Rutz. All rights reserved.
@@ -24,26 +24,25 @@
  */
 
 package de.sciss.grapheme
+package impl
 
-import de.sciss.synth.proc.Proc
-import impl.PhraseImpl
 import java.io.File
+import de.sciss.synth.io.{AudioFile, Frames}
 
-object Phrase {
-   def fromFile( file: File )( implicit tx: Tx ) : Phrase = PhraseImpl.fromFile( file )
-}
-trait Phrase {
-   def length: Long
-   def player( implicit tx: Tx ) : Proc
-   def asStrugatzkiInput( implicit tx: Tx ) : FutureResult[ File ]
+object FrameReaderFactoryImpl {
+   def apply( file: File ) : FrameReader.Factory = new FrameReader.Factory {
+      def open() : FrameReader = {
+         val af = AudioFile.openRead( file )
+         new ReaderImpl( af )
+      }
+   }
 
-   def reader( implicit tx: Tx ) : FrameReader.Factory
+   private final class ReaderImpl( af: AudioFile ) extends FrameReader {
+      def read( buf: Frames, off: Long, len: Int ) {
+         if( off != af.position ) { af.position = off }
+         af.read( buf, 0, len )
+      }
 
-//   /**
-//    * Plays this phrase into a given diffusion proc
-//    * (by creating a gen proc and connecting its output
-//    * to the diffusion). The result represents the
-//    * phrase
-//    */
-//   def playInto( diffusion: Proc )( implicit tx: Tx ) : FutureResult[ Unit ]
+      def close() { af.close() }
+   }
 }
