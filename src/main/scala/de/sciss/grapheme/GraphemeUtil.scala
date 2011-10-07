@@ -37,7 +37,7 @@ object GraphemeUtil {
     */
    var tmpDir           = new File( "/tmp" )
 
-   val seed = 1L
+   val seed = 2L
    private val rng = new util.Random( seed )
 
    val deleteTempFilesOnExit  = false

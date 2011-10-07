@@ -29,10 +29,12 @@ import de.sciss.nuages.NuagesLauncher
 import de.sciss.synth.proc.ProcTxn
 import java.io.File
 import de.sciss.strugatzki.Strugatzki
+import collection.immutable.{IndexedSeq => IIdxSeq}
 
 object WritingMachine {
    val logPanel            = false
-   val masterChannelOffset = 0
+   val masterChannelOffset = 2 // 0
+   val soloChannelOffset   = Some( 0 )
    val masterNumChannels   = 9
    val tvChannelOffset     = 0
 //   val strugatzkiDatabase  = new File( "/Users/hhrutz/Documents/devel/LeereNull/feature/" )
@@ -69,6 +71,7 @@ object WritingMachine {
       o.outputBusChannels  = masterChans.max + 1
       o.inputBusChannels   = tvChannelOffset + 1
       cfg.masterChannels   = Some( masterChans )
+      cfg.soloChannels     = soloChannelOffset.map( off => IIdxSeq( off, off + 1 ))
       cfg.collector        = true
       val c                = cfg.controlSettings
       c.log                = logPanel
