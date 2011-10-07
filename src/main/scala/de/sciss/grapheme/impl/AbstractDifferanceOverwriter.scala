@@ -26,12 +26,7 @@
 package de.sciss.grapheme
 package impl
 
-import java.io.File
-
-//object AbstractDifferanceOverwriter {
-//   def apply() : DifferanceOverwriter = new AbstractDifferanceOverwriter()
-//}
-abstract class AbstractDifferanceOverwriter private () extends DifferanceOverwriter {
+abstract class AbstractDifferanceOverwriter extends DifferanceOverwriter {
    import GraphemeUtil._
 
    /**
@@ -42,6 +37,11 @@ abstract class AbstractDifferanceOverwriter private () extends DifferanceOverwri
     * Cross-fade punch-out duration in seconds
     */
    def fadeOutMotion : Motion
+
+   def limiter() : SignalLimiter
+   def inFader( off: Long, len: Long ) : SignalFader
+   def outFader( off: Long, len: Long ) : SignalFader
+   def ramp( off: Long, len: Long, start: Float, stop: Float ) : SignalFader
 
    def perform( phrase: Phrase, source: OverwriteInstruction, target: DifferanceDatabaseQuery.Match )
               ( implicit tx: Tx ) : FutureResult[ Phrase ] = {
@@ -89,11 +89,6 @@ abstract class AbstractDifferanceOverwriter private () extends DifferanceOverwri
          threadBody( pReaderF, dbReaderF, pSpanFd, dbSpanFd, target.boostIn, target.boostOut, fadeIn, fadeOut, pLen, dbLen )
       }
    }
-
-   def limiter() : SignalLimiter
-   def inFader( off: Long, len: Long ) : SignalFader
-   def outFader( off: Long, len: Long ) : SignalFader
-   def ramp( off: Long, len: Long, start: Float, stop: Float ) : SignalFader
 
    private def add( in: Array[ Float ], inOff: Int, out: Array[ Float ], outOff: Int, len: Int ) {
       var i = 0

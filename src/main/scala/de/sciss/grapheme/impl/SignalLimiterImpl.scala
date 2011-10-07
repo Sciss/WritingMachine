@@ -1,3 +1,28 @@
+/*
+ *  SignalLimiterImpl.scala
+ *  (WritingMachine)
+ *
+ *  Copyright (c) 2011 Hanns Holger Rutz. All rights reserved.
+ *
+ *  This software is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU General Public License
+ *  as published by the Free Software Foundation; either
+ *  version 2, june 1991 of the License, or (at your option) any later version.
+ *
+ *  This software is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ *  General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public
+ *  License (gpl.txt) along with this software; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *
+ *  For further information, please contact Hanns Holger Rutz at
+ *  contact@sciss.de
+ */
+
 package de.sciss.grapheme
 package impl
 
@@ -8,9 +33,6 @@ object SignalLimiterImpl {
    def apply( lookAhead: Int, ceil: Float = 0.977f ) : SignalLimiter = new SignalLimiterImpl( lookAhead, ceil )
 }
 final class SignalLimiterImpl private ( lookAhead: Int, ceil: Float ) extends SignalLimiter {
-//   allocsize = (m_bufsize * 3).nextPowerOfTwo
-//   m_table = buffer of size allocsize
-
    private var flips          = 0
    private var pos            = 0
    private var slope          = 0.0f
@@ -25,15 +47,11 @@ final class SignalLimiterImpl private ( lookAhead: Int, ceil: Float ) extends Si
    private var xOutOff        = lookAhead * 2
    private val xFlushOff      = lookAhead * 4
 
-//   private var latency        = lookAhead * 2
-
    def process( in: Array[ Float ], inOff: Int, out: Array[ Float ], outOff: Int, len: Int ) : Int = {
       var remain     = len
       var buf_remain = lookAhead - pos
       var inPos      = inOff
       var outPos     = outOff
-
-//      val res        = math.max( 0, len - latency )   // number of samples written to out in this go
 
       while( remain > 0 ) {
          val nsmps   = math.min( remain, buf_remain )
@@ -100,20 +118,21 @@ final class SignalLimiterImpl private ( lookAhead: Int, ceil: Float ) extends Si
          remain -= nsmps
       }
 
-//      res
       outPos - outOff
    }
 
-   def flush( out: Array[ Float ], outOff: Int, len: Int ) : Int = {
-      var remain  = len
-      var outPos  = outOff
-      while( remain > 0 ) {
-         val nsmps   = math.min( lookAhead, remain )
-         val pr      = process( xBuf, xFlushOff, out, outPos, nsmps )
-         outPos += pr
-         remain -= pr
-      }
+   def latency : Int = lookAhead * 2
 
-      outPos - outOff
-   }
+//   def flush( out: Array[ Float ], outOff: Int, len: Int ) : Int = {
+//      var remain  = len
+//      var outPos  = outOff
+//      while( remain > 0 ) {
+//         val nsmps   = math.min( lookAhead, remain )
+//         val pr      = process( xBuf, xFlushOff, out, outPos, nsmps )
+//         outPos += pr
+//         remain -= pr
+//      }
+//
+//      outPos - outOff
+//   }
 }
