@@ -37,6 +37,9 @@ object GraphemeUtil {
     */
    var tmpDir           = new File( "/tmp" )
 
+   val seed = 1L
+   private val rng = new util.Random( seed )
+
    val deleteTempFilesOnExit  = false
 
    def logNoTx( text: => String ) {
@@ -53,7 +56,8 @@ object GraphemeUtil {
 
    def timeString() = (new java.util.Date()).toString
 
-   def random( implicit tx: Tx ) : Double = math.random // XXX
+//   def random( implicit tx: Tx ) : Double = math.random // XXX
+   def random( implicit tx: Tx ) : Double = rng.nextDouble()
    def sampleRate : Double = 44100.0
 
    def random( top: Int )( implicit tx: Tx ) : Int = (random * top).toInt

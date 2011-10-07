@@ -28,7 +28,6 @@ package impl
 
 import de.sciss.synth.io.AudioFile
 import de.sciss.strugatzki.{FeatureSegmentation, FeatureExtraction, Span => SSpan}
-import collection.immutable.{IndexedSeq => IIdxSeq}
 import java.io.File
 
 object DifferanceOverwriteSelectorImpl {
@@ -42,7 +41,8 @@ final class DifferanceOverwriteSelectorImpl () extends AbstractDifferanceOverwri
    val fragmentDurationMotion    = Motion.exprand( 0.5, 4.0 )
    val fragmentDeviationMotion   = Motion.constant( 0.5 )
    val positionMotion            = Motion.constant( 1 )
-   val frequencyMotion           = Motion.constant( 4 )
+//   val frequencyMotion           = Motion.constant( 4 )
+   val frequencyMotion           = Motion.constant( 8 )     // XXX
    val spectralMotion            = Motion.linrand( 0.25, 0.75 )
 
    /**
