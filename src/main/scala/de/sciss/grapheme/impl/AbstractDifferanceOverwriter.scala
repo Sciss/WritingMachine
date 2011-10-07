@@ -26,6 +26,8 @@
 package de.sciss.grapheme
 package impl
 
+import java.io.File
+
 //object AbstractDifferanceOverwriter {
 //   def apply() : DifferanceOverwriter = new AbstractDifferanceOverwriter()
 //}
@@ -84,14 +86,145 @@ abstract class AbstractDifferanceOverwriter private () extends DifferanceOverwri
       val dbReaderF  = db.reader
 
       threadFuture( "AbstractDifferanceOverwriter perform" ) {
-         performBody( pReaderF, dbReaderF, pSpanFd, dbSpanFd, target.boostIn, target.boostOut, fadeIn, fadeOut )
+         threadBody( pReaderF, dbReaderF, pSpanFd, dbSpanFd, target.boostIn, target.boostOut, fadeIn, fadeOut, pLen, dbLen )
       }
    }
 
-   private def performBody( pReaderF: FrameReader.Factory, dbReaderF: FrameReader.Factory,
-                            sourceSpan: Span, targetSpan: Span, boostIn: Float, boostOut: Float,
-                            fadeIn: Long, fadeOut: Long ) : Phrase = {
+   def limiter() : SignalLimiter
+   def inFader( off: Long, len: Long ) : SignalFader
+   def outFader( off: Long, len: Long ) : SignalFader
+   def ramp( off: Long, len: Long, start: Float, stop: Float ) : SignalFader
 
-      sys.error( "TODO" )
+   private def add( in: Array[ Float ], inOff: Int, out: Array[ Float ], outOff: Int, len: Int ) {
+      var i = 0
+      while( i < len ) {
+         out( outOff + i ) += in( inOff + i )
+         i += 1
+      }
+   }
+
+   private def clear( in: Array[ Float ], inOff: Int, len: Int ) {
+      var i = 0
+      while( i < len ) {
+         in( inOff + i ) = 0f
+         i += 1
+      }
+   }
+
+   private def threadBody( sourceReaderF: FrameReader.Factory, overReaderF: FrameReader.Factory,
+                            sourceSpan: Span, overSpan: Span, boostIn: Float, boostOut: Float,
+                            fadeIn: Long, fadeOut: Long, phraseLen: Long, overLen: Long ) : Phrase = {
+
+      val afSrc = sourceReaderF.open()
+      try {
+         val afOvr = overReaderF.open()
+         try {
+            val fTgt    = createTempFile( ".aif", None )
+            val afTgt   = openMonoWrite( fTgt )
+            try {
+               val bufSrc  = afTgt.buffer( 8192 )
+               val fBufSrc = bufSrc( 0 )
+               val bufOvr  = afTgt.buffer( 8192 )
+               val fBufOvr = bufOvr( 0 )
+               val bufTgt  = afTgt.buffer( 8192 )
+               val fBufTgt = bufTgt( 0 )
+
+               def readOvr( off: Long, len: Int ) {
+                  val len2 = math.min( overLen - off, len ).toInt
+                  afOvr.read( bufOvr, off, len2 )
+                  if( len2 < len ) {
+                     clear( fBufOvr, len2, len - len2 )
+                  }
+               }
+
+               // pre
+               var off     = sourceSpan.start
+               var stop    = sourceSpan.stop
+               while( off < stop ) {
+                  val chunkLen = math.min( stop - off, 8192 ).toInt
+                  afSrc.read( bufSrc, off, chunkLen )
+                  afTgt.write( bufSrc, 0, chunkLen )
+                  off += chunkLen
+               }
+
+               // fadein
+               val lim     = limiter()
+               val fSrcOut = outFader( 0L, fadeIn )
+               val fOvrIn  = inFader( 0L, fadeIn )
+               val rampOvr = ramp( 0L, overSpan.length, boostIn, boostOut )
+               stop       += fadeIn
+               var ovrOff  = overSpan.start
+//               var ovrOff2 = overSpan.start
+
+               while( off < stop ) {
+                  val chunkLen = math.min( stop - off, 8192 ).toInt
+                  readOvr( ovrOff, chunkLen )
+                  rampOvr.process( fBufOvr, 0, fBufSrc, 0, chunkLen )
+                  fOvrIn.process( fBufOvr, 0, fBufSrc, 0, chunkLen )
+                  val chunkLen2  = lim.process( fBufOvr, 0, fBufTgt, 0, chunkLen )
+                  afSrc.read( bufSrc, off, chunkLen2 )
+                  fSrcOut.process( fBufSrc, 0, fBufSrc, 0, chunkLen2 )
+                  add( fBufSrc, 0, fBufTgt, 0, chunkLen2 )
+                  afTgt.write( bufTgt, 0, chunkLen2 )
+                  ovrOff   += chunkLen
+                  off      += chunkLen2
+//                  ovrOff2  += chunkLen2
+               }
+               // over
+               // off = sourceSpan.start + fadeIn
+               off   = 0
+               stop  = overSpan.length - (fadeIn + fadeOut)
+               while( off < stop ) {
+                  val chunkLen   = math.min( stop - off, 8192 ).toInt
+                  readOvr( ovrOff, chunkLen )
+                  rampOvr.process( fBufOvr, 0, fBufSrc, 0, chunkLen )
+                  val chunkLen2 = lim.process( fBufOvr, 0, fBufTgt, 0, chunkLen )
+                  afTgt.write( bufTgt, 0, chunkLen2 )
+                  ovrOff   += chunkLen
+                  off      += chunkLen2
+               }
+
+               // fadeout
+               val fSrcIn  = inFader( 0L, fadeOut )
+               val fOvrOut = outFader( 0L, fadeOut )
+               off   = sourceSpan.stop - fadeOut
+               stop  = off + fadeOut
+               while( off < stop ) {
+                  val chunkLen = math.min( stop - off, 8192 ).toInt
+                  readOvr( ovrOff, chunkLen )
+                  rampOvr.process( fBufOvr, 0, fBufSrc, 0, chunkLen )
+                  fOvrOut.process( fBufOvr, 0, fBufSrc, 0, chunkLen )
+                  val chunkLen2 = lim.process( fBufOvr, 0, fBufTgt, 0, chunkLen )
+                  afSrc.read( bufSrc, off, chunkLen2 )
+                  fSrcIn.process( fBufSrc, 0, fBufSrc, 0, chunkLen2 )
+                  add( fBufSrc, 0, fBufTgt, 0, chunkLen2 )
+                  afTgt.write( bufTgt, 0, chunkLen2 )
+                  ovrOff   += chunkLen
+                  off      += chunkLen2
+               }
+
+               // post
+               stop  = phraseLen
+               while( off < stop ) {
+                  val chunkLen = math.min( stop - off, 8192 ).toInt
+                  afSrc.read( bufSrc, off, chunkLen )
+                  afTgt.write( bufSrc, 0, chunkLen )
+                  off += chunkLen
+               }
+//               Phrase.fromFile( fTgt )
+//               fTgt
+               atomic( "AbstractDifferanceOverwriter phrase from file" ) { implicit tx =>
+                  Phrase.fromFile( fTgt )
+               }
+
+            } finally {
+               afTgt.close()
+            }
+         } finally {
+            afOvr.close()
+         }
+      } finally {
+         afSrc.close()
+      }
    }
 }
