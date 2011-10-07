@@ -137,8 +137,8 @@ abstract class AbstractDifferanceOverwriter extends DifferanceOverwriter {
                }
 
                // pre
-               var off     = sourceSpan.start
-               var stop    = sourceSpan.stop
+               var off     = 0L
+               var stop    = sourceSpan.start
 if( verbose ) println( "COPY PRE FROM " + afSrc + ". SPAN = " + Span( off, stop ))
                while( off < stop ) {
                   val chunkLen = math.min( stop - off, 8192 ).toInt
