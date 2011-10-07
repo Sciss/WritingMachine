@@ -92,7 +92,7 @@ final class DifferanceOverwriteSelectorImpl () extends AbstractDifferanceOverwri
             val extr             = FeatureExtraction.Settings.fromXMLFile( metaInput )
             val spec             = AudioFile.readSpec( extr.audioInput )
             val set              = FeatureSegmentation.SettingsBuilder()
-            set.databaseFolder   = strugatzkiDatabase
+            set.databaseFolder   = databaseDir
             set.metaInput        = metaInput
             val corrLen          = atomic( "DifferanceOverwriteSelectorImpl : correlationMotion" ) { tx1 =>
                secondsToFrames( correlationMotion.step( tx1 ))

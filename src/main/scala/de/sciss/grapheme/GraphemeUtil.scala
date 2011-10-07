@@ -72,7 +72,8 @@ object GraphemeUtil {
    def openMonoWrite( f: File ) : AudioFile =
       AudioFile.openWrite( f, AudioFileSpec( AudioFileType.AIFF, SampleFormat.Float, 1, sampleRate ))
 
-   def strugatzkiDatabase = WritingMachine.strugatzkiDatabase
+//   def strugatzkiDatabase = WritingMachine.strugatzkiDatabase
+   def databaseDir = WritingMachine.databaseDir
 
    def createTempFile( suffix: String, dir: Option[ File ]) : File = {
       val res = File.createTempFile( "grapheme", suffix, dir.getOrElse( tmpDir ))
@@ -101,5 +102,9 @@ object GraphemeUtil {
          }
       }
       ev
+   }
+
+   def warnToDo( what: => String ) {
+      logNoTx( "+++MISSING+++ " + what )
    }
 }

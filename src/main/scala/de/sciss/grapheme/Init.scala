@@ -26,21 +26,33 @@
 package de.sciss.grapheme
 
 import de.sciss.nuages.{NuagesLauncher}
+import java.io.File
 
 object Init {
+   import WritingMachine._
+
    private val instanceRef = Ref.empty[ Init ]
 
    def instance( implicit tx: Tx ) : Init = instanceRef()
 
    def apply( r: NuagesLauncher.Ready )( implicit tx: Tx ) : Init = {
       require( instanceRef() == null )
-      val coll = r.frame.panel.collector.getOrElse( sys.error( "Requires nuages to use collector" ))
-      val spat = DifferanceSpat( coll )
-      val i    = new Init( spat )
+      val coll    = r.frame.panel.collector.getOrElse( sys.error( "Requires nuages to use collector" ))
+      val spat    = DifferanceSpat( coll )
+      val db      = Database( databaseDir )
+      val tv      = Television.fromFile( new File( testDir, "aljazeera1.aif" ))
+      val filler  = DifferanceDatabaseFiller( db, tv )
+      val thinner = DifferanceDatabaseThinner( db )
+      val trace   = PhraseTrace()
+      val query   = DifferanceDatabaseQuery( db )
+      val over    = DifferanceOverwriter()
+      val overSel = DifferanceOverwriteSelector()
+      val start   = Phrase.fromFile( new File( testDir, "amazonas_m.aif" ))
+      val diff    = DifferanceAlgorithm( spat, thinner, filler, trace, query, over, overSel, start )
+      val i       = new Init( diff )
       instanceRef.set( i )
       i
    }
 }
-final class Init private ( val spat: DifferanceSpat ) {
-
+final class Init private ( val differance: DifferanceAlgorithm ) {
 }

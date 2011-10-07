@@ -1,5 +1,5 @@
 /*
- *  DifferanceAlgorithm.scala
+ *  PhraseTraceImpl.scala
  *  (WritingMachine)
  *
  *  Copyright (c) 2011 Hanns Holger Rutz. All rights reserved.
@@ -24,21 +24,23 @@
  */
 
 package de.sciss.grapheme
+package impl
 
-import impl.{DifferanceAlgorithmImpl => Impl}
+import collection.immutable.{IndexedSeq => IIdxSeq}
 
-object DifferanceAlgorithm {
-   def apply( spat: DifferanceSpat,
-              thinner: DifferanceDatabaseThinner,
-              filler: DifferanceDatabaseFiller,
-              phraseTrace: PhraseTrace,
-              databaseQuery: DifferanceDatabaseQuery,
-              overwriter: DifferanceOverwriter,
-              overwriteSelector: DifferanceOverwriteSelector,
-              startPhrase: Phrase ) : DifferanceAlgorithm = {
-      Impl( spat, thinner, filler, phraseTrace, databaseQuery, overwriter, overwriteSelector, startPhrase )
-   }
+object PhraseTraceImpl {
+   def apply() : PhraseTrace = new PhraseTraceImpl()
 }
-trait DifferanceAlgorithm {
-   def step( implicit tx: Tx ) : FutureResult[ Unit ]
+final class PhraseTraceImpl private () extends PhraseTrace {
+   import de.sciss.grapheme.GraphemeUtil._
+
+   def add( phrase: Phrase )( implicit txn: Tx ) {
+      warnToDo( "PhraseTraceImpl : add" )
+   }
+
+   def series( n: Int )( implicit txn: Tx ) : IIdxSeq[ Phrase ] = {
+//      warnToDo( "PhraseTraceImpl : series" )
+//      IIdxSeq.empty
+      sys.error( "TODO" )
+   }
 }

@@ -29,7 +29,7 @@ import actors.sciss.FutureActor
 import actors.{Futures, Future}
 import concurrent.stm.Txn
 
-trait FutureResult[ A ] {
+trait FutureResult[ +A ] {
    def isSet : Boolean
    def apply() : A
 //   def respond( fun: A => Unit ) : Unit
@@ -39,6 +39,8 @@ trait FutureResult[ A ] {
 }
 
 object FutureResult {
+   import GraphemeUtil._
+
 //   def enrich[ A ]( f: IIdxSeq[ FutureResult[ A ]]) : FutureResult[ IIdxSeq[ A ]] = sys.error( "TODO" )
 
    def now[ A ]( value: A ) : FutureResult[ A ] = {
@@ -49,7 +51,15 @@ object FutureResult {
 
 //   def unitSeq( fs: FutureResult[ _ ]* ) : FutureResult[ Unit ] = sys.error( "TODO" )
 
-   def par( fs: FutureResult[ _ ]* ) : FutureResult[ Unit ] = sys.error( "TODO" )
+   def par[ A ]( fs: FutureResult[ A ]* ) : FutureResult[ Unit ] = {
+      warnToDo( "FutureResult : par" )
+      fs.headOption match {
+         case Some( fut0 ) =>
+            val seq = fs.drop( 1 ).foldLeft[ FutureResult[ Any ]]( fut0 )( (futPred, futSucc) => futPred.flatMap( _ => futSucc ))
+            seq.map { _ => }
+         case None => futureOf( () )
+      }
+   }
 
 //   /**
 //    * Strictly sequentially resolves the futures, that is, it awaits the result of the

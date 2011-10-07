@@ -25,7 +25,13 @@
 
 package de.sciss.grapheme
 
+import impl.{PhraseTraceImpl => Impl}
+import collection.immutable.{IndexedSeq => IIdxSeq}
+
+object PhraseTrace {
+   def apply() : PhraseTrace = Impl()
+}
 trait PhraseTrace {
    def add( phrase: Phrase )( implicit txn: Tx ) : Unit
-   def series( n: Int )( implicit txn: Tx ) : IndexedSeq[ Phrase ]
+   def series( n: Int )( implicit txn: Tx ) : IIdxSeq[ Phrase ]
 }

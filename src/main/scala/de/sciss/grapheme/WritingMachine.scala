@@ -35,7 +35,9 @@ object WritingMachine {
    val masterChannelOffset = 0
    val masterNumChannels   = 9
    val tvChannelOffset     = 0
-   val strugatzkiDatabase  = new File( "/Users/hhrutz/Documents/devel/LeereNull/feature/" )
+//   val strugatzkiDatabase  = new File( "/Users/hhrutz/Documents/devel/LeereNull/feature/" )
+   val databaseDir         = new File( "audio_work", "database" )
+   val testDir             = new File( "audio_work", "test" )
 
    val name          = "WritingMachine"
    val version       = 0.10
@@ -74,8 +76,14 @@ object WritingMachine {
       i.imports          :+= "de.sciss.grapheme._"
       i.text               =
 """val init = Init.instance
-val phrase = Phrase.fromFile( new java.io.File( "/Users/hhrutz/Desktop/SP_demo/tapes/Affoldra_RoomLp.aif" ))
-init.spat.rotateAndProject( phrase )
+// val phrase = Phrase.fromFile( new java.io.File( "/Users/hhrutz/Desktop/SP_demo/tapes/Affoldra_RoomLp.aif" ))
+// init.spat.rotateAndProject( phrase )
+actors.Actor.actor {
+   val futStep = atomic( "algo step" )( tx => init.differance.step( tx ))
+   println( "==== Awaiting Diff Alg Step ====" )
+   futStep()
+   println( "==== Diff Alg Step Done ====" )
+}
 """
       NuagesLauncher( cfg )
    }

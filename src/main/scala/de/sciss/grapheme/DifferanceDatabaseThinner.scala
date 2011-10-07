@@ -26,7 +26,11 @@
 package de.sciss.grapheme
 
 import collection.immutable.{IndexedSeq => IIdxSeq}
+import impl.{DifferanceDatabaseThinnerImpl => Impl}
 
+object DifferanceDatabaseThinner {
+   def apply( database: Database ) : DifferanceDatabaseThinner = Impl( database )
+}
 trait DifferanceDatabaseThinner {
    def remove( spans: IIdxSeq[ Span ])( implicit tx: Tx ) : FutureResult[ Unit ]
 }
