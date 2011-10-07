@@ -27,6 +27,7 @@ package de.sciss.grapheme
 
 import de.sciss.nuages.{NuagesLauncher}
 import java.io.File
+import actors.{TIMEOUT, Actor}
 
 object Init {
    import WritingMachine._
@@ -48,11 +49,58 @@ object Init {
       val over    = DifferanceOverwriter()
       val overSel = DifferanceOverwriteSelector()
       val start   = Phrase.fromFile( new File( testDir, "amazonas_m.aif" ))
-      val diff    = DifferanceAlgorithm( spat, thinner, filler, trace, query, over, overSel, start )
-      val i       = new Init( diff )
+      val diff    = DifferanceAlgorithm( /* spat, */ thinner, filler, trace, query, over, overSel, start )
+      val i       = new Init( start, spat, diff )
       instanceRef.set( i )
       i
    }
 }
-final class Init private ( val differance: DifferanceAlgorithm ) {
+final class Init private ( _phrase0: Phrase, val spat: DifferanceSpat, val differance: DifferanceAlgorithm ) {
+   import GraphemeUtil._
+
+   val numSectors = WritingMachine.masterNumChannels
+
+   var overlapMotion : Motion = Motion.exprand( 1.1, numSectors - 1 )
+
+   var keepGoing = true
+
+   private lazy val actor = new Actor {
+      def act() {
+         var p          = _phrase0 // atomic( "Init query current phrase" )( tx => differance.currentPhrase( tx ))
+         val spatFuts   = Array.fill( numSectors )( futureOf( () ))
+         var sector     = 0
+         while( keepGoing ) {
+            if( !spatFuts( sector ).isSet ) {
+               logNoTx( "==== Init wait for busy spat sector " + (sector+1) + " ====" )
+               spatFuts( sector )()
+            }
+            // differance process
+            val (spatFut, stepFut) = atomic( "Init difference algorithm step" ) { tx =>
+               val _spatFut = spat.rotateAndProject( p )( tx )
+               val _stepFut = differance.step( tx )
+               (_spatFut, _stepFut)
+            }
+            spatFuts( sector ) = spatFut
+            val dur = atomic( "Init determining rotation duration" ) { tx =>
+               val olap = overlapMotion.step( tx )
+               framesToSeconds( p.length ) / olap
+            }
+            val t1      = System.currentTimeMillis()
+            logNoTx( "==== Init wait for algorithm step ====" )
+            p = stepFut()
+            val dur2    = (System.currentTimeMillis() - t1) * 0.001
+            val dur3    = dur - dur2
+            if( dur3 > 0.0 ) {
+               logNoTx( "==== Init waiting " + dur3 + " secs to next rotation ====" )
+               receiveWithin( (dur3 * 1000).toLong ) {
+                  case TIMEOUT =>
+               }
+            }
+
+            sector = (sector + 1) % numSectors
+         }
+      }
+   }
+
+   def start() { actor.start() }
 }

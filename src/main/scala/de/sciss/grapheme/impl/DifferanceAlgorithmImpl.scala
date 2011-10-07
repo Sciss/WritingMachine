@@ -27,7 +27,7 @@ package de.sciss.grapheme
 package impl
 
 object DifferanceAlgorithmImpl {
-   def apply( spat: DifferanceSpat,
+   def apply( /* spat: DifferanceSpat, */
               thinner: DifferanceDatabaseThinner,
               filler: DifferanceDatabaseFiller,
               phraseTrace: PhraseTrace,
@@ -35,12 +35,12 @@ object DifferanceAlgorithmImpl {
               overwriter: DifferanceOverwriter,
               overwriteSelector: DifferanceOverwriteSelector,
               startPhrase: Phrase ) : DifferanceAlgorithm = {
-      new DifferanceAlgorithmImpl( spat, thinner, filler, phraseTrace, databaseQuery, overwriter, overwriteSelector,
+      new DifferanceAlgorithmImpl( /* spat, */ thinner, filler, phraseTrace, databaseQuery, overwriter, overwriteSelector,
                                    startPhrase )
    }
 }
 
-class DifferanceAlgorithmImpl private ( val spat: DifferanceSpat,
+class DifferanceAlgorithmImpl private ( /* val spat: DifferanceSpat, */
                                         val thinner: DifferanceDatabaseThinner,
                                         val filler: DifferanceDatabaseFiller,
                                         val phraseTrace: PhraseTrace,

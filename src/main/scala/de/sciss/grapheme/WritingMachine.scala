@@ -79,6 +79,8 @@ object WritingMachine {
       i.imports          :+= "de.sciss.grapheme._"
       i.text               =
 """val init = Init.instance
+init.start()
+
 // val phrase = Phrase.fromFile( new java.io.File( "/Users/hhrutz/Desktop/SP_demo/tapes/Affoldra_RoomLp.aif" ))
 // init.spat.rotateAndProject( phrase )
 actors.Actor.actor {

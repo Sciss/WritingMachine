@@ -34,7 +34,7 @@ abstract class AbstractDifferanceAlgorithm extends DifferanceAlgorithm {
 
    def startPhrase: Phrase
 
-   def spat: DifferanceSpat
+//   def spat: DifferanceSpat
    def overwriteSelector: DifferanceOverwriteSelector
    def overwriter: DifferanceOverwriter
    def databaseQuery: DifferanceDatabaseQuery
@@ -44,17 +44,17 @@ abstract class AbstractDifferanceAlgorithm extends DifferanceAlgorithm {
 
    private val phraseRef = Ref( startPhrase )
 
-   def step( implicit tx: Tx ) : FutureResult[ Unit ] = step0( tx )
+   def step( implicit tx: Tx ) : FutureResult[ Phrase ] = step0( tx )
 
-   private def step0( tx0: Tx ) : FutureResult[ Unit ] = {
+   private def step0( tx0: Tx ) : FutureResult[ Phrase ] = {
       val p          = phraseRef()( tx0 )
-      val futSpat    = spat.rotateAndProject( p )( tx0 )
+//      val futSpat    = spat.rotateAndProject( p )( tx0 )
       val futOvrSel  = overwriteSelector.selectParts( p )( tx0 )
-      futOvrSel.flatMap( mapOverwrites( p, futSpat ) _ )
+      futOvrSel.flatMap( mapOverwrites( p /*, futSpat */) _ )
    }
 
-   private def mapOverwrites( p: Phrase, fut0: FutureResult[ Unit ] )
-                            ( instrs: IIdxSeq[ OverwriteInstruction ]) : FutureResult[ Unit ] = {
+   private def mapOverwrites( p: Phrase /*, fut0: FutureResult[ Unit ]*/ )
+                            ( instrs: IIdxSeq[ OverwriteInstruction ]) : FutureResult[ Phrase ] = {
 
       val futFill = atomic( "DifferanceAlgorithm : filler.perform" )( tx5 => filler.perform( tx5 ))
 
@@ -85,11 +85,11 @@ abstract class AbstractDifferanceAlgorithm extends DifferanceAlgorithm {
          atomic( "DifferanceAlgorithm : thinner.remove" )( tx3 =>
             thinner.remove( targets.map( _.span )( breakOut ))( tx3 ))
       }
-      val futUnit1 = futPNew.map { pNew =>
+      val futResult = futPNew.map { pNew =>
          atomic( "DifferanceAlgorithm : update" ) { tx4 =>
             phraseRef.set( pNew )( tx4 )
             phraseTrace.add( pNew )( tx4 )
-            ()
+            pNew
          }
       }
 
@@ -97,7 +97,11 @@ abstract class AbstractDifferanceAlgorithm extends DifferanceAlgorithm {
 //          atomic( "DifferanceAlgorithm : filler.perform" )( tx5 => filler.perform( tx5 ))}
 //       FutureResult.par( futUnit1, futUnit2, fut0 )
 
-      val futUnit2 = futThin
-      FutureResult.par( futUnit1, futUnit2, fut0 )
+      futThin.flatMap( _ => futResult )
+//
+//      val futUnit2 = futThin
+//      FutureResult.par( futUnit1, futUnit2 /*, fut0 */ )
    }
+
+//   def currentPhrase( implicit tx: Tx ) : Phrase = phraseRef()
 }

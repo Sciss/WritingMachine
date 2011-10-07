@@ -28,7 +28,7 @@ package de.sciss.grapheme
 import impl.{DifferanceAlgorithmImpl => Impl}
 
 object DifferanceAlgorithm {
-   def apply( spat: DifferanceSpat,
+   def apply( /* spat: DifferanceSpat, */
               thinner: DifferanceDatabaseThinner,
               filler: DifferanceDatabaseFiller,
               phraseTrace: PhraseTrace,
@@ -36,9 +36,10 @@ object DifferanceAlgorithm {
               overwriter: DifferanceOverwriter,
               overwriteSelector: DifferanceOverwriteSelector,
               startPhrase: Phrase ) : DifferanceAlgorithm = {
-      Impl( spat, thinner, filler, phraseTrace, databaseQuery, overwriter, overwriteSelector, startPhrase )
+      Impl( /* spat, */ thinner, filler, phraseTrace, databaseQuery, overwriter, overwriteSelector, startPhrase )
    }
 }
 trait DifferanceAlgorithm {
-   def step( implicit tx: Tx ) : FutureResult[ Unit ]
+   def step( implicit tx: Tx ) : FutureResult[ Phrase ]
+//   def currentPhrase( implicit tx: Tx ) : Phrase
 }

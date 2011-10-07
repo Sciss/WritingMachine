@@ -61,7 +61,10 @@ object GraphemeUtil {
    def sampleRate : Double = 44100.0
 
    def random( top: Int )( implicit tx: Tx ) : Int = (random * top).toInt
+
    def secondsToFrames( secs: Double ) : Long = (secs * sampleRate + 0.5).toLong
+   def framesToSeconds( frames: Long ) : Double = frames / sampleRate
+
    def max( i: Int, is: Int* ) : Int = is.foldLeft( i )( _ max _ )
    def max( n: Long, ns: Long* ) : Long = ns.foldLeft( n )( _ max _ )
    def max( d: Double, ds: Double* ) : Double = ds.foldLeft( d )( _ max _ )

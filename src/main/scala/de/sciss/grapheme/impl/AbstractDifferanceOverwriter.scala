@@ -27,7 +27,7 @@ package de.sciss.grapheme
 package impl
 
 object AbstractDifferanceOverwriter {
-   var verbose = true
+   var verbose = false
 }
 abstract class AbstractDifferanceOverwriter extends DifferanceOverwriter {
    import GraphemeUtil._
