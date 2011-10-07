@@ -145,7 +145,7 @@ extends AbstractDatabase with ExtractionImpl {
       val sorted     = filtered.sortBy( _.span.start )
 
       val merged     = {
-         var pred       = RemovalInstruction( Span( -1L, -1L ), 0L, 0L )
+         var pred       = RemovalInstruction( Span( -1L, -1L ), 0L )
          var res        = IIdxSeq.empty[ RemovalInstruction ]
          sorted.foreach { succ =>
             pred.merge( succ ) match {
@@ -168,12 +168,11 @@ extends AbstractDatabase with ExtractionImpl {
    }
 
    private def removalBody( oldFileO: Option[ File ], entries: IIdxSeq[ RemovalInstruction ]) {
-//      try {
-//         val sub     = createDir( dir, dirPrefix )
-//         val fNew    = new File( sub, audioName )
-//         val afNew   = AudioFile.openWrite( fNew,
-//            AudioFileSpec( AudioFileType.AIFF, SampleFormat.Float, afApp.numChannels, afApp.sampleRate ))
-//         try {
+      try {
+         val sub     = createDir( dir, dirPrefix )
+         val fNew    = new File( sub, audioName )
+         val afNew   = openMonoWrite( fNew )
+         try {
 //            oldFileO.foreach { fOld =>
 //               val afOld   = AudioFile.openRead( fOld )
 //               try {
@@ -184,22 +183,25 @@ extends AbstractDatabase with ExtractionImpl {
 //               }
 //            }
 //            afApp.copyTo( afNew, length )
-//            val oldState   = stateRef.swap( State( Some( (fNew, afNew.spec) ), None ))
-//            val oldFileO2  = oldState.spec.map( _._1 )
-//            tx.afterCommit { _ =>
-//               oldFileO2.foreach { fOld2 =>
-//                  deleteDir( fOld2.getParentFile )
+//            afNew.close()
+//            atomic( "Database append finalize" ) { tx =>
+//               val oldState   = stateRef.swap( State( Some( (fNew, afNew.spec) ), None ))( tx )
+//               val oldFileO2  = oldState.spec.map( _._1 )
+//               tx.afterCommit { _ =>
+//                  oldFileO2.foreach { fOld2 =>
+//                     deleteDir( fOld2.getParentFile )
+//                  }
 //               }
 //            }
-//         } finally {
-//            afNew.close()
-//         }
-//
-//      } catch {
-//         case e =>
-//            println( "Database removal - Ooops, should handle exceptions" )
-//            e.printStackTrace()
-//      }
+         } finally {
+            if( afNew.isOpen ) afNew.close()
+         }
+
+      } catch {
+         case e =>
+            println( "Database removal - Ooops, should handle exceptions" )
+            e.printStackTrace()
+      }
    }
 
    private def appendBody( oldFileO: Option[ File ], appFile: File, offset: Long, len: Long ) {
@@ -210,8 +212,7 @@ extends AbstractDatabase with ExtractionImpl {
          val fNew    = new File( sub, audioName )
          val afApp   = AudioFile.openRead( appFile )
          try {
-            val afNew   = AudioFile.openWrite( fNew,
-               AudioFileSpec( AudioFileType.AIFF, SampleFormat.Float, afApp.numChannels, afApp.sampleRate ))
+            val afNew   = openMonoWrite( fNew )
             try {
                afApp.seek( offset )
                val fdLen = oldFileO.map( fOld => {

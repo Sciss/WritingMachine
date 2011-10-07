@@ -77,13 +77,12 @@ abstract class AbstractDifferanceDatabaseThinner extends DifferanceDatabaseThinn
          val stop       = max( start, min( dbLen, stop0 ))
          val spanT      = Span( start, stop )
 
-         val fadeIn0    = secondsToFrames( fadeInMotion.step )
-         val fadeOut0   = secondsToFrames( fadeOutMotion.step )
-         val fiPre      = min( spanT.start, fadeIn0/2 )
-         val foPost     = min( dbLen - spanT.stop, fadeOut0/2 )
+         val fade0      = secondsToFrames( fadeInMotion.step )
+         val fiPre      = min( spanT.start, fade0/2 )
+         val foPost     = min( dbLen - spanT.stop, fade0/2 )
 
-         val fiPost0    = fadeIn0 - fiPre
-         val foPre0     = fadeOut0 - foPost
+         val fiPost0    = fade0 - fiPre
+         val foPre0     = fade0 - foPost
          val innerSum   = fiPost0 + foPre0
 
          val (fiPost, foPre) = if( innerSum <= spanT.length ) {
@@ -94,10 +93,11 @@ abstract class AbstractDifferanceDatabaseThinner extends DifferanceDatabaseThinn
          }
 
          val spanTFd    = Span( spanT.start - fiPre, spanT.stop + foPost )
-         val fadeIn     = fiPre + fiPost
-         val fadeOut    = foPre + foPost
+//         val fadeIn     = fiPre + fiPost
+//         val fadeOut    = foPre + foPost
+         val fade       = min( fiPre + fiPost, foPre + foPost )
 
-         RemovalInstruction( spanTFd, fadeIn, fadeOut )
+         RemovalInstruction( spanTFd, fade )
       }
 
       database.remove( instrs )
