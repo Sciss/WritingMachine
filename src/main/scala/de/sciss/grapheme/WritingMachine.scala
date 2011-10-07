@@ -28,7 +28,7 @@ package de.sciss.grapheme
 import de.sciss.nuages.NuagesLauncher
 import de.sciss.synth.proc.ProcTxn
 import java.io.File
-import de.sciss.strugatzki.{FeatureExtraction, Strugatzki}
+import de.sciss.strugatzki.Strugatzki
 
 object WritingMachine {
    val logPanel            = false

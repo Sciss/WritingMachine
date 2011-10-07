@@ -1,0 +1,47 @@
+Fri Oct 07 17:08:35 BST 2011 PhraseImpl : stop proc
+Fri Oct 07 17:08:35 BST 2011 Proc : futureStopped listener
+scala.concurrent.stm.skel.RollbackError$
+Fri Oct 07 17:08:35 BST 2011 AbstractDifferanceSpat : dispose phrase proc
+java.lang.RuntimeException: Buffer(<localhost>,0) : <32768,1,44100.0> : has already been freed
+	at scala.sys.package$.error(package.scala:27)
+	at de.sciss.synth.Buffer.release(Buffer.scala:155)
+	at de.sciss.synth.Buffer.freeMsg(Buffer.scala:146)
+	at de.sciss.synth.Buffer.freeMsg(Buffer.scala:136)
+	at de.sciss.synth.proc.impl.BufferCueImpl$$anonfun$disposeWith$2.apply(BufferImpl.scala:78)
+	at de.sciss.synth.proc.impl.BufferCueImpl$$anonfun$disposeWith$2.apply(BufferImpl.scala:78)
+	at de.sciss.synth.proc.RichNode$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$1$$anonfun$apply$2.apply(RichObject.scala:80)
+	at de.sciss.synth.proc.RichNode$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$1$$anonfun$apply$2.apply(RichObject.scala:79)
+	at scala.collection.Iterator$class.foreach(Iterator.scala:660)
+	at scala.collection.LinearSeqLike$$anon$1.foreach(LinearSeqLike.scala:50)
+	at scala.collection.IterableLike$class.foreach(IterableLike.scala:73)
+	at scala.collection.immutable.Queue.foreach(Queue.scala:30)
+	at de.sciss.synth.proc.RichNode$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$1.apply(RichObject.scala:79)
+	at de.sciss.synth.proc.RichNode$$anonfun$1$$anonfun$apply$mcV$sp$1$$anonfun$apply$1.apply(RichObject.scala:77)
+	at de.sciss.synth.proc.ProcTxn$$anonfun$atomic$1.apply(ProcTxn.scala:103)
+	at de.sciss.synth.proc.ProcTxn$$anonfun$atomic$1.apply(ProcTxn.scala:95)
+	at scala.concurrent.stm.ccstm.InTxnImpl.runBlock(InTxnImpl.scala:533)
+	at scala.concurrent.stm.ccstm.InTxnImpl.topLevelAttempt(InTxnImpl.scala:489)
+	at scala.concurrent.stm.ccstm.InTxnImpl.topLevelAtomicImpl(InTxnImpl.scala:360)
+	at scala.concurrent.stm.ccstm.InTxnImpl.atomic(InTxnImpl.scala:240)
+	at scala.concurrent.stm.ccstm.CCSTMExecutor.apply(CCSTMExecutor.scala:24)
+	at de.sciss.synth.proc.ProcTxn$.atomic(ProcTxn.scala:95)
+	at de.sciss.synth.proc.ProcTxn$$anonfun$spawnAtomic$1.apply$mcV$sp(ProcTxn.scala:92)
+	at de.sciss.synth.proc.ProcTxn$$anon$1$$anonfun$act$1$$anonfun$apply$2.apply(ProcTxn.scala:78)
+	at de.sciss.synth.proc.ProcTxn$$anon$1$$anonfun$act$1$$anonfun$apply$2.apply(ProcTxn.scala:76)
+	at scala.actors.ReactorTask.run(ReactorTask.scala:31)
+	at scala.actors.Reactor$class.resumeReceiver(Reactor.scala:129)
+	at de.sciss.synth.proc.ProcTxn$$anon$1.scala$actors$ReplyReactor$$super$resumeReceiver(ProcTxn.scala:75)
+	at scala.actors.ReplyReactor$class.resumeReceiver(ReplyReactor.scala:68)
+	at de.sciss.synth.proc.ProcTxn$$anon$1.resumeReceiver(ProcTxn.scala:75)
+	at scala.actors.Actor$class.searchMailbox(Actor.scala:500)
+	at de.sciss.synth.proc.ProcTxn$$anon$1.searchMailbox(ProcTxn.scala:75)
+	at scala.actors.Reactor$$anonfun$startSearch$1$$anonfun$apply$mcV$sp$1.apply$mcV$sp(Reactor.scala:117)
+	at scala.actors.Reactor$$anonfun$startSearch$1$$anonfun$apply$mcV$sp$1.apply(Reactor.scala:114)
+	at scala.actors.Reactor$$anonfun$startSearch$1$$anonfun$apply$mcV$sp$1.apply(Reactor.scala:114)
+	at scala.actors.ReactorTask.run(ReactorTask.scala:33)
+	at scala.actors.threadpool.ThreadPoolExecutor.runWorker(Unknown Source)
+	at scala.actors.threadpool.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.lang.Thread.run(Thread.java:637)
+Fri Oct 07 17:09:53 BST 2011 PhraseImpl : stop proc
+Fri Oct 07 17:09:53 BST 2011 Proc : futureStopped listener
+Fri Oct 07 17:09:53 BST 2011 AbstractDifferanceSpat : dispose phrase proc
