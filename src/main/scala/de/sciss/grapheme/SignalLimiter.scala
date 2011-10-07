@@ -25,7 +25,8 @@
 
 package de.sciss.grapheme
 
-import impl.{SignalLimiterImpl => Impl}
+//import impl.{SignalLimiterImpl => Impl}
+import impl.{DummyLimiterImpl => Impl} // XXX
 
 object SignalLimiter {
    /**

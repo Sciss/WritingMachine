@@ -134,12 +134,16 @@ if( verbose ) {
                val bufTgt  = afTgt.buffer( 8192 )
                val fBufTgt = bufTgt( 0 )
 
+//var gaga = -1L
                def readOvr( off: Long, len: Int ) {
+//if( gaga >= 0L ) require( gaga == off )
                   val len2 = math.max( 0, math.min( overLen - off, len )).toInt
                   afOvr.read( bufOvr, off, len2 )
                   if( len2 < len ) {
                      clear( fBufOvr, len2, len - len2 )
                   }
+//clear( fBufOvr, 0, len2 )
+//gaga = off + len
                }
 
                // pre
@@ -167,7 +171,7 @@ if( verbose ) println( "-------- FADEIN FROM " + afOvr + ". SPAN = " + Span( ovr
                   val chunkLen = math.min( stop - off, 8192 ).toInt
                   readOvr( ovrOff, chunkLen )
                   rampOvr.process( fBufOvr, 0, fBufSrc, 0, chunkLen )
-                  fOvrIn.process( fBufOvr, 0, fBufSrc, 0, chunkLen )
+                  fOvrIn.process( fBufOvr, 0, fBufOvr, 0, chunkLen )
                   val chunkLen2  = lim.process( fBufOvr, 0, fBufTgt, 0, chunkLen )
                   afSrc.read( bufSrc, off, chunkLen2 )
                   fSrcOut.process( fBufSrc, 0, fBufSrc, 0, chunkLen2 )
@@ -203,7 +207,7 @@ if( verbose ) println( "-------- FADEOUT. SPAN (SRC) = " + Span( off, stop ))
                   val chunkLen = math.min( stop - off, 8192 ).toInt
                   readOvr( ovrOff, chunkLen )
                   rampOvr.process( fBufOvr, 0, fBufSrc, 0, chunkLen )
-                  fOvrOut.process( fBufOvr, 0, fBufSrc, 0, chunkLen )
+                  fOvrOut.process( fBufOvr, 0, fBufOvr, 0, chunkLen )
                   val chunkLen2 = lim.process( fBufOvr, 0, fBufTgt, 0, chunkLen )
                   afSrc.read( bufSrc, off, chunkLen2 )
                   fSrcIn.process( fBufSrc, 0, fBufSrc, 0, chunkLen2 )
