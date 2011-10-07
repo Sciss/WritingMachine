@@ -123,7 +123,7 @@ object Tests {
    def segmAndThen( fun: (Phrase, IIdxSeq[ OverwriteInstruction ]) => Unit ) {
       val sel     = DifferanceOverwriteSelector()
       val (phrase, spanFut) = atomic( "Test phrase.fromFile" ) { implicit tx =>
-         val p = Phrase.fromFile( new File( "/Users/hhrutz/Desktop/from_mnemo/Amazonas.aif" ))
+         val p = Phrase.fromFile( new File( "audio_work/test/amazonas_m.aif" ))
          (p, sel.selectParts( p ))
       }
       // make a real one... Actor.actor {} produces a daemon actor,

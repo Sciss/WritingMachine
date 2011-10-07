@@ -39,6 +39,8 @@ object PhraseImpl {
 
       val path       = file.getAbsolutePath
       val spec       = audioFileSpec( path )
+      require( spec.numChannels == 1 )    // we need this now for the overwriter implementation!
+
       val factName   = "phrase-file-" + file.getName // XXX hrmpfff
       val fact       = ProcDemiurg.factories.find( _.name == factName ).getOrElse {
          gen( factName ) {

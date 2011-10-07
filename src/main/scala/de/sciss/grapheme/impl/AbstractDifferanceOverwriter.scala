@@ -26,8 +26,12 @@
 package de.sciss.grapheme
 package impl
 
+object AbstractDifferanceOverwriter {
+   var verbose = true
+}
 abstract class AbstractDifferanceOverwriter extends DifferanceOverwriter {
    import GraphemeUtil._
+   import AbstractDifferanceOverwriter._
 
    /**
     * Cross-fade punch-in duration in seconds
@@ -125,7 +129,7 @@ abstract class AbstractDifferanceOverwriter extends DifferanceOverwriter {
                val fBufTgt = bufTgt( 0 )
 
                def readOvr( off: Long, len: Int ) {
-                  val len2 = math.min( overLen - off, len ).toInt
+                  val len2 = math.max( 0, math.min( overLen - off, len )).toInt
                   afOvr.read( bufOvr, off, len2 )
                   if( len2 < len ) {
                      clear( fBufOvr, len2, len - len2 )
@@ -135,6 +139,7 @@ abstract class AbstractDifferanceOverwriter extends DifferanceOverwriter {
                // pre
                var off     = sourceSpan.start
                var stop    = sourceSpan.stop
+if( verbose ) println( "COPY PRE FROM " + afSrc + ". SPAN = " + Span( off, stop ))
                while( off < stop ) {
                   val chunkLen = math.min( stop - off, 8192 ).toInt
                   afSrc.read( bufSrc, off, chunkLen )
@@ -151,6 +156,7 @@ abstract class AbstractDifferanceOverwriter extends DifferanceOverwriter {
                var ovrOff  = overSpan.start
 //               var ovrOff2 = overSpan.start
 
+if( verbose ) println( "FADEIN FROM " + afOvr + ". SPAN = " + Span( ovrOff, ovrOff + (stop - off) ))
                while( off < stop ) {
                   val chunkLen = math.min( stop - off, 8192 ).toInt
                   readOvr( ovrOff, chunkLen )
@@ -165,10 +171,12 @@ abstract class AbstractDifferanceOverwriter extends DifferanceOverwriter {
                   off      += chunkLen2
 //                  ovrOff2  += chunkLen2
                }
+
                // over
                // off = sourceSpan.start + fadeIn
                off   = 0
                stop  = overSpan.length - (fadeIn + fadeOut)
+if( verbose ) println( "OVERWRITING. SPAN = " + Span( ovrOff, ovrOff + (stop - off) ))
                while( off < stop ) {
                   val chunkLen   = math.min( stop - off, 8192 ).toInt
                   readOvr( ovrOff, chunkLen )
@@ -184,6 +192,7 @@ abstract class AbstractDifferanceOverwriter extends DifferanceOverwriter {
                val fOvrOut = outFader( 0L, fadeOut )
                off   = sourceSpan.stop - fadeOut
                stop  = off + fadeOut
+if( verbose ) println( "FADEOUT. SPAN (SRC) = " + Span( off, stop ))
                while( off < stop ) {
                   val chunkLen = math.min( stop - off, 8192 ).toInt
                   readOvr( ovrOff, chunkLen )
@@ -200,6 +209,7 @@ abstract class AbstractDifferanceOverwriter extends DifferanceOverwriter {
 
                // post
                stop  = phraseLen
+if( verbose ) println( "COPY POST TO " + fTgt + ". SPAN (SRC) = " + Span( off, stop ))
                while( off < stop ) {
                   val chunkLen = math.min( stop - off, 8192 ).toInt
                   afSrc.read( bufSrc, off, chunkLen )

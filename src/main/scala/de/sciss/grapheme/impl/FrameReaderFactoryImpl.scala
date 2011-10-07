@@ -38,6 +38,8 @@ object FrameReaderFactoryImpl {
    }
 
    private final class ReaderImpl( af: AudioFile ) extends FrameReader {
+      override def toString = "FrameReader(" + af.file.getOrElse( "?" ) + ")"
+
       def read( buf: Frames, off: Long, len: Int ) {
          if( off != af.position ) { af.position = off }
          af.read( buf, 0, len )
