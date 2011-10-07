@@ -35,6 +35,7 @@ object MotionImpl {
    def linrand( lo: Double, hi: Double ) : Motion = LinRand( lo, hi )
    def exprand( lo: Double, hi: Double ) : Motion = ExpRand( lo, hi )
    def sine( lo: Double, hi: Double, period: Int ) : Motion = Sine( lo, hi, period )
+   def walk( lo: Double, hi: Double, maxStep: Double ) : Motion = Walk( lo, hi, maxStep )
 
    def linlin( in: Motion, inLo: Double, inHi: Double, outLo: Double, outHi: Double ) : Motion =
       LinLin( in, inLo, inHi, outLo, outHi )
@@ -54,6 +55,21 @@ object MotionImpl {
    private final case class ExpRand( lo: Double, hi: Double ) extends Motion {
       val factor = math.log( hi / lo )
       def step( implicit tx: Tx ) : Double = math.exp( random * factor ) * lo
+   }
+
+   private final case class Walk( lo: Double, hi: Double, maxStep: Double ) extends Motion {
+      val maxStep2   = maxStep * 2
+      val current    = Ref( Double.NaN )
+      def step( implicit tx: Tx ) : Double = {
+         val c = current()
+         val v = if( c.isNaN ) {
+            random * (hi - lo) + lo
+         } else {
+            max( lo, min( hi, c + (random * maxStep2 - maxStep)))
+         }
+         current.set( v )
+         v
+      }
    }
 
    private final case class Sine( lo: Double, hi: Double, period: Int ) extends Motion {

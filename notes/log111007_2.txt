@@ -1,0 +1,156 @@
+Fri Oct 07 20:08:42 BST 2011 DifferanceAlgorithm : databaseQuery
+Fri Oct 07 20:08:51 BST 2011 DifferanceAlgorithm : databaseQuery
+Fri Oct 07 20:09:01 BST 2011 DifferanceAlgorithm : databaseQuery
+Fri Oct 07 20:09:11 BST 2011 DifferanceAlgorithm : databaseQuery
+Fri Oct 07 20:09:20 BST 2011 +++MISSING+++ DifferanceDatabaseThinnerImpl : remove
+Fri Oct 07 20:09:20 BST 2011 DifferanceAlgorithm : thinner.remove
+Fri Oct 07 20:09:20 BST 2011 DifferanceAlgorithm : overwriter.perform
+Fri Oct 07 20:09:20 BST 2011 threadFuture started : AbstractDifferanceOverwriter perform
+Fri Oct 07 20:09:21 BST 2011 AbstractDifferanceOverwriter phrase from file
+Fri Oct 07 20:09:21 BST 2011 DifferanceAlgorithm : overwriter.perform
+Fri Oct 07 20:09:21 BST 2011 threadFuture started : AbstractDifferanceOverwriter perform
+Fri Oct 07 20:09:21 BST 2011 AbstractDifferanceOverwriter phrase from file
+Fri Oct 07 20:09:21 BST 2011 DifferanceAlgorithm : overwriter.perform
+Fri Oct 07 20:09:21 BST 2011 threadFuture started : AbstractDifferanceOverwriter perform
+Fri Oct 07 20:09:22 BST 2011 AbstractDifferanceOverwriter phrase from file
+Fri Oct 07 20:09:22 BST 2011 DifferanceAlgorithm : overwriter.perform
+Fri Oct 07 20:09:22 BST 2011 threadFuture started : AbstractDifferanceOverwriter perform
+Fri Oct 07 20:09:22 BST 2011 AbstractDifferanceOverwriter phrase from file
+Fri Oct 07 20:09:22 BST 2011 DifferanceAlgorithm : overwriter.perform
+Fri Oct 07 20:09:22 BST 2011 threadFuture started : AbstractDifferanceOverwriter perform
+Fri Oct 07 20:09:22 BST 2011 AbstractDifferanceOverwriter phrase from file
+Fri Oct 07 20:09:22 BST 2011 DifferanceAlgorithm : overwriter.perform
+Fri Oct 07 20:09:22 BST 2011 threadFuture started : AbstractDifferanceOverwriter perform
+Fri Oct 07 20:09:23 BST 2011 AbstractDifferanceOverwriter phrase from file
+Fri Oct 07 20:09:23 BST 2011 DifferanceAlgorithm : overwriter.perform
+Fri Oct 07 20:09:23 BST 2011 threadFuture started : AbstractDifferanceOverwriter perform
+Fri Oct 07 20:09:23 BST 2011 AbstractDifferanceOverwriter phrase from file
+Fri Oct 07 20:09:23 BST 2011 DifferanceAlgorithm : overwriter.perform
+Fri Oct 07 20:09:23 BST 2011 threadFuture started : AbstractDifferanceOverwriter perform
+Fri Oct 07 20:09:24 BST 2011 AbstractDifferanceOverwriter phrase from file
+Fri Oct 07 20:09:24 BST 2011 +++MISSING+++ PhraseTraceImpl : add
+Fri Oct 07 20:09:24 BST 2011 DifferanceAlgorithm : update
+Fri Oct 07 20:09:24 BST 2011 AbstractDifferanceOverwriteSelector selectParts
+Fri Oct 07 20:09:24 BST 2011 Init difference algorithm step
+Fri Oct 07 20:09:24 BST 2011 Init determining rotation duration
+Fri Oct 07 20:09:24 BST 2011 ==== Init wait for algorithm step ====
+Fri Oct 07 20:09:25 BST 2011 PhraseImpl caching feature extraction
+Fri Oct 07 20:09:25 BST 2011 DifferanceOverwriteSelectorImpl : correlationMotion
+Fri Oct 07 20:09:25 BST 2011 DifferanceOverwriteSelector : success
+Fri Oct 07 20:09:25 BST 2011 AbstractDifferanceOverwriteSelector selectParts
+Fri Oct 07 20:09:25 BST 2011 DifferanceOverwriteSelectorImpl : correlationMotion
+Fri Oct 07 20:09:25 BST 2011 DifferanceOverwriteSelector : success
+Fri Oct 07 20:09:25 BST 2011 AbstractDifferanceOverwriteSelector selectParts
+Fri Oct 07 20:09:25 BST 2011 DifferanceOverwriteSelectorImpl : correlationMotion
+Fri Oct 07 20:09:25 BST 2011 DifferanceOverwriteSelector : success
+Fri Oct 07 20:09:25 BST 2011 AbstractDifferanceOverwriteSelector selectParts
+Fri Oct 07 20:09:25 BST 2011 DifferanceOverwriteSelectorImpl : correlationMotion
+Fri Oct 07 20:09:25 BST 2011 DifferanceOverwriteSelector : success
+Fri Oct 07 20:09:25 BST 2011 AbstractDifferanceOverwriteSelector selectParts
+Fri Oct 07 20:09:25 BST 2011 DifferanceOverwriteSelectorImpl : correlationMotion
+Fri Oct 07 20:09:25 BST 2011 DifferanceOverwriteSelector : success
+Fri Oct 07 20:09:25 BST 2011 AbstractDifferanceOverwriteSelector selectParts
+Fri Oct 07 20:09:25 BST 2011 DifferanceOverwriteSelectorImpl : correlationMotion
+Fri Oct 07 20:09:25 BST 2011 DifferanceOverwriteSelector : success
+Fri Oct 07 20:09:25 BST 2011 AbstractDifferanceOverwriteSelector selectParts
+Fri Oct 07 20:09:25 BST 2011 DifferanceOverwriteSelectorImpl : correlationMotion
+Fri Oct 07 20:09:25 BST 2011 DifferanceOverwriteSelector : success
+Fri Oct 07 20:09:25 BST 2011 AbstractDifferanceOverwriteSelector selectParts
+Fri Oct 07 20:09:25 BST 2011 DifferanceOverwriteSelectorImpl : correlationMotion
+Fri Oct 07 20:09:25 BST 2011 DifferanceOverwriteSelector : success
+Fri Oct 07 20:09:25 BST 2011 DifferanceAlgorithm : filler.perform
+Fri Oct 07 20:09:25 BST 2011 threadFuture started : FileTelevisionImpl capture
+Fri Oct 07 20:09:25 BST 2011 AbstractDifferanceDatabaseFiller appending
+Fri Oct 07 20:09:25 BST 2011 threadFuture started : Database append
+
+Fri Oct 07 20:10:17 BST 2011 Database append tx
+Fri Oct 07 20:10:17 BST 2011 DifferanceAlgorithm : databaseQuery
+Fri Oct 07 20:10:17 BST 2011 threadFuture started : DatabaseImpl copy file audio_work/database/feat_norms.aif
+Fri Oct 07 20:10:17 BST 2011 DatabaseImpl extract
+
+Fri Oct 07 20:11:01 BST 2011 DatabaseImpl saving feature extraction cache
+Fri Oct 07 20:11:13 BST 2011 DifferanceAlgorithm : databaseQuery
+Fri Oct 07 20:11:14 BST 2011 PhraseImpl : stop proc
+Fri Oct 07 20:11:14 BST 2011 Proc : futureStopped listener
+Fri Oct 07 20:11:14 BST 2011 AbstractDifferanceSpat : dispose phrase proc
+Fri Oct 07 20:11:22 BST 2011 DifferanceAlgorithm : databaseQuery
+Fri Oct 07 20:11:32 BST 2011 DifferanceAlgorithm : databaseQuery
+Fri Oct 07 20:11:40 BST 2011 DifferanceAlgorithm : databaseQuery
+Fri Oct 07 20:11:48 BST 2011 DifferanceAlgorithm : databaseQuery
+Fri Oct 07 20:11:56 BST 2011 DifferanceAlgorithm : databaseQuery
+Fri Oct 07 20:12:05 BST 2011 DifferanceAlgorithm : databaseQuery
+Fri Oct 07 20:12:14 BST 2011 +++MISSING+++ DifferanceDatabaseThinnerImpl : remove
+Fri Oct 07 20:12:14 BST 2011 DifferanceAlgorithm : thinner.remove
+Fri Oct 07 20:12:14 BST 2011 DifferanceAlgorithm : overwriter.perform
+Fri Oct 07 20:12:14 BST 2011 threadFuture started : AbstractDifferanceOverwriter perform
+Fri Oct 07 20:12:14 BST 2011 AbstractDifferanceOverwriter phrase from file
+Fri Oct 07 20:12:14 BST 2011 DifferanceAlgorithm : overwriter.perform
+Fri Oct 07 20:12:14 BST 2011 threadFuture started : AbstractDifferanceOverwriter perform
+Fri Oct 07 20:12:15 BST 2011 AbstractDifferanceOverwriter phrase from file
+Fri Oct 07 20:12:15 BST 2011 DifferanceAlgorithm : overwriter.perform
+Fri Oct 07 20:12:15 BST 2011 threadFuture started : AbstractDifferanceOverwriter perform
+Fri Oct 07 20:12:15 BST 2011 AbstractDifferanceOverwriter phrase from file
+Fri Oct 07 20:12:15 BST 2011 DifferanceAlgorithm : overwriter.perform
+Fri Oct 07 20:12:15 BST 2011 threadFuture started : AbstractDifferanceOverwriter perform
+Fri Oct 07 20:12:16 BST 2011 AbstractDifferanceOverwriter phrase from file
+Fri Oct 07 20:12:16 BST 2011 DifferanceAlgorithm : overwriter.perform
+Fri Oct 07 20:12:16 BST 2011 threadFuture started : AbstractDifferanceOverwriter perform
+Fri Oct 07 20:12:16 BST 2011 AbstractDifferanceOverwriter phrase from file
+Fri Oct 07 20:12:16 BST 2011 DifferanceAlgorithm : overwriter.perform
+Fri Oct 07 20:12:16 BST 2011 threadFuture started : AbstractDifferanceOverwriter perform
+Fri Oct 07 20:12:17 BST 2011 AbstractDifferanceOverwriter phrase from file
+Fri Oct 07 20:12:17 BST 2011 DifferanceAlgorithm : overwriter.perform
+Fri Oct 07 20:12:17 BST 2011 threadFuture started : AbstractDifferanceOverwriter perform
+Fri Oct 07 20:12:17 BST 2011 AbstractDifferanceOverwriter phrase from file
+Fri Oct 07 20:12:17 BST 2011 DifferanceAlgorithm : overwriter.perform
+Fri Oct 07 20:12:17 BST 2011 threadFuture started : AbstractDifferanceOverwriter perform
+Fri Oct 07 20:12:18 BST 2011 AbstractDifferanceOverwriter phrase from file
+Fri Oct 07 20:12:18 BST 2011 +++MISSING+++ PhraseTraceImpl : add
+Fri Oct 07 20:12:19 BST 2011 DifferanceAlgorithm : update
+Fri Oct 07 20:12:19 BST 2011 AbstractDifferanceOverwriteSelector selectParts
+Fri Oct 07 20:12:19 BST 2011 Init difference algorithm step
+Fri Oct 07 20:12:19 BST 2011 Init determining rotation duration
+Fri Oct 07 20:12:19 BST 2011 ==== Init wait for algorithm step ====
+Fri Oct 07 20:12:20 BST 2011 PhraseImpl caching feature extraction
+Fri Oct 07 20:12:20 BST 2011 DifferanceOverwriteSelectorImpl : correlationMotion
+Fri Oct 07 20:12:20 BST 2011 DifferanceOverwriteSelector : success
+Fri Oct 07 20:12:20 BST 2011 AbstractDifferanceOverwriteSelector selectParts
+Fri Oct 07 20:12:20 BST 2011 DifferanceOverwriteSelectorImpl : correlationMotion
+Fri Oct 07 20:12:20 BST 2011 DifferanceOverwriteSelector : success
+Fri Oct 07 20:12:20 BST 2011 AbstractDifferanceOverwriteSelector selectParts
+Fri Oct 07 20:12:20 BST 2011 DifferanceOverwriteSelectorImpl : correlationMotion
+Fri Oct 07 20:12:20 BST 2011 DifferanceOverwriteSelector : success
+Fri Oct 07 20:12:20 BST 2011 AbstractDifferanceOverwriteSelector selectParts
+Fri Oct 07 20:12:20 BST 2011 DifferanceOverwriteSelectorImpl : correlationMotion
+Fri Oct 07 20:12:20 BST 2011 DifferanceOverwriteSelector : success
+Fri Oct 07 20:12:20 BST 2011 AbstractDifferanceOverwriteSelector selectParts
+Fri Oct 07 20:12:20 BST 2011 DifferanceOverwriteSelectorImpl : correlationMotion
+Fri Oct 07 20:12:20 BST 2011 DifferanceOverwriteSelector : success
+Fri Oct 07 20:12:20 BST 2011 AbstractDifferanceOverwriteSelector selectParts
+Fri Oct 07 20:12:20 BST 2011 DifferanceOverwriteSelectorImpl : correlationMotion
+Fri Oct 07 20:12:20 BST 2011 DifferanceOverwriteSelector : success
+Fri Oct 07 20:12:20 BST 2011 AbstractDifferanceOverwriteSelector selectParts
+Fri Oct 07 20:12:20 BST 2011 DifferanceOverwriteSelectorImpl : correlationMotion
+Fri Oct 07 20:12:20 BST 2011 DifferanceOverwriteSelector : success
+Fri Oct 07 20:12:20 BST 2011 AbstractDifferanceOverwriteSelector selectParts
+Fri Oct 07 20:12:20 BST 2011 DifferanceOverwriteSelectorImpl : correlationMotion
+Fri Oct 07 20:12:20 BST 2011 DifferanceOverwriteSelector : success
+Fri Oct 07 20:12:20 BST 2011 DifferanceAlgorithm : filler.perform
+Fri Oct 07 20:12:20 BST 2011 threadFuture started : FileTelevisionImpl capture
+Fri Oct 07 20:12:20 BST 2011 AbstractDifferanceDatabaseFiller appending
+Fri Oct 07 20:12:20 BST 2011 threadFuture started : Database append
+
+Fri Oct 07 20:13:21 BST 2011 Database append tx
+Fri Oct 07 20:13:21 BST 2011 DifferanceAlgorithm : databaseQuery
+Fri Oct 07 20:13:21 BST 2011 threadFuture started : DatabaseImpl copy file audio_work/database/feat_norms.aif
+Fri Oct 07 20:13:21 BST 2011 DatabaseImpl extract
+Fri Oct 07 20:14:08 BST 2011 PhraseImpl : stop proc
+Fri Oct 07 20:14:08 BST 2011 Proc : futureStopped listener
+Fri Oct 07 20:14:08 BST 2011 AbstractDifferanceSpat : dispose phrase proc
+Fri Oct 07 20:14:12 BST 2011 DatabaseImpl saving feature extraction cache
+DifferanceDatabaseQuery : Ouch. No matches. Need to handle this case!
+Fri Oct 07 20:14:25 BST 2011 DifferanceDatabaseQuery failureMatch
+Fri Oct 07 20:14:25 BST 2011 DifferanceAlgorithm : databaseQuery
+Fri Oct 07 20:14:35 BST 2011 DifferanceAlgorithm : databaseQuery
+Fri Oct 07 20:14:43 BST 2011 DifferanceAlgorithm : databaseQuery
+Fri Oct 07 20:14:53 BST 2011 DifferanceAlgorithm : databaseQuery

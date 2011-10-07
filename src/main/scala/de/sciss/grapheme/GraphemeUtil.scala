@@ -29,18 +29,18 @@ import java.io.File
 import de.sciss.synth.io.{SampleFormat, AudioFileType, AudioFileSpec, AudioFile}
 
 object GraphemeUtil {
-   var logTransactions  = true
+   var logTransactions        = true
    /**
     * Important: there seem to be problems with communications between
     * WritingMachine and scsynth when using `sys.props( "java.io.tmpdir" )`
     * which gives you something terrible as `/var/folders/M9/M9W+ucwpFzaqGpC2mu3KZq0sUCc/-Tmp-/`
     */
-   var tmpDir           = new File( "/tmp" )
+   var tmpDir                 = new File( "/tmp" )
 
-   val seed = 2L
-   private val rng = new util.Random( seed )
+   val seed                   = 3L  // System.currentTimeMillis()
+   private val rng            = new util.Random( seed )
 
-   val deleteTempFilesOnExit  = false
+   val deleteTempFilesOnExit  = true   // false
 
    def logNoTx( text: => String ) {
       if( logTransactions ) logPrint( text )
@@ -62,7 +62,7 @@ object GraphemeUtil {
 
    def random( top: Int )( implicit tx: Tx ) : Int = (random * top).toInt
 
-   def secondsToFrames( secs: Double ) : Long = (secs * sampleRate + 0.5).toLong
+   def secondsToFrames( secs: Double ) : Long   = (secs * sampleRate + 0.5).toLong
    def framesToSeconds( frames: Long ) : Double = frames / sampleRate
 
    def max( i: Int, is: Int* ) : Int = is.foldLeft( i )( _ max _ )
