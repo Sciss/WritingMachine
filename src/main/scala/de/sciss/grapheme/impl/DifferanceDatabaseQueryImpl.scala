@@ -105,7 +105,7 @@ class DifferanceDatabaseQueryImpl private ( db: Database ) extends AbstractDiffe
          case Success( coll ) =>
             val idx0 = min( coll.size - 1, rank )
             val idx  = if( idx0 == 0 && coll( idx0 ).sim.isNaN ) idx0 + 1 else idx0
-            res.set( if( idx < 0 ) {
+            res.set( if( idx < 0 || idx >= coll.size ) {
                println( "DifferanceDatabaseQuery : Ouch. No matches. Need to handle this case!" )
                failureMatch
             } else {

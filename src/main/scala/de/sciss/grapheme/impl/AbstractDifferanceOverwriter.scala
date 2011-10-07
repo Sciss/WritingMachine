@@ -89,6 +89,12 @@ abstract class AbstractDifferanceOverwriter extends DifferanceOverwriter {
       val pReaderF   = phrase.reader
       val dbReaderF  = db.reader
 
+if( verbose ) {
+   println( "\n-------- overwriter : src " + source.span + ", ovr " + target.span )
+   println( "-------- fadein0 " + fadeIn0 + ", fadeout0 " + fadeOut0 + ", p-len " + pLen + ", db-len " + dbLen )
+   println( "-------- thread body: p-span-fd " + pSpanFd + ", db-span-fd " + dbSpanFd + ", fadein " + fadeIn + ", fadeout " + fadeOut  )
+}
+
       threadFuture( "AbstractDifferanceOverwriter perform" ) {
          threadBody( pReaderF, dbReaderF, pSpanFd, dbSpanFd, target.boostIn, target.boostOut, fadeIn, fadeOut, pLen, dbLen )
       }
@@ -139,7 +145,7 @@ abstract class AbstractDifferanceOverwriter extends DifferanceOverwriter {
                // pre
                var off     = 0L
                var stop    = sourceSpan.start
-if( verbose ) println( "COPY PRE FROM " + afSrc + ". SPAN = " + Span( off, stop ))
+if( verbose ) println( "-------- COPY PRE FROM " + afSrc + ". SPAN = " + Span( off, stop ))
                while( off < stop ) {
                   val chunkLen = math.min( stop - off, 8192 ).toInt
                   afSrc.read( bufSrc, off, chunkLen )
@@ -156,7 +162,7 @@ if( verbose ) println( "COPY PRE FROM " + afSrc + ". SPAN = " + Span( off, stop 
                var ovrOff  = overSpan.start
 //               var ovrOff2 = overSpan.start
 
-if( verbose ) println( "FADEIN FROM " + afOvr + ". SPAN = " + Span( ovrOff, ovrOff + (stop - off) ))
+if( verbose ) println( "-------- FADEIN FROM " + afOvr + ". SPAN = " + Span( ovrOff, ovrOff + (stop - off) ))
                while( off < stop ) {
                   val chunkLen = math.min( stop - off, 8192 ).toInt
                   readOvr( ovrOff, chunkLen )
@@ -176,7 +182,7 @@ if( verbose ) println( "FADEIN FROM " + afOvr + ". SPAN = " + Span( ovrOff, ovrO
                // off = sourceSpan.start + fadeIn
                off   = 0
                stop  = overSpan.length - (fadeIn + fadeOut)
-if( verbose ) println( "OVERWRITING. SPAN = " + Span( ovrOff, ovrOff + (stop - off) ))
+if( verbose ) println( "-------- OVERWRITING. SPAN = " + Span( ovrOff, ovrOff + (stop - off) ))
                while( off < stop ) {
                   val chunkLen   = math.min( stop - off, 8192 ).toInt
                   readOvr( ovrOff, chunkLen )
@@ -192,7 +198,7 @@ if( verbose ) println( "OVERWRITING. SPAN = " + Span( ovrOff, ovrOff + (stop - o
                val fOvrOut = outFader( 0L, fadeOut )
                off   = sourceSpan.stop - fadeOut
                stop  = off + fadeOut
-if( verbose ) println( "FADEOUT. SPAN (SRC) = " + Span( off, stop ))
+if( verbose ) println( "-------- FADEOUT. SPAN (SRC) = " + Span( off, stop ))
                while( off < stop ) {
                   val chunkLen = math.min( stop - off, 8192 ).toInt
                   readOvr( ovrOff, chunkLen )
@@ -209,7 +215,7 @@ if( verbose ) println( "FADEOUT. SPAN (SRC) = " + Span( off, stop ))
 
                // post
                stop  = phraseLen
-if( verbose ) println( "COPY POST TO " + fTgt + ". SPAN (SRC) = " + Span( off, stop ))
+if( verbose ) println( "-------- COPY POST TO " + fTgt + ". SPAN (SRC) = " + Span( off, stop ))
                while( off < stop ) {
                   val chunkLen = math.min( stop - off, 8192 ).toInt
                   afSrc.read( bufSrc, off, chunkLen )
@@ -218,12 +224,13 @@ if( verbose ) println( "COPY POST TO " + fTgt + ". SPAN (SRC) = " + Span( off, s
                }
 //               Phrase.fromFile( fTgt )
 //               fTgt
+               afTgt.close()
                atomic( "AbstractDifferanceOverwriter phrase from file" ) { implicit tx =>
                   Phrase.fromFile( fTgt )
                }
 
             } finally {
-               afTgt.close()
+               if( afTgt.isOpen ) afTgt.close()
             }
          } finally {
             afOvr.close()
