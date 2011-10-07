@@ -37,6 +37,8 @@ object GraphemeUtil {
     */
    var tmpDir           = new File( "/tmp" )
 
+   val deleteTempFilesOnExit  = false
+
    def logNoTx( text: => String ) {
       if( logTransactions ) logPrint( text )
    }
@@ -70,7 +72,7 @@ object GraphemeUtil {
 
    def createTempFile( suffix: String, dir: Option[ File ]) : File = {
       val res = File.createTempFile( "grapheme", suffix, dir.getOrElse( tmpDir ))
-      res.deleteOnExit()
+      if( deleteTempFilesOnExit ) res.deleteOnExit()
       res
    }
 

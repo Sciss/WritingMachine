@@ -59,7 +59,7 @@ object DatabaseImpl {
                   val extr       = FeatureExtraction.Settings.fromXMLFile( fExtr )
                   val spec       = AudioFile.readSpec( extr.audioInput )
                   val normSpec   = AudioFile.readSpec( fNorm )
-                  if( normSpec.numFrames == 1 ) {  // make sure this is there and was fully written
+                  if( normSpec.numFrames == 2 ) {  // make sure this is there and was fully written
                      (Some( (extr.audioInput, spec) ), Some( fExtr ))
                   } else {
                      (None, None)

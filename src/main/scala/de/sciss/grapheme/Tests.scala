@@ -27,12 +27,13 @@ package de.sciss.grapheme
 
 import java.io.File
 import collection.immutable.{IndexedSeq => IIdxSeq}
-import de.sciss.strugatzki.{Strugatzki, FeatureExtraction}
+import de.sciss.strugatzki.{FeatureCorrelation, Strugatzki, FeatureExtraction}
 
 object Tests {
    def main( args: Array[ String ]) {
-      Strugatzki.tmpDir = GraphemeUtil.tmpDir
-      FeatureExtraction.verbose = true
+      Strugatzki.tmpDir          = GraphemeUtil.tmpDir
+      FeatureExtraction.verbose  = true
+      FeatureCorrelation.verbose = true
 
       args.headOption match {
          case Some( "--fut1" )   => future1()

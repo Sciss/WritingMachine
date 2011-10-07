@@ -19,7 +19,7 @@ trait ExtractionImpl {
          val set           = SettingsBuilder()
          set.audioInput    = audioInput
          set.featureOutput = createTempFile( ".aif", dir )
-         val meta          = createTempFile( ".xml", dir )
+         val meta          = createTempFile( "_feat.xml", dir )
          set.metaOutput    = Some( meta )
          val process       = apply( set ) {
             case Aborted =>

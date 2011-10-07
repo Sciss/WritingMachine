@@ -43,8 +43,8 @@ class DifferanceDatabaseQueryImpl private ( db: Database ) extends AbstractDiffe
    val stretchDeviationMotion = Motion.linrand( 0.2, 0.5 )
    val rankMotion             = Motion.linrand( 0, 11 )
 
-   val maxBoostMotion         = Motion.constant( 18 )
-   val minSpacingMotion       = Motion.constant( 0.5 )
+   val maxBoostMotion         = Motion.constant( 30 ) // 18
+   val minSpacingMotion       = Motion.constant( 0.0 ) // 0.5
 
    def findMatch( rank: Int, phrase: Phrase, punchIn: Span, punchOut: Span,
                   minPunch: Long, maxPunch: Long, weight: Double )( implicit tx: Tx ) : FutureResult[ Match ] = {
@@ -85,7 +85,12 @@ class DifferanceDatabaseQueryImpl private ( db: Database ) extends AbstractDiffe
       set.minPunch         = minPunch
       set.maxPunch         = maxPunch
 
-      val process          = apply( set ) {
+      val setb             = set.build
+
+println( "----CORRELATION----" )
+println( setb )
+
+      val process          = apply( setb ) {
          case Aborted =>
             println( "DifferanceDatabaseQuery : Ouch. Aborted. Need to handle this case!" )
             res.set( failureMatch )
