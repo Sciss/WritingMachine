@@ -61,6 +61,8 @@ object PhraseImpl {
    private class Impl( file: File, fact: ProcFactory, val length: Long ) extends Phrase with ExtractionImpl {
       import GraphemeUtil._
 
+      override def toString = "Phrase.fromFile(" + file + ")"
+
       private val featureRef = Ref( Option.empty[ File ])
 
       def player( implicit tx: Tx ) : Proc = fact.make

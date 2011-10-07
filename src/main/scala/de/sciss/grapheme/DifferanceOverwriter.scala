@@ -25,6 +25,11 @@
 
 package de.sciss.grapheme
 
+import impl.{DifferanceOverwriterImpl => Impl}
+
+object DifferanceOverwriter {
+   def apply() : DifferanceOverwriter = Impl()
+}
 trait DifferanceOverwriter {
    def perform( phrase: Phrase, source: OverwriteInstruction, target: DifferanceDatabaseQuery.Match )
               ( implicit tx: Tx ) : FutureResult[ Phrase ]

@@ -41,8 +41,9 @@ object Tests {
          case Some( "--fut3" )   => future3()
          case Some( "--fut4" )   => future4()
          case Some( "--segm" )   => segm()
-         case Some( "--fill" )  => segmAndFill()
+         case Some( "--fill" )   => segmAndFill()
          case Some( "--parts" )  => findParts()
+         case Some( "--over" )  => overwrite()
          case _ => sys.error( "Illegal arguments : " + args )
       }
    }
@@ -56,6 +57,29 @@ object Tests {
    }
 
    def findParts() {
+      findPartsAndThen { (_, _, _) => }
+   }
+
+   def overwrite() {
+      import GraphemeUtil._
+
+      findPartsAndThen { (phrase, ovs, ms) =>
+         val ovr     = DifferanceOverwriter()
+         val zipped  = ovs zip ms
+         // make sure we truncate or expand from the end, as that way the successive overwrites still make sense
+         val sorted  = zipped.sortBy { case (ov, _) => -ov.span.start }
+         val pFut    = sorted.foldLeft( futureOf( phrase )) { case (fut, (ov, m)) =>
+            fut.flatMap( p => atomic( "Test perform overwrite" )( tx1 => ovr.perform( p, ov, m )( tx1 )))
+         }
+         println( "Test ==== Waiting for Overwrites ====")
+         val newPhrase = pFut()
+         println( "Test ==== Overwrite Result ====")
+         println( newPhrase )
+      }
+   }
+
+   def findPartsAndThen( fun: (Phrase, IIdxSeq[ OverwriteInstruction ],
+                               IIdxSeq[ DifferanceDatabaseQuery.Match ]) => Unit ) {
       import GraphemeUtil._
 
       segmAndFillAndThen { (phrase, ovs, fill) =>
@@ -75,6 +99,7 @@ object Tests {
          val ms = futTgt()
          println( "Test ==== Match Results ====")
          ms.foreach( println _ )
+         fun( phrase, ovs, ms )
       }
    }
 
