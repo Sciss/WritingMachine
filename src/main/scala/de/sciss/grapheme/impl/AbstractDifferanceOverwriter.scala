@@ -100,25 +100,11 @@ if( verbose ) {
       }
    }
 
-   private def add( in: Array[ Float ], inOff: Int, out: Array[ Float ], outOff: Int, len: Int ) {
-      var i = 0
-      while( i < len ) {
-         out( outOff + i ) += in( inOff + i )
-         i += 1
-      }
-   }
-
-   private def clear( in: Array[ Float ], inOff: Int, len: Int ) {
-      var i = 0
-      while( i < len ) {
-         in( inOff + i ) = 0f
-         i += 1
-      }
-   }
-
    private def threadBody( sourceReaderF: FrameReader.Factory, overReaderF: FrameReader.Factory,
                             sourceSpan: Span, overSpan: Span, boostIn: Float, boostOut: Float,
                             fadeIn: Long, fadeOut: Long, phraseLen: Long, overLen: Long ) : Phrase = {
+
+      import DSP._
 
       val afSrc = sourceReaderF.open()
       try {

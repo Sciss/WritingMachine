@@ -202,7 +202,9 @@ extends AbstractDatabase with ExtractionImpl {
 //      }
    }
 
-   private def appendBody( oldFileO: Option[ File ], appFile: File, offset: Long, length: Long ) {
+   private def appendBody( oldFileO: Option[ File ], appFile: File, offset: Long, len: Long ) {
+      import DSP._
+
       try {
          val sub     = createDir( dir, dirPrefix )
          val fNew    = new File( sub, audioName )
@@ -212,16 +214,30 @@ extends AbstractDatabase with ExtractionImpl {
                AudioFileSpec( AudioFileType.AIFF, SampleFormat.Float, afApp.numChannels, afApp.sampleRate ))
             try {
                afApp.seek( offset )
-               oldFileO.foreach { fOld =>
+               val fdLen = oldFileO.map( fOld => {
                   val afOld   = AudioFile.openRead( fOld )
                   try {
                      require( afOld.numChannels == afApp.numChannels, "Database append - channel mismatch" )
-                     afOld.copyTo( afNew, afOld.numFrames )
+                     val _fdLen = min( afOld.numFrames, len, secondsToFrames( 0.1 )).toInt
+                     afOld.copyTo( afNew, afOld.numFrames - _fdLen )
+                     if( _fdLen > 0 ) {
+                        val fo      = SignalFader( 0L, _fdLen, 1f, 0f )  // make it linear, so we don't need a limiter
+                        val foBuf   = afOld.buffer( _fdLen )
+                        afOld.read( foBuf )
+                        fo.process( foBuf( 0 ), 0, foBuf( 0 ), 0, _fdLen )
+                        val fi      = SignalFader( 0L, _fdLen, 0f, 1f )
+                        val fiBuf   = afApp.buffer( _fdLen )
+                        afApp.read( fiBuf )
+                        fi.process( fiBuf( 0 ), 0, fiBuf( 0 ), 0, _fdLen )
+                        add( fiBuf( 0 ), 0, foBuf( 0 ), 0, _fdLen )
+                        afNew.write( fiBuf )
+                     }
+                     _fdLen
                   } finally {
                      afOld.close()
                   }
-               }
-               afApp.copyTo( afNew, length )
+               }).getOrElse( 0 )
+               afApp.copyTo( afNew, len - fdLen )
                afNew.close()
                atomic( "Database append finalize" ) { tx =>
                   val oldState   = stateRef.swap( State( Some( (fNew, afNew.spec) ), None ))( tx )
