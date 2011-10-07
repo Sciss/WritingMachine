@@ -75,5 +75,7 @@ object PhraseImpl {
                res
             }
       }
+
+      def reader( implicit tx: Tx ) : FrameReader = FrameReader( file )
    }
 }

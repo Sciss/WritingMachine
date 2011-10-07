@@ -31,6 +31,8 @@ import java.io.File
 import de.sciss.synth
 
 object DifferanceDatabaseQueryImpl {
+   var verbose = false
+
    def apply( db: Database ) : DifferanceDatabaseQuery = new DifferanceDatabaseQueryImpl( db )
 }
 class DifferanceDatabaseQueryImpl private ( db: Database ) extends AbstractDifferanceDatabaseQuery {
@@ -77,8 +79,8 @@ class DifferanceDatabaseQueryImpl private ( db: Database ) extends AbstractDiffe
       set.maxBoost         = maxBoost
       set.metaInput        = metaInput
       set.minSpacing       = minSpacing
-      set.numMatches       = rank + 1
-      set.numPerFile       = rank + 1
+      set.numMatches       = max( 2, rank + 1 )
+      set.numPerFile       = max( 2, rank + 1 )
 
       set.punchIn          = Punch( SSpan( punchIn.start, punchIn.stop ), weight.toFloat )
       set.punchOut         = Some( Punch( SSpan( punchOut.start, punchOut.stop ), weight.toFloat ))
@@ -87,8 +89,8 @@ class DifferanceDatabaseQueryImpl private ( db: Database ) extends AbstractDiffe
 
       val setb             = set.build
 
-println( "----CORRELATION----" )
-println( setb )
+      if( verbose ) println( "----CORRELATION----" )
+      if( verbose ) println( setb )
 
       val process          = apply( setb ) {
          case Aborted =>
@@ -108,7 +110,7 @@ println( setb )
                failureMatch
             } else {
                val m = coll( idx )
-               Match( Span( m.punch.start, m.punch.stop ), m.boostIn, m.boostOut )
+               Match( db, Span( m.punch.start, m.punch.stop ), m.boostIn, m.boostOut )
             })
 
          case Progress( p ) =>
@@ -119,7 +121,7 @@ println( setb )
 
    private def failureMatch = {
       atomic( "DifferanceDatabaseQuery failureMatch" ) { tx1 =>
-         Match( Span( 0L, min( db.length( tx1 ), secondsToFrames( 1.0 ))), 1f, 1f )
+         Match( db, Span( 0L, min( db.length( tx1 ), secondsToFrames( 1.0 ))), 1f, 1f )
       }
    }
 }

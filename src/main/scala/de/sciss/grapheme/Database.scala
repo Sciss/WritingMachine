@@ -44,4 +44,6 @@ trait Database {
     * the database.
     */
    def asStrugatziDatabase( implicit tx: Tx ) : FutureResult[ File ]
+
+   def reader( implicit tx: Tx ) : FrameReader
 }

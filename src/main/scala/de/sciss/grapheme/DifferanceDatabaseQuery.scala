@@ -28,7 +28,7 @@ package de.sciss.grapheme
 import impl.{DifferanceDatabaseQueryImpl => Impl}
 
 object DifferanceDatabaseQuery {
-   final case class Match( span: Span, boostIn: Float, boostOut: Float )
+   final case class Match( database: Database, span: Span, boostIn: Float, boostOut: Float )
 
    def apply( db: Database ) : DifferanceDatabaseQuery = Impl( db )
 }
