@@ -140,7 +140,8 @@ extends AbstractDatabase with ExtractionImpl {
    }
 
    def remove( instrs: IIdxSeq[ RemovalInstruction ])( implicit tx: Tx ) : FutureResult[ Unit ] = {
-      val filtered   = instrs.filter( _.span.nonEmpty )
+      val len        = length
+      val filtered   = instrs.filter( i => i.span.nonEmpty && i.span.start >= 0 && i.span.stop <= len )
       val sorted     = filtered.sortBy( _.span.start )
 
       val merged     = {
@@ -159,16 +160,49 @@ extends AbstractDatabase with ExtractionImpl {
          res
       }
 
+      val oldFileO  = stateRef().spec.map( _._1 )
+
       threadFuture( "DatabaseImpl remove" ) {
-         removalBody( merged )
+         removalBody( oldFileO, merged )
       }
    }
 
-   private def removalBody( entries: IIdxSeq[ RemovalInstruction ]) {
-      sys.error( "TODO" )
+   private def removalBody( oldFileO: Option[ File ], entries: IIdxSeq[ RemovalInstruction ]) {
+//      try {
+//         val sub     = createDir( dir, dirPrefix )
+//         val fNew    = new File( sub, audioName )
+//         val afNew   = AudioFile.openWrite( fNew,
+//            AudioFileSpec( AudioFileType.AIFF, SampleFormat.Float, afApp.numChannels, afApp.sampleRate ))
+//         try {
+//            oldFileO.foreach { fOld =>
+//               val afOld   = AudioFile.openRead( fOld )
+//               try {
+//                  require( afOld.numChannels == afApp.numChannels, "Database append - channel mismatch" )
+//                  afOld.copyTo( afNew, afOld.numFrames )
+//               } finally {
+//                  afOld.close()
+//               }
+//            }
+//            afApp.copyTo( afNew, length )
+//            val oldState   = stateRef.swap( State( Some( (fNew, afNew.spec) ), None ))
+//            val oldFileO2  = oldState.spec.map( _._1 )
+//            tx.afterCommit { _ =>
+//               oldFileO2.foreach { fOld2 =>
+//                  deleteDir( fOld2.getParentFile )
+//               }
+//            }
+//         } finally {
+//            afNew.close()
+//         }
+//
+//      } catch {
+//         case e =>
+//            println( "Database removal - Ooops, should handle exceptions" )
+//            e.printStackTrace()
+//      }
    }
 
-   private def appendBody( oldFileO: Option[ File ], appFile: File, offset: Long, length: Long )( implicit tx: Tx ) {
+   private def appendBody( oldFileO: Option[ File ], appFile: File, offset: Long, length: Long ) {
       try {
          val sub     = createDir( dir, dirPrefix )
          val fNew    = new File( sub, audioName )
@@ -188,15 +222,18 @@ extends AbstractDatabase with ExtractionImpl {
                   }
                }
                afApp.copyTo( afNew, length )
-               val oldState   = stateRef.swap( State( Some( (fNew, afNew.spec) ), None ))
-               val oldFileO2  = oldState.spec.map( _._1 )
-               tx.afterCommit { _ =>
-                  oldFileO2.foreach { fOld2 =>
-                     deleteDir( fOld2.getParentFile )
+               afNew.close()
+               atomic( "Database append finalize" ) { tx =>
+                  val oldState   = stateRef.swap( State( Some( (fNew, afNew.spec) ), None ))( tx )
+                  val oldFileO2  = oldState.spec.map( _._1 )
+                  tx.afterCommit { _ =>
+                     oldFileO2.foreach { fOld2 =>
+                        deleteDir( fOld2.getParentFile )
+                     }
                   }
                }
             } finally {
-               afNew.close()
+               if( afNew.isOpen ) afNew.close()
             }
          } finally {
             afApp.close()
