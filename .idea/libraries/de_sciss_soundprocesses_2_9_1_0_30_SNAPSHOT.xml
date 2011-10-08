@@ -8,6 +8,7 @@
     </JAVADOC>
     <SOURCES>
       <root url="jar://$PROJECT_DIR$/lib_managed/srcs/de.sciss/soundprocesses_2.9.1/soundprocesses_2.9.1-0.30-SNAPSHOT-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../SoundProcesses/target/scala-2.9.1/soundprocesses_2.9.1-0.30-SNAPSHOT-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

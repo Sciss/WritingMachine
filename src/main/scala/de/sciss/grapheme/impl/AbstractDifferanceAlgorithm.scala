@@ -32,7 +32,7 @@ import collection.immutable.{IndexedSeq => IIdxSeq}
 abstract class AbstractDifferanceAlgorithm extends DifferanceAlgorithm {
    import GraphemeUtil._
 
-   private val identifier = "a-differance-algorithm"
+   private val identifier = "a-differance"
 
    def startPhrase: Phrase
 

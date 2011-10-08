@@ -25,9 +25,14 @@
 
 package de.sciss.grapheme
 
-import de.sciss.nuages.{NuagesLauncher}
 import java.io.File
 import actors.{TIMEOUT, Actor}
+import de.sciss.synth.{Server, AudioBus}
+import de.sciss.synth
+import synth.osc.OSCResponder
+import de.sciss.osc.Message
+import swing.Swing
+import de.sciss.nuages.{ControlPanel, NuagesLauncher}
 
 object Init {
    import WritingMachine._
@@ -38,11 +43,17 @@ object Init {
 
    def apply( r: NuagesLauncher.Ready )( implicit tx: Tx ) : Init = {
       require( instanceRef() == null )
-      val coll    = r.frame.panel.collector.getOrElse( sys.error( "Requires nuages to use collector" ))
+
+      val panel   = r.frame.panel
+      val coll    = panel.collector.getOrElse( sys.error( "Requires nuages to use collector" ))
       val spat    = DifferanceSpat( coll )
       val db      = Database( databaseDir )
 //      val tv      = Television.fromFile( new File( testDir, "aljazeera1.aif" ))
-      val tv      = Television.fromFile( new File( testDir, "mulholland_drive_ct.aif" ))
+      val tv      = if( tvUseTestFile ) {
+         Television.fromFile( new File( testDir, "mulholland_drive_ct.aif" ))
+      } else {
+         Television.live()
+      }
       val filler  = DifferanceDatabaseFiller( db, tv )
       val thinner = DifferanceDatabaseThinner( db )
       val trace   = PhraseTrace()
@@ -53,7 +64,40 @@ object Init {
       val diff    = DifferanceAlgorithm( /* spat, */ thinner, filler, trace, query, over, overSel, start )
       val i       = new Init( start, spat, diff )
       instanceRef.set( i )
+
+      tx.afterCommit { _ =>
+         val s = Server.default
+         startMeterSynth(
+            r.controlPanel,
+            AudioBus( s, s.options.outputBusChannels + tvChannelOffset, tvNumChannels ),
+            panel.masterBus.get
+         )
+      }
       i
+   }
+
+   private def startMeterSynth( ctrl: ControlPanel, inBus: AudioBus, outBus: AudioBus ) {
+      import synth._
+      import ugen._
+
+      val s = inBus.server
+
+      val df = SynthDef( "post-master" ) {
+         val inSig         = In.ar( inBus.index, inBus.numChannels )
+         val outSig        = In.ar( outBus.index, outBus.numChannels )
+         val sig           = Flatten( Seq( outSig, inSig ))
+         val meterTr       = Impulse.kr( 20 )
+         val peak          = Peak.kr( sig, meterTr )
+         val rms           = A2K.kr( Lag.ar( sig.squared, 0.1 ))
+         val meterData     = Zip( peak, rms )  // XXX correct?
+         SendReply.kr( meterTr, meterData, "/meters" )
+      }
+      val syn     = df.play( s, addAction = addToTail )
+      val synID   = syn.id
+      OSCResponder.add({
+         case Message( "/meters", `synID`, 0, values @ _* ) =>
+            Swing.onEDT { ctrl.meterUpdate( values.map( _.asInstanceOf[ Float ])( collection.breakOut ))}
+      }, s  )
    }
 }
 final class Init private ( _phrase0: Phrase, val spat: DifferanceSpat, val differance: DifferanceAlgorithm ) {

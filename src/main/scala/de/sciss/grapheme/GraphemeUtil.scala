@@ -63,9 +63,9 @@ object GraphemeUtil {
    def formatSpan( span: Span ) : String = {
       val sb   = new StringBuilder( 24 )
       sb.append( '[' )
-      sb.append( formatSeconds( secondsToFrames( span.start )))
+      sb.append( formatSeconds( framesToSeconds( span.start )))
       sb.append( '-' )
-      sb.append( formatSeconds( secondsToFrames( span.stop )))
+      sb.append( formatSeconds( framesToSeconds( span.stop )))
       sb.append( ']' )
       sb.toString()
    }

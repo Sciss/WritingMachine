@@ -33,10 +33,13 @@ import collection.immutable.{IndexedSeq => IIdxSeq}
 
 object WritingMachine {
    val logPanel            = false
-   val masterChannelOffset = 2 // 0
-   val soloChannelOffset   = Some( 0 )
+   val masterChannelOffset = 0 // 2
+   val soloChannelOffset   = Some( 0 ) // Some( 0 )
    val masterNumChannels   = 9
    val tvChannelOffset     = 0
+   val tvNumChannels       = 2
+   val tvBoostDB           = 0   // decibels
+   val tvUseTestFile       = false
 //   val strugatzkiDatabase  = new File( "/Users/hhrutz/Documents/devel/LeereNull/feature/" )
    val databaseDir         = new File( "audio_work", "database" )
    val testDir             = new File( "audio_work", "test" )
@@ -68,13 +71,22 @@ object WritingMachine {
       cfg.doneAction       = booted _
       val o                = cfg.serverOptions
       val masterChans      = (masterChannelOffset until (masterChannelOffset + masterNumChannels)).toIndexedSeq
-      o.outputBusChannels  = masterChans.max + 1
-      o.inputBusChannels   = tvChannelOffset + 1
+      val soloChans        = soloChannelOffset.map( off => IIdxSeq( off, off + 1 )).getOrElse( IIdxSeq.empty )
+      o.outputBusChannels  = {
+         val mm = masterChans.max + 1
+         if( soloChans.isEmpty ) mm else {
+            math.max( mm, soloChans.max + 1 )
+         }
+      }
+      o.inputBusChannels   = tvChannelOffset + tvNumChannels
       cfg.masterChannels   = Some( masterChans )
-      cfg.soloChannels     = soloChannelOffset.map( off => IIdxSeq( off, off + 1 ))
+      cfg.soloChannels     = if( soloChans.nonEmpty ) Some( soloChans ) else None
       cfg.collector        = true
       val c                = cfg.controlSettings
       c.log                = logPanel
+      c.numInputChannels   = tvNumChannels
+      c.numOutputChannels  = masterNumChannels
+
       val i                = c.replSettings
       i.imports          :+= "de.sciss.grapheme._"
       i.text               =
