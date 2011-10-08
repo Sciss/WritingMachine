@@ -33,5 +33,6 @@ object DifferanceDatabaseFillerImpl {
 }
 class DifferanceDatabaseFillerImpl private ( val database: Database, val television: Television )
 extends AbstractDifferanceDatabaseFiller {
-   val durationMotion = Motion.constant( 180.0 )
+   val durationMotion   = Motion.constant( 180.0 )
+   val maxCaptureDur    = 45.0
 }

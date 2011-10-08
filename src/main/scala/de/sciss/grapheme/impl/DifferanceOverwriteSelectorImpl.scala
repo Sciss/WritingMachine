@@ -121,7 +121,7 @@ final class DifferanceOverwriteSelectorImpl () extends AbstractDifferanceOverwri
 
                case FeatureSegmentation.Success( coll ) =>
                   val b    = if( coll( 0 ).sim.isNaN ) coll( 1 ) else coll( 0 )
-                  val len  = atomic( "DifferanceOverwriteSelector : success" ) { tx2 =>
+                  val len  = atomic( identifier + " : success" ) { tx2 =>
                      (random( tx2 ) * (maxLen - minLen) + minLen).toLong
                   }
                   val s    = if( b.pos <= center ) {

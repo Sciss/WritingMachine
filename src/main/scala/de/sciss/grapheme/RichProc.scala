@@ -39,7 +39,7 @@ object RichProc {
                val state = u.state
 //println( "JO " + state )
                if( state.valid && !state.playing ) {
-                  atomic( "Proc : futureStopped listener" ) { implicit tx =>
+                  atomic( "proc : stopped listener" ) { implicit tx =>
                      proc.removeListener( l )
                      fut.set( () )
                   }

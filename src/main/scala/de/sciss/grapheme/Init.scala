@@ -148,4 +148,7 @@ final class Init private ( _phrase0: Phrase, val spat: DifferanceSpat, val diffe
    }
 
    def start() { actor.start() }
+   def stop() {
+      warnToDo( "Init : stop" )
+   }
 }

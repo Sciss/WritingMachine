@@ -99,7 +99,7 @@ object GraphemeUtil {
          }
       }
       sb.append( secs )
-      sb.append( ':' )
+      sb.append( '.' )
       if( millis < 10 ) {
          sb.append( '0' )
       }

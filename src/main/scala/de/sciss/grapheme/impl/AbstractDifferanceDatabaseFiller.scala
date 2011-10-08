@@ -40,11 +40,17 @@ abstract class AbstractDifferanceDatabaseFiller extends DifferanceDatabaseFiller
 
    def database : Database
    def television : Television
+   def maxCaptureDur : Double
 
    def perform( implicit tx: Tx ) : FutureResult[ Unit ] = {
       val tgtLen  = secondsToFrames( durationMotion.step )
       val dbLen   = database.length
-      val inc     = tgtLen - dbLen
+      val inc0    = tgtLen - dbLen
+      val maxF    = secondsToFrames( maxCaptureDur )
+      val inc     = min( inc0, maxF )
+
+      logTx( identifier + " : gathering " + formatSeconds( framesToSeconds( inc )))
+
       if( inc > 0 ) {
          television.capture( inc ).flatMap( f => performWithFile( f, inc ))
       } else {

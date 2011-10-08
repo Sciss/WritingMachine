@@ -34,9 +34,9 @@ import collection.immutable.{IndexedSeq => IIdxSeq}
 object WritingMachine {
    val logPanel            = false
    val masterChannelOffset = 0 // 2
-   val soloChannelOffset   = Some( 0 ) // Some( 0 )
+   val soloChannelOffset   = Some( 10 ) // Some( 0 )
    val masterNumChannels   = 9
-   val tvChannelOffset     = 0
+   val tvChannelOffset     = 2   // 0
    val tvNumChannels       = 2
    val tvBoostDB           = 0   // decibels
    val tvUseTestFile       = false
@@ -89,6 +89,14 @@ object WritingMachine {
       c.log                = logPanel
       c.numInputChannels   = tvNumChannels
       c.numOutputChannels  = masterNumChannels
+      c.clockAction        = { (state, fun) =>
+         if( state ) {
+            atomic( name + " : start" ) { implicit tx => Init.instance.start() }
+         } else {
+            atomic( name + " : stop" )  { implicit tx => Init.instance.stop() }
+         }
+         fun()
+      }
 
       val i                = c.replSettings
       i.imports          :+= "de.sciss.grapheme._"

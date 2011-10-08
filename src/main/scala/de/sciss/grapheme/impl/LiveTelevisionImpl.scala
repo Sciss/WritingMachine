@@ -78,7 +78,7 @@ final class LiveTelevisionImpl private () extends Television {
                         if( len == 0L ) Thread.sleep( 200 )
                         i -= 1
                      }
-                     atomic( identifier + " : return path" ) { implicit tx => res.set( path )}
+                     res.set( path )
                   }
                }
                DiskOut.ar( buf.id, mix )
@@ -89,11 +89,12 @@ final class LiveTelevisionImpl private () extends Television {
          _p.audioInput( "in" ).bus  = Some( RichBus.soundIn( Server.default,
             WritingMachine.tvNumChannels, WritingMachine.tvChannelOffset ))
          _p.control( "boost" ).v    = WritingMachine.tvBoostDB.dbamp
-         _p.control( "dur" ).v      = dur
          _p
       }
 
       require( !p.isPlaying, identifier + " : still in previous capture" )
+      p.control( "dur" ).v      = dur
+      p.play
 
       res
    }

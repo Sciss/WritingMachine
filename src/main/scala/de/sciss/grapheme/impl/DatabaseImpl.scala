@@ -134,7 +134,7 @@ extends AbstractDatabase with ExtractionImpl {
 
    def append( appFile: File, offset: Long, length: Long )( implicit tx: Tx ) : FutureResult[ Unit ] = {
       val oldFileO  = stateRef().spec.map( _._1 )
-      threadFuture( identifier + " : append" ) {
+      threadFuture( identifier + " : append " + formatSeconds( framesToSeconds( length ))) {
 //         atomic( "Database append tx" ) { implicit tx =>
             appendBody( oldFileO, appFile, offset, length )
 //         }
@@ -259,13 +259,20 @@ extends AbstractDatabase with ExtractionImpl {
       }
    }
 
-   private def appendBody( oldFileO: Option[ File ], appFile: File, offset: Long, len: Long ) {
+   private def appendBody( oldFileO: Option[ File ], appFile: File, off0: Long, len0: Long ) {
       import DSP._
 
       updateLoop { afNew =>
          val afApp = AudioFile.openRead( appFile )
+//println( "app file = " + appFile + "; numFrames = " + afApp.numFrames + "; off = " + offset + " ; len = " + len )
+
+         // this is important: DiskOut writes in blocks, and therefore the actual
+         // number of frames in afApp may be a bit smaller than the len0 argument!
+         val off  = min( off0, afApp.numFrames )
+         val len = min( len0, afApp.numFrames - off )
+
          try {
-            afApp.seek( offset )
+            if( off > 0 ) afApp.seek( off )
             val fdLen = oldFileO.map( fOld => {
                val afOld   = AudioFile.openRead( fOld )
                try {
