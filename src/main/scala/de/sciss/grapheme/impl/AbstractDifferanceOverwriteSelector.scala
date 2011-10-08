@@ -33,6 +33,8 @@ abstract class AbstractDifferanceOverwriteSelector
 extends DifferanceOverwriteSelector {
    import GraphemeUtil._
 
+   private val identifier = "a-overwrite-selector"
+
    /**
     * Temporal stretch factor (1 = preserve duration, <1 = shorten, >1 = elongate).
     */
@@ -80,7 +82,7 @@ extends DifferanceOverwriteSelector {
                                 num : Int ) : FutureResult[ IIdxSeq[ OverwriteInstruction ]] = {
       (0 until num).foldLeft( ovrNow ) { case (futPred, i) =>
          futPred.flatMap { coll =>
-            val (stretch, futSpan) = atomic( "AbstractDifferanceOverwriteSelector selectParts" ) { tx1 =>
+            val (stretch, futSpan) = atomic( identifier + " : select parts" ) { tx1 =>
                import synth._
 
                val stre    = stretchMotion.step( tx1 )

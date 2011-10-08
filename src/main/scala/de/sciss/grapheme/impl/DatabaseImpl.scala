@@ -38,6 +38,8 @@ object DatabaseImpl {
    private val xmlName     = "grapheme.xml"
    private val audioName   = "grapheme.aif"
 
+   private val identifier  = "database-impl"
+
    def apply( dir: File )( implicit tx: Tx ) : Database = {
       val normFile = new File( dir, normName )
       require( normFile.isFile, "Missing normalization file at " + normFile )
@@ -89,7 +91,7 @@ object DatabaseImpl {
    private def copyAudioFile( source: File, target: File )( implicit tx: Tx ) : FutureResult[ Unit ] = {
       import GraphemeUtil._
 
-      threadFuture( "DatabaseImpl copy file " + source ) {
+      threadFuture( identifier + " : copy file" ) {
          val afSrc = AudioFile.openRead( source )
          try {
             val afTgt = AudioFile.openWrite( target, afSrc.spec )
@@ -132,7 +134,7 @@ extends AbstractDatabase with ExtractionImpl {
 
    def append( appFile: File, offset: Long, length: Long )( implicit tx: Tx ) : FutureResult[ Unit ] = {
       val oldFileO  = stateRef().spec.map( _._1 )
-      threadFuture( "Database append" ) {
+      threadFuture( identifier + " : append" ) {
 //         atomic( "Database append tx" ) { implicit tx =>
             appendBody( oldFileO, appFile, offset, length )
 //         }
@@ -163,7 +165,7 @@ extends AbstractDatabase with ExtractionImpl {
       val oldFileO  = stateRef().spec.map( _._1 )
       oldFileO match {
          case Some( f ) =>
-            threadFuture( "DatabaseImpl remove" ) {
+            threadFuture( identifier + " : remove" ) {
                // add a dummy instruction to the end, so we can easier traverse the list
                removalBody( f, merged :+ RemovalInstruction( Span( len, len ), 0L ))
             }
@@ -179,7 +181,7 @@ extends AbstractDatabase with ExtractionImpl {
          try {
             fun( afNew )
             afNew.close()
-            atomic( "Database update finalize" ) { tx =>
+            atomic( identifier + " : update finalize" ) { tx =>
                val oldState   = stateRef.swap( State( Some( (fNew, afNew.spec) ), None ))( tx )
                val oldFileO2  = oldState.spec.map( _._1 )
                tx.afterCommit { _ =>
@@ -267,7 +269,7 @@ extends AbstractDatabase with ExtractionImpl {
             val fdLen = oldFileO.map( fOld => {
                val afOld   = AudioFile.openRead( fOld )
                try {
-                  require( afOld.numChannels == afApp.numChannels, "Database append - channel mismatch" )
+                  require( afOld.numChannels == afApp.numChannels, identifier + " : append - channel mismatch" )
                   val _fdLen = min( afOld.numFrames, len, secondsToFrames( 0.1 )).toInt
                   afOld.copyTo( afNew, afOld.numFrames - _fdLen )
                   if( _fdLen > 0 ) {
@@ -297,7 +299,7 @@ extends AbstractDatabase with ExtractionImpl {
    def length( implicit tx: Tx ) : Long = stateRef().spec.map( _._2.numFrames ).getOrElse( 0L )
 
    def reader( implicit tx: Tx ) : FrameReader.Factory = {
-      val f = stateRef().spec.map( _._1 ).getOrElse( sys.error( "Database contains no file" ))
+      val f = stateRef().spec.map( _._1 ).getOrElse( sys.error( identifier + " : contains no file" ))
       FrameReader.Factory( f )
    }
 
@@ -306,7 +308,7 @@ extends AbstractDatabase with ExtractionImpl {
       state.extr match {
          case Some( meta ) => futureOf( meta.getParentFile )
          case None =>
-            val audioInput = state.spec.map( _._1 ).getOrElse( sys.error( "Database contains no file" ))
+            val audioInput = state.spec.map( _._1 ).getOrElse( sys.error( identifier + " : contains no file" ))
             val sub        = audioInput.getParentFile
             copyAudioFile( normFile, new File( sub, normName )).flatMap { _ =>
                extractAndUpdate( audioInput, sub )
@@ -315,7 +317,7 @@ extends AbstractDatabase with ExtractionImpl {
    }
 
    private def extractAndUpdate( audioInput: File, sub: File ) : FutureResult[ File ] = {
-      atomic( "DatabaseImpl extract" ) { implicit tx =>
+      atomic( identifier + " : extract" ) { implicit tx =>
          extract( audioInput, Some( sub )).map { meta =>
             assert( meta.getParentFile == sub )
             updateState( meta )
@@ -325,7 +327,7 @@ extends AbstractDatabase with ExtractionImpl {
    }
 
    private def updateState( meta: File ) {
-      atomic( "DatabaseImpl saving feature extraction cache" ) { implicit tx =>
+      atomic( identifier + " : cache feature extraction" ) { implicit tx =>
          stateRef.transform( _.copy( extr = Some( meta )))
       }
    }

@@ -36,6 +36,8 @@ object DifferanceOverwriteSelectorImpl {
 final class DifferanceOverwriteSelectorImpl () extends AbstractDifferanceOverwriteSelector {
    import GraphemeUtil._
 
+   private val identifier  = "overwrite-selector-impl"
+
 //   val stretchMotion             = Motion.linexp( Motion.sine( 0, 1, 30 ), 0, 1, 0.5, 2.0 )
    val stretchMotion             = Motion.constant( 1.0 )   // XXX
    val fragmentDurationMotion    = Motion.exprand( 0.5, 4.0 )
@@ -94,7 +96,7 @@ final class DifferanceOverwriteSelectorImpl () extends AbstractDifferanceOverwri
             val set              = FeatureSegmentation.SettingsBuilder()
             set.databaseFolder   = databaseDir
             set.metaInput        = metaInput
-            val corrLen          = atomic( "DifferanceOverwriteSelectorImpl : correlationMotion" ) { tx1 =>
+            val corrLen          = atomic( identifier + " : correlation motion" ) { tx1 =>
                secondsToFrames( correlationMotion.step( tx1 ))
             }
             val maxLenH          = maxLen / 2

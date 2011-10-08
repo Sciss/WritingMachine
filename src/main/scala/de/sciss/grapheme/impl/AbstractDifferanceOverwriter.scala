@@ -33,6 +33,8 @@ abstract class AbstractDifferanceOverwriter extends DifferanceOverwriter {
    import GraphemeUtil._
    import AbstractDifferanceOverwriter._
 
+   private val identifier = "a-overwriter"
+
    /**
     * Cross-fade punch-in duration in seconds
     */
@@ -95,7 +97,7 @@ if( verbose ) {
    println( "-------- thread body: p-span-fd " + pSpanFd + ", db-span-fd " + dbSpanFd + ", fadein " + fadeIn + ", fadeout " + fadeOut  )
 }
 
-      threadFuture( "AbstractDifferanceOverwriter perform" ) {
+      threadFuture( identifier + " : perform " ) {
          threadBody( pReaderF, dbReaderF, pSpanFd, dbSpanFd, target.boostIn, target.boostOut, fadeIn, fadeOut, pLen, dbLen )
       }
    }
@@ -215,7 +217,7 @@ if( verbose ) println( "-------- COPY POST TO " + fTgt + ". SPAN (SRC) = " + Spa
 //               Phrase.fromFile( fTgt )
 //               fTgt
                afTgt.close()
-               atomic( "AbstractDifferanceOverwriter phrase from file" ) { implicit tx =>
+               atomic( identifier + " : phrase from file" ) { implicit tx =>
                   Phrase.fromFile( fTgt )
                }
 

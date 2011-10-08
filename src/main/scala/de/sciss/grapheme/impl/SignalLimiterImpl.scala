@@ -41,11 +41,11 @@ final class SignalLimiterImpl private ( lookAhead: Int, ceil: Float ) extends Si
    private var curmaxval      = 0.0f
    private val slopefactor    = 1.0f / lookAhead
 
-   private val xBuf           = new Array[ Float ]( lookAhead * 4 )
+   private val xBuf           = new Array[ Float ]( lookAhead * 3 /* 4 */)
    private var xInOff         = 0
    private var xMidOff        = lookAhead
    private var xOutOff        = lookAhead * 2
-   private val xFlushOff      = lookAhead * 4
+//   private val xFlushOff      = lookAhead * 4
 
    def process( in: Array[ Float ], inOff: Int, out: Array[ Float ], outOff: Int, len: Int ) : Int = {
       var remain     = len

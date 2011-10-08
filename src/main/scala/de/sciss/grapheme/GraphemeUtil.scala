@@ -54,6 +54,12 @@ object GraphemeUtil {
       println( timeString() + " " + text )
    }
 
+   def fileNameWithoutExtension( f: File ) : String = {
+      val n = f.getName
+      val i = n.lastIndexOf( '.' )
+      if( i < 0 ) n else n.substring( 0, i )
+   }
+
    def timeString() = (new java.util.Date()).toString
 
    def formatSeconds( seconds: Double ) : String = {

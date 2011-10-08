@@ -39,6 +39,8 @@ class DifferanceDatabaseQueryImpl private ( db: Database ) extends AbstractDiffe
    import GraphemeUtil._
    import DifferanceDatabaseQuery._
 
+   private val identifier  = "database-query-impl"
+
    val matchDurationMotion    = Motion.exprand( 0.4, 4.0 )
    val matchDeviationMotion   = Motion.linrand( 0.2, 0.5 )
    val spectralMotion         = Motion.linrand( 0.25, 0.75 )
@@ -120,7 +122,7 @@ class DifferanceDatabaseQueryImpl private ( db: Database ) extends AbstractDiffe
    }
 
    private def failureMatch = {
-      atomic( "DifferanceDatabaseQuery failureMatch" ) { tx1 =>
+      atomic( identifier + " : failure match" ) { tx1 =>
          Match( db, Span( 0L, min( db.length( tx1 ), secondsToFrames( 1.0 ))), 1f, 1f )
       }
    }

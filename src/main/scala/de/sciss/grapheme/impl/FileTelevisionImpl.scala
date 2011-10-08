@@ -30,21 +30,24 @@ import java.io.File
 import de.sciss.synth.io.{AudioFileSpec, AudioFile}
 
 object FileTelevisionImpl {
+   private val identifier  = "file-television-impl"
+
    def apply( f: File ) : Television = {
       val spec = AudioFile.readSpec( f )
-      require( spec.numChannels == 1, "Television is supposed to be mono" )
-      require( spec.numFrames > 0, "Television file is empty" )
+      require( spec.numChannels == 1, identifier + " : must be mono" )
+      require( spec.numFrames > 0, identifier + " : file is empty" )
       new FileTelevisionImpl( f, spec )
    }
 }
 class FileTelevisionImpl private ( f: File, spec: AudioFileSpec ) extends Television {
    import GraphemeUtil._
+   import FileTelevisionImpl._
 
    private val posRef = Ref( 0L )
 
    def capture( length: Long )( implicit tx: Tx ) : FutureResult[ File ] = {
       val oldPos = posRef()
-      threadFuture( "FileTelevisionImpl capture" ) {
+      threadFuture( identifier + " : capture" ) {
          try {
             val fNew    = createTempFile( ".aif", None )
             val afNew   = openMonoWrite( fNew )

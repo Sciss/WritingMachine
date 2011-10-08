@@ -29,6 +29,8 @@ package impl
 import de.sciss.synth.proc.{DSL, Proc, Ref}
 
 abstract class AbstractDifferanceSpat extends DifferanceSpat {
+   private val identifier = "a-differance-spat"
+
    def numChannels : Int
    def diffusion( chan: Int )( implicit tx: Tx ) : Proc
 
@@ -44,7 +46,7 @@ abstract class AbstractDifferanceSpat extends DifferanceSpat {
       pProc ~> pDiff
       pProc.play
       pProc.futureStopped.map { _ =>
-         atomic( "AbstractDifferanceSpat : dispose phrase proc" ) { implicit tx =>
+         atomic( identifier + " : dispose phrase process" ) { implicit tx =>
             pProc.remove
          }
       }

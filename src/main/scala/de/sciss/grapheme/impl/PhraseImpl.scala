@@ -31,6 +31,10 @@ import de.sciss.synth
 import synth.proc.{Proc, ProcFactory}
 
 object PhraseImpl {
+   import GraphemeUtil._
+
+   private val identifier  = "phrase-impl"
+
    def fromFile( file: File )( implicit tx: Tx ) : Phrase = {
       import synth._
       import proc._
@@ -41,7 +45,7 @@ object PhraseImpl {
       val spec       = audioFileSpec( path )
       require( spec.numChannels == 1 )    // we need this now for the overwriter implementation!
 
-      val factName   = "phrase-file-" + file.getName // XXX hrmpfff
+      val factName   = "file-" + fileNameWithoutExtension( file ) // XXX hrmpfff
       val fact       = ProcDemiurg.factories.find( _.name == factName ).getOrElse {
          gen( factName ) {
             graph {
@@ -73,7 +77,7 @@ object PhraseImpl {
          case Some( res ) => futureOf( res )
          case None =>
             extract( file, None ).map { res =>
-               atomic( "PhraseImpl caching feature extraction" ) { implicit tx =>
+               atomic( identifier + " : cache feature extraction" ) { implicit tx =>
                   featureRef.set( Some( res ))
                }
                res

@@ -29,13 +29,16 @@ package impl
 import collection.immutable.{IndexedSeq => IIdxSeq}
 
 object PhraseTraceImpl {
+   private val identifier  = "phrase-trace-impl"
+
    def apply() : PhraseTrace = new PhraseTraceImpl()
 }
 final class PhraseTraceImpl private () extends PhraseTrace {
-   import de.sciss.grapheme.GraphemeUtil._
+   import GraphemeUtil._
+   import PhraseTraceImpl._
 
    def add( phrase: Phrase )( implicit txn: Tx ) {
-      warnToDo( "PhraseTraceImpl : add" )
+      warnToDo( identifier + " : add" )
    }
 
    def series( n: Int )( implicit txn: Tx ) : IIdxSeq[ Phrase ] = {
