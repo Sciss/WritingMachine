@@ -72,7 +72,7 @@ object Init {
             AudioBus( s, s.options.outputBusChannels + tvChannelOffset, tvNumChannels ),
             panel.masterBus.get
          )
-         if( autoStart ) r.controlPanel.startClock()
+         if( autoStart ) Swing.onEDT( r.controlPanel.startClock() )
       }
       i
    }

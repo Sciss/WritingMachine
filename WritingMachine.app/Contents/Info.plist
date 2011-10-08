@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CFBundleGetInfoString</key>
+	<string>WritingMachine 0.10. Copyright © 2011 by Hanns Holger Rutz. All rights reserved.</string>
+	<key>CFBundleShortVersionString</key>
+	<string>0.10</string>
 	<key>CFBundleName</key>
 	<string>WritingMachine</string>
 	<key>CFBundleIdentifier</key>
@@ -24,6 +28,19 @@
 	<string>application.icns</string>
 	<key>Java</key>
 	<dict>
+		<key>Properties</key>
+		<dict>
+			<key>apple.laf.useScreenMenuBar</key>
+			<string>true</string>
+			<key>apple.awt.graphics.UseQuartz</key>
+			<string>false</string>
+		</dict>
+		<key>VMOptions</key>
+		<string>-Xmx1024m</string>
+		<key>MainClass</key>
+		<string>de.sciss.grapheme.WritingMachine</string>
+		<key>JVMVersion</key>
+		<string>1.6+</string>
 		<key>ClassPath</key>
 		<array>
 			<string>$JAVAROOT/audiowidgets.jar</string>
@@ -40,21 +57,13 @@
 			<string>$JAVAROOT/scalacolliderswing.jar</string>
 			<string>$JAVAROOT/scalainterpreterpane.jar</string>
 			<string>$JAVAROOT/scalaosc.jar</string>
+			<string>$JAVAROOT/salatest.jar</string>
+			<string>$JAVAROOT/scopt.jar</string>
 			<string>$JAVAROOT/soundprocesses.jar</string>
+			<string>$JAVAROOT/strugatzki.jar</string>
 			<string>$JAVAROOT/wolkenpumpe.jar</string>
 			<string>$JAVAROOT/writingmachine.jar</string>
 		</array>
-		<key>Properties</key>
-		<dict>
-			<key>apple.laf.useScreenMenuBar</key>
-			<string>true</string>
-		</dict>
-		<key>MainClass</key>
-		<string>de.sciss.grapheme.WritingMachine</string>
-		<key>JVMVersion</key>
-		<string>1.6+</string>
-		<key>VMOptions</key>
-		<string>-Xmx1024m</string>
 	</dict>
 </dict>
 </plist>

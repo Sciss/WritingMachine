@@ -65,11 +65,14 @@ object WritingMachine {
    def main( args: Array[ String ]) {
       args.toSeq match {
 //         case Seq( "--fut1" ) => Futures.test1()
+
          case _ => launch()
       }
    }
 
    def launch() {
+//      sys.props += "actors.enableForkJoin" -> "false"
+
       val cfg = NuagesLauncher.SettingsBuilder()
       cfg.beforeShutdown   = quit _
       cfg.doneAction       = booted _
