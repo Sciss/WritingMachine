@@ -1,3 +1,7 @@
 111007
 
 the very beginning and ending of the phrase is preserved forever (? or at least very long periods)
+
+111008
+
+with stretch 1 it drifts towards shortening. we should thus replace motion with an argument fed function that can switch motions when the phrase gets too short or to long.
