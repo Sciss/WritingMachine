@@ -53,6 +53,8 @@
 		<string>de.sciss.grapheme.WritingMachine</string>
 		<key>JVMVersion</key>
 		<string>1.6+</string>
+		<key>VMOptions</key>
+		<string>-Xmx1024m</string>
 	</dict>
 </dict>
 </plist>

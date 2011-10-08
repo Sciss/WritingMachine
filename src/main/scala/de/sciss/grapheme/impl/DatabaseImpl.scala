@@ -325,7 +325,7 @@ extends AbstractDatabase with ExtractionImpl {
 
    private def extractAndUpdate( audioInput: File, sub: File ) : FutureResult[ File ] = {
       atomic( identifier + " : extract" ) { implicit tx =>
-         extract( audioInput, Some( sub )).map { meta =>
+         extract( audioInput, Some( sub ), true ).map { meta =>
             assert( meta.getParentFile == sub )
             updateState( meta )
             sub

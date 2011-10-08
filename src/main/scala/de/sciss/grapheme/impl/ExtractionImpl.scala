@@ -12,14 +12,14 @@ trait ExtractionImpl {
     * is started after the transaction commits, and the method returns
     * the future result of the meta file thus generated.
     */
-   protected def extract( audioInput : File, dir: Option[ File ])( implicit tx: Tx ) : FutureResult[ File ] = {
+   protected def extract( audioInput : File, dir: Option[ File ], keep: Boolean )( implicit tx: Tx ) : FutureResult[ File ] = {
       val res = FutureResult.event[ File ]()
       tx.afterCommit { _ =>
          import FeatureExtraction._
          val set           = SettingsBuilder()
          set.audioInput    = audioInput
-         set.featureOutput = createTempFile( ".aif", dir )
-         val meta          = createTempFile( "_feat.xml", dir )
+         set.featureOutput = createTempFile( ".aif", dir, keep )
+         val meta          = createTempFile( "_feat.xml", dir, keep )
          set.metaOutput    = Some( meta )
          val process       = apply( set ) {
             case Aborted =>

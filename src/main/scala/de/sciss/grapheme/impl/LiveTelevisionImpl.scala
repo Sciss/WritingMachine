@@ -39,6 +39,10 @@ final class LiveTelevisionImpl private () extends Television {
    import GraphemeUtil._
    import LiveTelevisionImpl._
 
+   val lookAheadLim = 0.01
+
+   def latency = lookAheadLim * 2
+
    private val procRef  = Ref( Option.empty[ synth.proc.Proc ])
    private val futRef   = Ref({ val ev = FutureResult.event[ File ](); ev.set( new File( "" )); ev })
 
@@ -48,7 +52,7 @@ final class LiveTelevisionImpl private () extends Television {
       import proc._
       import DSL._
 
-      val dur = framesToSeconds( length )
+      val dur = framesToSeconds( length ) + latency
       val res = FutureResult.event[ File ]()
       val oldFut  = futRef.swap( res )
       require( oldFut.isSet, identifier + " : still in previous capture" )
@@ -57,9 +61,10 @@ final class LiveTelevisionImpl private () extends Television {
          val fact = diff( "$live-tv" ) {
             val pBoost  = pControl( "boost", ParamSpec( 1.0, 10.0, ExpWarp ), 1.0 )
             val pDur    = pScalar(  "dur",   ParamSpec( 0.0, 600.0 ), 10.0 )
-            graph { in: In =>
-               val path = createTempFile( ".aif", None )
-               val mix  = Limiter.ar( Mix.mono( in ) * pBoost.kr, 0.97 0.01 )
+            graph { in0: In =>
+               val path = createTempFile( ".aif", None, false )
+               val in   = if( WritingMachine.tvPhaseFlip ) in0 * Seq( 1, -1 ) else in0
+               val mix  = Limiter.ar( Mix.mono( in ) * pBoost.kr, 0.97, 0.01 )
                val buf  = bufRecord( path.getAbsolutePath, 1, AudioFileType.AIFF, SampleFormat.Int24 )
                val dura = pDur.ir
                val me   = Proc.local

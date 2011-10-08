@@ -34,4 +34,9 @@ object Television {
 }
 trait Television {
    def capture( length: Long )( implicit tx: Tx ) : FutureResult[ File ]
+
+   /**
+    * Latency in capture result in seconds
+    */
+   def latency : Double
 }

@@ -80,7 +80,7 @@ object PhraseImpl {
       def asStrugatzkiInput( implicit tx: Tx ) : FutureResult[ File ] = featureRef() match {
          case Some( res ) => futureOf( res )
          case None =>
-            extract( file, None ).map { res =>
+            extract( file, None, false ).map { res =>
                atomic( identifier + " : cache feature extraction" ) { implicit tx =>
                   featureRef.set( Some( res ))
                }

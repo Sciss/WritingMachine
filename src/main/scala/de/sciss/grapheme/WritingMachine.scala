@@ -39,6 +39,7 @@ object WritingMachine {
    val masterNumChannels   = 9
    val tvChannelOffset     = 2   // 0
    val tvNumChannels       = 2
+   val tvPhaseFlip         = true
    val tvBoostDB           = 0   // decibels
    val tvUseTestFile       = false
 //   val strugatzkiDatabase  = new File( "/Users/hhrutz/Documents/devel/LeereNull/feature/" )

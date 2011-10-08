@@ -52,15 +52,17 @@ abstract class AbstractDifferanceDatabaseFiller extends DifferanceDatabaseFiller
       logTx( identifier + " : gathering " + formatSeconds( framesToSeconds( inc )))
 
       if( inc > 0 ) {
-         television.capture( inc ).flatMap( f => performWithFile( f, inc ))
+         television.capture( inc ).flatMap { f =>
+            performWithFile( f, secondsToFrames( television.latency ), inc )
+         }
       } else {
          futureOf( () )
       }
    }
 
-   private def performWithFile( file: File, inc: Long ) : FutureResult[ Unit ] = {
+   private def performWithFile( file: File, off: Long, inc: Long ) : FutureResult[ Unit ] = {
       atomic( identifier + " : appending " + formatSeconds( framesToSeconds( inc ))) { tx1 =>
-         database.append( file, 0L, inc )( tx1 )
+         database.append( file, off, inc )( tx1 )
       }
    }
 }

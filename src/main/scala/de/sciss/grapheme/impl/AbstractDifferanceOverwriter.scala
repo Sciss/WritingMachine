@@ -112,7 +112,7 @@ if( verbose ) {
       try {
          val afOvr = overReaderF.open()
          try {
-            val fTgt    = createTempFile( ".aif", None )
+            val fTgt    = createTempFile( ".aif", None, false )
             val afTgt   = openMonoWrite( fTgt )
             try {
                val bufSrc  = afTgt.buffer( 8192 )

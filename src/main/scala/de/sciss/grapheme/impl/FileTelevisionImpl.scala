@@ -45,11 +45,13 @@ class FileTelevisionImpl private ( f: File, spec: AudioFileSpec ) extends Televi
 
    private val posRef = Ref( 0L )
 
+   def latency = 0.0
+
    def capture( length: Long )( implicit tx: Tx ) : FutureResult[ File ] = {
       val oldPos = posRef()
       threadFuture( identifier + " : capture" ) {
          try {
-            val fNew    = createTempFile( ".aif", None )
+            val fNew    = createTempFile( ".aif", None, false )
             val afNew   = openMonoWrite( fNew )
             try {
                val afTV = AudioFile.openRead( f )
