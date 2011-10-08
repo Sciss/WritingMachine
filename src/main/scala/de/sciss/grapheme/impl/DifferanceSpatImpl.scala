@@ -57,7 +57,7 @@ object DifferanceSpatImpl {
 
       val dummyF     = gen( "$dummy" )( graph { Silent.ar })
       val diffs      = IIdxSeq.tabulate( numCh ) { ch =>
-         val fact       = filter( "spat-" + (ch + 1) ) {
+         val fact       = filter( /* "spat-" + */ (ch + 1).toString ) {
             graph { in: In =>
                val sig = if( ch == 0 ) {
                   Seq( in, Silent.ar( numCh - 1 ))

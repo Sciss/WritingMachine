@@ -39,7 +39,8 @@ final class LiveTelevisionImpl private () extends Television {
    import GraphemeUtil._
    import LiveTelevisionImpl._
 
-   private val procRef = Ref( Option.empty[ synth.proc.Proc ])
+   private val procRef  = Ref( Option.empty[ synth.proc.Proc ])
+   private val futRef   = Ref({ val ev = FutureResult.event[ File ](); ev.set( new File( "" )); ev })
 
    def capture( length: Long )( implicit tx: Tx ) : FutureResult[ File ] = {
       import synth._
@@ -49,6 +50,8 @@ final class LiveTelevisionImpl private () extends Television {
 
       val dur = framesToSeconds( length )
       val res = FutureResult.event[ File ]()
+      val oldFut  = futRef.swap( res )
+      require( oldFut.isSet, identifier + " : still in previous capture" )
 
       val p = procRef().getOrElse {
          val fact = diff( "$live-tv" ) {
@@ -56,7 +59,7 @@ final class LiveTelevisionImpl private () extends Television {
             val pDur    = pScalar(  "dur",   ParamSpec( 0.0, 600.0 ), 10.0 )
             graph { in: In =>
                val path = createTempFile( ".aif", None )
-               val mix  = Mix.mono( in ) * pBoost.kr
+               val mix  = Limiter.ar( Mix.mono( in ) * pBoost.kr, 0.97 0.01 )
                val buf  = bufRecord( path.getAbsolutePath, 1, AudioFileType.AIFF, SampleFormat.Int24 )
                val dura = pDur.ir
                val me   = Proc.local
@@ -78,7 +81,10 @@ final class LiveTelevisionImpl private () extends Television {
                         if( len == 0L ) Thread.sleep( 200 )
                         i -= 1
                      }
-                     res.set( path )
+//                     res.set( path )
+                     atomic( identifier + " return path" ) { implicit tx =>
+                        futRef().set( path )
+                     }
                   }
                }
                DiskOut.ar( buf.id, mix )
@@ -92,7 +98,7 @@ final class LiveTelevisionImpl private () extends Television {
          _p
       }
 
-      require( !p.isPlaying, identifier + " : still in previous capture" )
+//      require( !p.isPlaying, identifier + " : still in previous capture" )
       p.control( "dur" ).v      = dur
       p.play
 

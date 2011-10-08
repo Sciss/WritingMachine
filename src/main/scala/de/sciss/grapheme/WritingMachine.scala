@@ -32,6 +32,7 @@ import de.sciss.strugatzki.Strugatzki
 import collection.immutable.{IndexedSeq => IIdxSeq}
 
 object WritingMachine {
+   val autoStart           = true
    val logPanel            = false
    val masterChannelOffset = 0 // 2
    val soloChannelOffset   = Some( 10 ) // Some( 0 )

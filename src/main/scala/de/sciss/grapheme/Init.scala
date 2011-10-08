@@ -72,6 +72,7 @@ object Init {
             AudioBus( s, s.options.outputBusChannels + tvChannelOffset, tvNumChannels ),
             panel.masterBus.get
          )
+         if( autoStart ) r.controlPanel.startClock()
       }
       i
    }
