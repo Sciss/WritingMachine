@@ -33,6 +33,8 @@ object Phrase {
    def fromFile( file: File )( implicit tx: Tx ) : Phrase = PhraseImpl.fromFile( file )
 }
 trait Phrase {
+   def printFormat : String
+
    def length: Long
    def player( implicit tx: Tx ) : Proc
    def asStrugatzkiInput( implicit tx: Tx ) : FutureResult[ File ]

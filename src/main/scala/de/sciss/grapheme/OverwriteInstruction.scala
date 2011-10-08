@@ -25,4 +25,12 @@
 
 package de.sciss.grapheme
 
-final case class OverwriteInstruction( span: Span, newLength: Long )
+final case class OverwriteInstruction( span: Span, newLength: Long ) {
+   import GraphemeUtil._
+
+   def printFormat : String = {
+      val s = formatSpan( span )
+      val p = formatPercent( newLength.toDouble / span.length )
+      "over( " + s + " -> " + p + " )"
+   }
+}

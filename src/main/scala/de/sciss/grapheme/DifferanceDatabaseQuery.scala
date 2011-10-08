@@ -28,7 +28,14 @@ package de.sciss.grapheme
 import impl.{DifferanceDatabaseQueryImpl => Impl}
 
 object DifferanceDatabaseQuery {
-   final case class Match( database: Database, span: Span, boostIn: Float, boostOut: Float )
+   final case class Match( database: Database, span: Span, boostIn: Float, boostOut: Float ) {
+      import GraphemeUtil._
+
+      def printFormat : String = {
+         val s = formatSpan( span )
+         "match( " + s + " )"
+      }
+   }
 
    def apply( db: Database ) : DifferanceDatabaseQuery = Impl( db )
 }

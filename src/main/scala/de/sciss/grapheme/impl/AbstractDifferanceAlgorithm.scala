@@ -62,7 +62,7 @@ abstract class AbstractDifferanceAlgorithm extends DifferanceAlgorithm {
       val tgtNow  = futFill.map( _ => IIdxSeq.empty[ DifferanceDatabaseQuery.Match ])
       val futTgt  = ovs.foldLeft( tgtNow ) { case (futTgt1, ov) =>
          futTgt1.flatMap { coll =>
-            atomic( identifier + " : database query" ) { tx2 =>
+            atomic( identifier + " : database query " + ov.printFormat ) { tx2 =>
                val futOne = databaseQuery.find( p, ov )( tx2 )
                futOne.map { m =>
                   coll :+ m
@@ -74,7 +74,7 @@ abstract class AbstractDifferanceAlgorithm extends DifferanceAlgorithm {
       val futPNew = futTgt flatMap { targets =>
          (ovs zip targets).foldRight( pNow ) { case ((ov, target), futP1) =>
             futP1.flatMap { p1 =>
-               atomic( identifier + " : overwriter perform" ) { tx2 =>
+               atomic( identifier + " : overwriter perform " + target.printFormat ) { tx2 =>
                   overwriter.perform( p1, ov, target )( tx2 )
                }
             }
@@ -85,7 +85,7 @@ abstract class AbstractDifferanceAlgorithm extends DifferanceAlgorithm {
             thinner.remove( targets.map( _.span )( breakOut ))( tx3 ))
       }
       val futResult = futPNew.map { pNew =>
-         atomic( identifier + " update and complete cycle" ) { tx4 =>
+         atomic( identifier + " complete cycle with " + pNew.printFormat ) { tx4 =>
             phraseRef.set( pNew )( tx4 )
             phraseTrace.add( pNew )( tx4 )
             pNew

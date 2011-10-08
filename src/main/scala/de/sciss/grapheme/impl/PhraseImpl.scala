@@ -64,10 +64,14 @@ object PhraseImpl {
       new Impl( file, fact, spec.numFrames )
    }
 
-   private class Impl( file: File, fact: ProcFactory, val length: Long ) extends Phrase with ExtractionImpl {
+   private final class Impl( file: File, fact: ProcFactory, val length: Long ) extends Phrase with ExtractionImpl {
       import GraphemeUtil._
 
       override def toString = "Phrase.fromFile(" + file + ")"
+
+      def printFormat : String = {
+         "phrase( " + fileNameWithoutExtension( file ) + ", " + formatSeconds( framesToSeconds( length )) + " )"
+      }
 
       private val featureRef = Ref( Option.empty[ File ])
 

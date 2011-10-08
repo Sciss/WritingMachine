@@ -60,6 +60,28 @@ object GraphemeUtil {
       if( i < 0 ) n else n.substring( 0, i )
    }
 
+   def formatSpan( span: Span ) : String = {
+      val sb   = new StringBuilder( 24 )
+      sb.append( '[' )
+      sb.append( formatSeconds( secondsToFrames( span.start )))
+      sb.append( '-' )
+      sb.append( formatSeconds( secondsToFrames( span.stop )))
+      sb.append( ']' )
+      sb.toString()
+   }
+
+   def formatPercent( d: Double ) : String = {
+      val pm   = (d * 1000).toInt
+      val post = pm % 10
+      val pre  = pm / 10
+      val sb   = new StringBuilder( 8 )
+      sb.append( pre )
+      sb.append( '.' )
+      sb.append( post )
+      sb.append( '%' )
+      sb.toString()
+   }
+
    def timeString() = (new java.util.Date()).toString
 
    def formatSeconds( seconds: Double ) : String = {
