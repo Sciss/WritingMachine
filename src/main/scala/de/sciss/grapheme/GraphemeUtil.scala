@@ -165,4 +165,19 @@ object GraphemeUtil {
    def warnToDo( what: => String ) {
       logNoTx( "+++MISSING+++ " + what )
    }
+
+   def thread( name: String )( code: => Unit ) {
+      new Thread( name ) {
+         start()
+         override def run() {
+            code
+         }
+      }
+   }
+
+   def threadAtomic( info: => String )( fun: Tx => Unit ) {
+      thread( info ) {
+         atomic( info )( fun( _ ))
+      }
+   }
 }

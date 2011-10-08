@@ -28,7 +28,7 @@ package impl
 
 import java.io.File
 import de.sciss.synth
-import synth.io.{SampleFormat, AudioFileType}
+import synth.io.{AudioFile, SampleFormat, AudioFileType}
 
 object LiveTelevisionImpl {
    private val identifier  = "live-television-impl"
@@ -61,11 +61,25 @@ final class LiveTelevisionImpl private () extends Television {
                val dura = pDur.ir
                val me   = Proc.local
                Done.kr( Line.kr( dur = dura )).react {
-                  threadFuture( identifier + " : spawn stop" ) {
-                     atomic( identifier + " : stop proc" ) { implicit tx => me.stop }
-                     res.set( path )
+                  thread( identifier + " : capture completed" ) {
+                     atomic( identifier + " stop process" ) { implicit tx => me.stop }
+                     var len = 0L
+                     var i = 10
+                     // some effort to make sure the file was closed by the server
+                     // ; unfortunately we can't guarantee this with the current
+                     // sound processes (or can we?)
+                     while( len == 0L && i > 0 ) {
+                        try {
+                           val spec = AudioFile.readSpec( path )
+                           len      = spec.numFrames
+                        } catch {
+                           case _ =>
+                        }
+                        if( len == 0L ) Thread.sleep( 200 )
+                        i -= 1
+                     }
+                     atomic( identifier + " : return path" ) { implicit tx => res.set( path )}
                   }
-                  ()
                }
                DiskOut.ar( buf.id, mix )
             }

@@ -54,10 +54,7 @@ object PhraseImpl {
                // Done.kr( disk )
                val me   = Proc.local
                Done.kr( Line.kr( dur = spec.numFrames.toDouble / SampleRate.ir )).react {
-                  threadFuture( identifier + " : spawn stop" ) {
-                     atomic( identifier + " : stop proc" ) { implicit tx => me.stop }
-                  }
-                  ()
+                  threadAtomic( identifier + " : stop proc" ) { implicit tx => me.stop }
                }
                Mix.mono( disk )
             }

@@ -41,6 +41,8 @@ object WritingMachine {
    val tvBoostDB           = 0   // decibels
    val tvUseTestFile       = false
 //   val strugatzkiDatabase  = new File( "/Users/hhrutz/Documents/devel/LeereNull/feature/" )
+   val inDevice            = "MOTU 828mk2"
+   val outDevice           = inDevice
    val databaseDir         = new File( "audio_work", "database" )
    val testDir             = new File( "audio_work", "test" )
 
@@ -70,6 +72,7 @@ object WritingMachine {
       cfg.beforeShutdown   = quit _
       cfg.doneAction       = booted _
       val o                = cfg.serverOptions
+      o.deviceNames        = Some( (inDevice, outDevice) )
       val masterChans      = (masterChannelOffset until (masterChannelOffset + masterNumChannels)).toIndexedSeq
       val soloChans        = soloChannelOffset.map( off => IIdxSeq( off, off + 1 )).getOrElse( IIdxSeq.empty )
       o.outputBusChannels  = {
