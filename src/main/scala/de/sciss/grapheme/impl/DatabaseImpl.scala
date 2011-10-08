@@ -133,9 +133,9 @@ extends AbstractDatabase with ExtractionImpl {
    def append( appFile: File, offset: Long, length: Long )( implicit tx: Tx ) : FutureResult[ Unit ] = {
       val oldFileO  = stateRef().spec.map( _._1 )
       threadFuture( "Database append" ) {
-         atomic( "Database append tx" ) { implicit tx =>
+//         atomic( "Database append tx" ) { implicit tx =>
             appendBody( oldFileO, appFile, offset, length )
-         }
+//         }
       }
    }
 
