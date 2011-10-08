@@ -31,6 +31,8 @@ import java.io.File
 abstract class AbstractDifferanceDatabaseFiller extends DifferanceDatabaseFiller {
    import GraphemeUtil._
 
+   private val identifier = "a-database-filler"
+
    /**
     * Target database length in seconds.
     */
@@ -38,14 +40,21 @@ abstract class AbstractDifferanceDatabaseFiller extends DifferanceDatabaseFiller
 
    def database : Database
    def television : Television
-//   def fileSpace : FileSpace
 
    def perform( implicit tx: Tx ) : FutureResult[ Unit ] = {
-      val length  = secondsToFrames( durationMotion.step )
-      television.capture( length ).flatMap( f => performWithFile( f, length ))
+      val tgtLen  = secondsToFrames( durationMotion.step )
+      val dbLen   = database.length
+      val inc     = tgtLen - dbLen
+      if( inc > 0 ) {
+         television.capture( inc ).flatMap( f => performWithFile( f, inc ))
+      } else {
+         futureOf( () )
+      }
    }
 
-   private def performWithFile( file: File, length: Long ) : FutureResult[ Unit ] = {
-      atomic( "AbstractDifferanceDatabaseFiller appending" )( tx1 => database.append( file, 0L, length )( tx1 ))
+   private def performWithFile( file: File, inc: Long ) : FutureResult[ Unit ] = {
+      atomic( identifier + " : appending " + formatSeconds( framesToSeconds( inc ))) { tx1 =>
+         database.append( file, 0L, inc )( tx1 )
+      }
    }
 }
