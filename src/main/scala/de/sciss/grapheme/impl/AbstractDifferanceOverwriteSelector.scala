@@ -29,9 +29,13 @@ package impl
 import de.sciss.synth
 import collection.immutable.{IndexedSeq => IIdxSeq}
 
+object AbstractDifferanceOverwriteSelector {
+   private val verbose = true
+}
 abstract class AbstractDifferanceOverwriteSelector
 extends DifferanceOverwriteSelector {
    import GraphemeUtil._
+   import AbstractDifferanceOverwriteSelector._
 
    private val identifier = "a-overwrite-selector"
 
@@ -101,6 +105,7 @@ extends DifferanceOverwriteSelector {
             }
             futSpan.map { span =>
                val newLen  = (span.length * stretch).toLong
+if( verbose ) println( "---stretch from " + formatSeconds( framesToSeconds( span.length )) + " to " + formatSeconds( framesToSeconds( newLen )) + " (" + formatPercent( stretch ) + ")" )
                val ins     = OverwriteInstruction( span, newLen )
                coll :+ ins
             }

@@ -134,6 +134,7 @@ final class Init private ( /* _phrase0: Phrase, val differance: DifferanceAlgori
          val spatFuts   = Array.fill( numSectors )( futureOf( () ))
          var sector     = 0
          while( keepGoing ) {
+try {
             if( !spatFuts( sector ).isSet ) {
                logNoTx( "==== meta-diff wait for busy spat sector " + (sector+1) + " ====" )
                spatFuts( sector )()
@@ -161,6 +162,11 @@ final class Init private ( /* _phrase0: Phrase, val differance: DifferanceAlgori
                }
             }
 //            atomic( "meta-diff releasing spat phrase" ) { tx => spat.releasePhrase( tx )}
+} catch {
+   case e =>
+      logNoTx( "==== meta-diff caught exception ====" )
+      e.printStackTrace()
+}
 
             sector = (sector + 1) % numSectors
          }

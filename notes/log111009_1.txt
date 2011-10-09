@@ -1,0 +1,827 @@
+/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/bin/java -Xmx1024m -Didea.launcher.port=7532 -Didea.launcher.bin.path=/Applications/IntelliJ IDEA 10 CE.app/bin -Dfile.encoding=UTF-8 -classpath /System/Library/Frameworks/JavaVM.framework/Versions/A/Resources/Deploy.bundle/Contents/Resources/Java/deploy.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/lib/dt.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/lib/javaws.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/lib/jce.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/lib/management-agent.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/lib/plugin.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/lib/sa-jdi.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Classes/alt-rt.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Classes/charsets.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Classes/classes.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Classes/jconsole.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Classes/jsse.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Classes/ui.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/lib/ext/apple_provider.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/lib/ext/dnsns.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/lib/ext/localedata.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/lib/ext/sunjce_provider.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/lib/ext/sunpkcs11.jar:/Users/hhrutz/Documents/devel/WritingMachine/target/scala-2.9.1/classes:/Users/hhrutz/Documents/devel/WritingMachine/lib_managed/jars/de.sciss/audiowidgets_2.9.1/audiowidgets_2.9.1-0.10.jar:/Users/hhrutz/Documents/devel/WritingMachine/lib_managed/jars/de.sciss/prefuse-core/prefuse-core-0.21.jar:/Users/hhrutz/Documents/devel/WritingMachine/lib_managed/jars/de.sciss/scalaaudiofile_2.9.1/scalaaudiofile_2.9.1-0.20.jar:/Users/hhrutz/Documents/devel/WritingMachine/lib_managed/jars/de.sciss/scalaaudiowidgets_2.9.1/scalaaudiowidgets_2.9.1-0.10.jar:/Users/hhrutz/Documents/devel/WritingMachine/lib_managed/jars/de.sciss/scalacollider_2.9.1/scalacollider_2.9.1-0.30-SNAPSHOT.jar:/Users/hhrutz/Documents/devel/WritingMachine/lib_managed/jars/de.sciss/scalacolliderswing_2.9.1/scalacolliderswing_2.9.1-0.30-SNAPSHOT.jar:/Users/hhrutz/Documents/devel/WritingMachine/lib_managed/jars/de.sciss/soundprocesses_2.9.1/soundprocesses_2.9.1-0.30-SNAPSHOT.jar:/Users/hhrutz/Documents/devel/WritingMachine/lib_managed/jars/de.sciss/wolkenpumpe_2.9.1/wolkenpumpe_2.9.1-0.30-SNAPSHOT.jar:/Users/hhrutz/Documents/devel/WritingMachine/lib_managed/jars/jsyntaxpane/jsyntaxpane/jsyntaxpane-0.9.5-b29.jar:/Users/hhrutz/.sbt/boot/scala-2.9.1/lib/scala-compiler.jar:/Users/hhrutz/.sbt/boot/scala-2.9.1/lib/scala-library.jar:/Users/hhrutz/Documents/devel/WritingMachine/lib_managed/jars/org.scala-lang/scala-swing/scala-swing-2.9.1.jar:/Users/hhrutz/Documents/devel/WritingMachine/lib_managed/jars/org.scala-tools/scala-stm_2.9.1/scala-stm_2.9.1-0.3.jar:/Users/hhrutz/Documents/devel/WritingMachine/lib_managed/jars/org.scalatest/scalatest_2.9.1/scalatest_2.9.1-1.6.1.jar:/Users/hhrutz/Documents/devel/WritingMachine/lib_managed/jars/de.sciss/scalaosc_2.9.1/scalaosc_2.9.1-0.30.jar:/Users/hhrutz/Documents/devel/WritingMachine/lib_managed/jars/de.sciss/scalainterpreterpane_2.9.1/scalainterpreterpane_2.9.1-0.18.jar:/Users/hhrutz/Documents/devel/WritingMachine/lib_managed/jars/de.sciss/nuagespompe_2.9.1/nuagespompe_2.9.1-0.10.jar:/Users/hhrutz/Documents/devel/WritingMachine/lib_managed/jars/de.sciss/strugatzki_2.9.1/strugatzki_2.9.1-0.14-SNAPSHOT.jar:/Users/hhrutz/Documents/devel/WritingMachine/lib_managed/jars/com.github.scopt/scopt_2.9.1/scopt_2.9.1-1.1.2.jar:/Applications/IntelliJ IDEA 10 CE.app/lib/idea_rt.jar com.intellij.rt.execution.application.AppMain de.sciss.grapheme.WritingMachine
+fCoreAudioDriverUID AppleHDAEngineInput:1B,0,1,0:1
+Number of Devices: 12
+   0 : "Built-in Microphone"
+   1 : "Built-in Input"
+   2 : "Built-in Output"
+   3 : "CD Spin Doctor Capture Support"
+   4 : "Soundflower (2ch)"
+   5 : "Soundflower (16ch)"
+   6 : "Adobe Encore DVD 4.0.1"
+   7 : "Adobe Media Encoder 4.0"
+   8 : "After Effects 9.0.2"
+   9 : "Premiere Pro 4.0"
+   10 : "Soundbooth 2.0"
+   11 : "MOTU 828mk2"
+
+"MOTU 828mk2" Input Device
+   Streams: 5
+      0  channels 2
+      1  channels 8
+      2  channels 2
+      3  channels 2
+      4  channels 8
+
+"MOTU 828mk2" Output Device
+   Streams: 5
+      0  channels 2
+      1  channels 8
+      2  channels 2
+      3  channels 2
+      4  channels 8
+
+SC_AudioDriver: sample rate = 44100.000000, driver's block size = 512
+SuperCollider 3 server ready..
+Sun Oct 09 14:13:24 BST 2011 WritingMachine : start
+Sun Oct 09 14:13:24 BST 2011 meta-diff initial tv capture
+Sun Oct 09 14:13:24 BST 2011 ==== meta-diff wait for initial tv capture ====
+Sun Oct 09 14:13:28 BST 2011 live-television-impl stop process
+Sun Oct 09 14:13:28 BST 2011 live-television-impl return path
+Sun Oct 09 14:13:28 BST 2011 meta-diff initialize algorithm
+Sun Oct 09 14:13:28 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:13:28 BST 2011 meta-diff difference algorithm step
+Sun Oct 09 14:13:28 BST 2011 meta-diff determining rotation duration
+Sun Oct 09 14:13:28 BST 2011 ==== meta-diff wait for algorithm step ====
+Sun Oct 09 14:13:29 BST 2011 phrase-impl : cache feature extraction
+Sun Oct 09 14:13:29 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:13:29 BST 2011 overwrite-selector-impl : found 0.928s
+---stretch from 2.297s to 2.477s (107.8%)
+Sun Oct 09 14:13:29 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:13:29 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:13:29 BST 2011 overwrite-selector-impl : found 2.484s
+---stretch from 3.317s to 3.575s (107.7%)
+Sun Oct 09 14:13:29 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:13:29 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:13:29 BST 2011 overwrite-selector-impl : found 0.917s
+---stretch from 3.715s to 4.055s (109.1%)
+Sun Oct 09 14:13:29 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:13:29 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:13:29 BST 2011 overwrite-selector-impl : found 1.404s
+---stretch from 3.551s to 3.895s (109.6%)
+Sun Oct 09 14:13:29 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:13:29 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:13:29 BST 2011 overwrite-selector-impl : found 1.160s
+---stretch from 3.715s to 4.027s (108.4%)
+Sun Oct 09 14:13:29 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:13:29 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:13:29 BST 2011 overwrite-selector-impl : found 2.240s
+---stretch from 2.950s to 3.220s (109.1%)
+Sun Oct 09 14:13:29 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:13:29 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:13:29 BST 2011 overwrite-selector-impl : found 2.472s
+---stretch from 3.715s to 4.086s (110.0%)
+Sun Oct 09 14:13:29 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:13:29 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:13:29 BST 2011 overwrite-selector-impl : found 2.275s
+---stretch from 2.740s to 3.015s (110.0%)
+Sun Oct 09 14:13:29 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:13:29 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:13:29 BST 2011 overwrite-selector-impl : found 2.240s
+---stretch from 3.715s to 4.019s (108.1%)
+Sun Oct 09 14:13:29 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:13:30 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:13:30 BST 2011 overwrite-selector-impl : found 2.240s
+---stretch from 2.744s to 2.989s (108.9%)
+Sun Oct 09 14:13:30 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:13:30 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:13:30 BST 2011 overwrite-selector-impl : found 2.147s
+---stretch from 3.450s to 3.784s (109.6%)
+Sun Oct 09 14:13:30 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:13:30 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:13:30 BST 2011 overwrite-selector-impl : found 2.113s
+---stretch from 3.715s to 4.086s (110.0%)
+Sun Oct 09 14:13:30 BST 2011 a-differance : filler.perform
+Sun Oct 09 14:13:30 BST 2011 a-database-filler : gathering 20.230s
+Sun Oct 09 14:13:50 BST 2011 live-television-impl stop process
+Sun Oct 09 14:13:50 BST 2011 live-television-impl return path
+Sun Oct 09 14:13:50 BST 2011 a-database-filler : appending 20.230s
+Sun Oct 09 14:13:50 BST 2011 threadFuture started : database-impl : append 20.230s
+Sun Oct 09 14:13:51 BST 2011 database-impl : update finalize
+---punch in[0.000s-0.810s] / out [1.325s-3.270s] / minPunch = 1.926s / maxPunch = 1.926s
+Sun Oct 09 14:13:51 BST 2011 a-differance : database query over( [0.000s-2.297s] -> 107.8% )
+Sun Oct 09 14:13:51 BST 2011 threadFuture started : database-impl : copy file
+Sun Oct 09 14:13:51 BST 2011 database-impl : extract
+Created tmp file : audio_work/database/database1219110886839611668/grapheme8489662782436642939.aif
+Created tmp file : audio_work/database/database1219110886839611668/grapheme506260205725153124_feat.xml
+Sun Oct 09 14:13:52 BST 2011 database-impl : cache feature extraction
+---punch in[0.000s-1.033s] / out [2.855s-3.715s] / minPunch = 3.274s / maxPunch = 3.274s
+Sun Oct 09 14:13:53 BST 2011 a-differance : database query over( [0.000s-3.715s] -> 109.1% )
+---punch in[0.000s-0.861s] / out [2.849s-3.715s] / minPunch = 3.184s / maxPunch = 3.184s
+Sun Oct 09 14:13:54 BST 2011 a-differance : database query over( [0.000s-3.551s] -> 109.6% )
+---punch in[0.000s-0.585s] / out [3.189s-3.715s] / minPunch = 3.182s / maxPunch = 3.182s
+Sun Oct 09 14:13:55 BST 2011 a-differance : database query over( [0.000s-3.715s] -> 108.4% )
+---punch in[0.000s-0.645s] / out [3.008s-3.715s] / minPunch = 3.330s / maxPunch = 3.330s
+Sun Oct 09 14:13:55 BST 2011 a-differance : database query over( [0.000s-3.715s] -> 110.0% )
+---punch in[0.000s-0.608s] / out [3.054s-3.715s] / minPunch = 3.269s / maxPunch = 3.269s
+Sun Oct 09 14:13:56 BST 2011 a-differance : database query over( [0.000s-3.715s] -> 108.1% )
+---punch in[0.000s-0.697s] / out [0.00-848s-3.715s] / minPunch = 3.415s / maxPunch = 3.415s
+Sun Oct 09 14:13:57 BST 2011 a-differance : database query over( [0.000s-3.715s] -> 110.0% )
+DifferanceDatabaseQuery : Ouch. Failure. Need to handle this case!
+Sun Oct 09 14:13:57 BST 2011 database-query-impl : failure match
+java.io.IOException: Negative seek offset
+	at java.io.RandomAccessFile.seek(Native Method)
+	at de.sciss.synth.io.AudioFile$FileLike$class.seek(AudioFile.scala:411)
+	at de.sciss.synth.io.AudioFile$ReadableFileImpl.seek(AudioFile.scala:475)
+	at de.sciss.strugatzki.FeatureCorrelation.readInBuffer$1(FeatureCorrelation.scala:281)
+	at de.sciss.strugatzki.FeatureCorrelation$$anonfun$4.apply(FeatureCorrelation.scala:296)
+	at de.sciss.strugatzki.FeatureCorrelation$$anonfun$4.apply(FeatureCorrelation.scala:296)
+	at scala.Option.map(Option.scala:133)
+	at de.sciss.strugatzki.FeatureCorrelation.body(FeatureCorrelation.scala:296)
+	at de.sciss.strugatzki.aux.Processor$ProcT$.liftedTree1$1(Processor.scala:134)
+	at de.sciss.strugatzki.aux.Processor$ProcT$.run(Processor.scala:133)
+---punch in[0.000s-0.903s] / out [3.076s-3.715s] / minPunch = 3.175s / maxPunch = 3.175s
+Sun Oct 09 14:13:57 BST 2011 a-differance : database query over( [0.264s-3.715s] -> 109.6% )
+---punch in[0.000s-1.179s] / out [3.076s-3.715s] / minPunch = 2.983s / maxPunch = 2.983s
+Sun Oct 09 14:13:58 BST 2011 a-differance : database query over( [0.397s-3.715s] -> 107.7% )
+---punch in[0.240s-1.288s] / out [3.219s-3.715s] / minPunch = 2.729s / maxPunch = 2.729s
+Sun Oct 09 14:13:58 BST 2011 a-differance : database query over( [0.764s-3.715s] -> 109.1% )
+---punch in[0.440s-1.297s] / out [3.165s-3.715s] / minPunch = 2.490s / maxPunch = 2.490s
+Sun Oct 09 14:13:58 BST 2011 a-differance : database query over( [0.868s-3.612s] -> 108.9% )
+---punch in[0.383s-1.427s] / out [3.148s-3.715s] / minPunch = 2.494s / maxPunch = 2.494s
+Sun Oct 09 14:13:59 BST 2011 a-differance : database query over( [0.905s-3.646s] -> 109.9% )
+Sun Oct 09 14:13:59 BST 2011 a-differance : thinner remove 12 regions
+Sun Oct 09 14:13:59 BST 2011 threadFuture started : database-impl : remove
+Sun Oct 09 14:13:59 BST 2011 a-differance : overwriter perform match( [1:31.057s-1:33.553s] )
+Sun Oct 09 14:13:59 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:13:59 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:13:59 BST 2011 a-differance : overwriter perform match( [15.952s-18.517s] )
+Sun Oct 09 14:13:59 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:13:59 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:13:59 BST 2011 a-differance : overwriter perform match( [2:44.014s-2:47.497s] )
+Sun Oct 09 14:13:59 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:14:00 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:14:00 BST 2011 a-differance : overwriter perform match( [2:40.078s-2:44.350s] )
+Sun Oct 09 14:14:00 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:14:00 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:14:00 BST 2011 a-differance : overwriter perform match( [45.511s-49.214s] )
+Sun Oct 09 14:14:00 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:14:00 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:14:00 BST 2011 a-differance : overwriter perform match( [0.000s-1.000s] )
+Sun Oct 09 14:14:00 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:14:00 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:14:00 BST 2011 a-differance : overwriter perform match( [2:32.439s-2:36.096s] )
+Sun Oct 09 14:14:00 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:14:00 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:14:00 BST 2011 a-differance : overwriter perform match( [1:03.123s-1:07.546s] )
+Sun Oct 09 14:14:00 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:14:00 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:14:00 BST 2011 a-differance : overwriter perform match( [2:48.263s-2:52.466s] )
+Sun Oct 09 14:14:00 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:14:00 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:14:00 BST 2011 a-differance : overwriter perform match( [1:03.413s-1:07.384s] )
+Sun Oct 09 14:14:00 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:14:00 BST 2011 database-impl : update finalize
+Sun Oct 09 14:14:00 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:14:00 BST 2011 a-differance : overwriter perform match( [1:03.204s-1:07.395s] )
+Sun Oct 09 14:14:00 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:14:00 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:14:00 BST 2011 a-differance : overwriter perform match( [2:07.500s-2:10.681s] )
+Sun Oct 09 14:14:00 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:14:00 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:14:00 BST 2011 +++MISSING+++ phrase-trace-impl : add
+Sun Oct 09 14:14:00 BST 2011 a-differance complete cycle with phrase( grapheme6869764098019333737, 6.688s )
+Sun Oct 09 14:14:00 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:14:00 BST 2011 meta-diff difference algorithm step
+Sun Oct 09 14:14:00 BST 2011 meta-diff determining rotation duration
+Sun Oct 09 14:14:00 BST 2011 ==== meta-diff wait for algorithm step ====
+Sun Oct 09 14:14:00 BST 2011 phrase-impl : cache feature extraction
+Sun Oct 09 14:14:00 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:14:00 BST 2011 overwrite-selector-impl : found 3.169s
+---stretch from 2.519s to 2.740s (108.7%)
+Sun Oct 09 14:14:00 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:14:00 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:14:00 BST 2011 overwrite-selector-impl : found 3.146s
+---stretch from 4.594s to 4.949s (107.7%)
+Sun Oct 09 14:14:00 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:14:00 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:14:00 BST 2011 overwrite-selector-impl : found 3.146s
+---stretch from 2.192s to 2.328s (106.2%)
+Sun Oct 09 14:14:00 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:14:00 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:14:00 BST 2011 overwrite-selector-impl : found 3.134s
+---stretch from 3.012s to 3.154s (104.7%)
+Sun Oct 09 14:14:00 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:14:00 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:14:00 BST 2011 overwrite-selector-impl : found 3.703s
+---stretch from 1.842s to 1.954s (106.0%)
+Sun Oct 09 14:14:00 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:14:00 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:14:01 BST 2011 overwrite-selector-impl : found 3.169s
+---stretch from 2.661s to 2.820s (105.9%)
+Sun Oct 09 14:14:01 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:14:01 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:14:01 BST 2011 overwrite-selector-impl : found 3.169s
+---stretch from 3.281s to 3.439s (104.8%)
+Sun Oct 09 14:14:01 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:14:01 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:14:01 BST 2011 overwrite-selector-impl : found 3.169s
+---stretch from 3.483s to 3.650s (104.7%)
+Sun Oct 09 14:14:01 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:14:01 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:14:01 BST 2011 overwrite-selector-impl : found 3.169s
+---stretch from 3.000s to 3.134s (104.4%)
+Sun Oct 09 14:14:01 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:14:01 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:14:01 BST 2011 overwrite-selector-impl : found 3.134s
+---stretch from 3.908s to 4.123s (105.5%)
+Sun Oct 09 14:14:01 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:14:01 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:14:01 BST 2011 overwrite-selector-impl : found 3.146s
+---stretch from 3.860s to 4.124s (106.8%)
+Sun Oct 09 14:14:01 BST 2011 a-differance : filler.perform
+Sun Oct 09 14:14:01 BST 2011 a-database-filler : gathering 19.229s
+Sun Oct 09 14:14:04 BST 2011 phrase-impl : stop proc
+Sun Oct 09 14:14:04 BST 2011 proc : stopped listener
+scala.concurrent.stm.skel.RollbackError$
+scala.concurrent.stm.skel.RollbackError$
+scala.concurrent.stm.skel.RollbackError$
+Sun Oct 09 14:14:04 BST 2011 a-differance-spat : dispose phrase process
+Sun Oct 09 14:14:20 BST 2011 live-television-impl stop process
+Sun Oct 09 14:14:20 BST 2011 live-television-impl return path
+Sun Oct 09 14:14:20 BST 2011 a-database-filler : appending 19.229s
+Sun Oct 09 14:14:20 BST 2011 threadFuture started : database-impl : append 19.229s
+Sun Oct 09 14:14:21 BST 2011 database-impl : update finalize
+---punch in[0.000s-0.488s] / out [2.574s-3.586s] / minPunch = 2.557s / maxPunch = 2.557s
+Sun Oct 09 14:14:21 BST 2011 a-differance : database query over( [0.068s-3.080s] -> 104.7% )
+Sun Oct 09 14:14:21 BST 2011 threadFuture started : database-impl : copy file
+Sun Oct 09 14:14:21 BST 2011 database-impl : extract
+Created tmp file : audio_work/database/database2583877603529202416/grapheme6804453006974526204.aif
+Created tmp file : audio_work/database/database2583877603529202416/grapheme3301015099339464760_feat.xml
+Sun Oct 09 14:14:22 BST 2011 database-impl : cache feature extraction
+---punch in[0.000s-0.520s] / out [3.565s-4.342s] / minPunch = 3.348s / maxPunch = 3.348s
+Sun Oct 09 14:14:22 BST 2011 a-differance : database query over( [0.093s-3.953s] -> 106.8% )
+---punch in[0.000s-0.634s] / out [2.103s-2.773s] / minPunch = 1.908s / maxPunch = 1.908s
+Sun Oct 09 14:14:23 BST 2011 a-differance : database query over( [0.246s-2.438s] -> 106.2% )
+---punch in[0.480s-1.217s] / out [5.041s-5.845s] / minPunch = 4.055s / maxPunch = 4.055s
+Sun Oct 09 14:14:23 BST 2011 a-differance : database query over( [0.848s-5.443s] -> 107.7% )
+---punch in[0.585s-1.234s] / out [4.554s-5.081s] / minPunch = 3.493s / maxPunch = 3.493s
+Sun Oct 09 14:14:24 BST 2011 a-differance : database query over( [0.909s-4.818s] -> 105.5% )
+---punch in[0.679s-1.267s] / out [3.389s-3.880s] / minPunch = 2.439s / maxPunch = 2.439s
+Sun Oct 09 14:14:24 BST 2011 a-differance : database query over( [0.973s-3.635s] -> 105.9% )
+---punch in[0.775s-1.379s] / out [3.262s-3.931s] / minPunch = 2.360s / maxPunch = 2.360s
+Sun Oct 09 14:14:25 BST 2011 a-differance : database query over( [1.077s-3.597s] -> 108.7% )
+---punch in[1.078s-1.777s] / out [0.847s-6.688s] / minPunch = 3.188s / maxPunch = 3.188s
+Sun Oct 09 14:14:25 BST 2011 a-differance : database query over( [1.427s-4.911s] -> 104.7% )
+---punch in[1.172s-1.885s] / out [4.427s-5.192s] / minPunch = 2.914s / maxPunch = 2.914s
+Sun Oct 09 14:14:26 BST 2011 a-differance : database query over( [1.528s-4.810s] -> 104.8% )
+---punch in[1.233s-2.105s] / out [4.189s-5.149s] / minPunch = 2.662s / maxPunch = 2.662s
+Sun Oct 09 14:14:27 BST 2011 a-differance : database query over( [1.669s-4.669s] -> 104.4% )
+---punch in[3.099s-4.042s] / out [4.912s-5.914s] / minPunch = 1.643s / maxPunch = 1.643s
+Sun Oct 09 14:14:28 BST 2011 a-differance : database query over( [3.571s-5.413s] -> 106.0% )
+Sun Oct 09 14:14:28 BST 2011 a-differance : overwriter perform match( [2:30.883s-2:32.601s] )
+Sun Oct 09 14:14:28 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:14:28 BST 2011 a-differance : thinner remove 11 regions
+Sun Oct 09 14:14:28 BST 2011 threadFuture started : database-impl : remove
+Sun Oct 09 14:14:28 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:14:28 BST 2011 a-differance : overwriter perform match( [2:52.559s-2:55.914s] )
+Sun Oct 09 14:14:28 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:14:28 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:14:28 BST 2011 a-differance : overwriter perform match( [2:08.673s-2:12.678s] )
+Sun Oct 09 14:14:28 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:14:28 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:14:28 BST 2011 a-differance : overwriter perform match( [2:04.366s-2:08.348s] )
+Sun Oct 09 14:14:28 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:14:28 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:14:28 BST 2011 a-differance : overwriter perform match( [1:30.581s-1:33.762s] )
+Sun Oct 09 14:14:28 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:14:29 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:14:29 BST 2011 a-differance : overwriter perform match( [2:08.185s-2:10.681s] )
+Sun Oct 09 14:14:29 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:14:29 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:14:29 BST 2011 a-differance : overwriter perform match( [1:58.862s-2:02.357s] )
+Sun Oct 09 14:14:29 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:14:29 BST 2011 database-impl : update finalize
+Sun Oct 09 14:14:29 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:14:29 BST 2011 a-differance : overwriter perform match( [2:28.828s-2:33.971s] )
+Sun Oct 09 14:14:29 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:14:29 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:14:29 BST 2011 a-differance : overwriter perform match( [2:07.500s-2:09.602s] )
+Sun Oct 09 14:14:29 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:14:29 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:14:29 BST 2011 a-differance : overwriter perform match( [1:33.750s-1:38.139s] )
+Sun Oct 09 14:14:29 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:14:29 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:14:29 BST 2011 a-differance : overwriter perform match( [56.169s-58.850s] )
+Sun Oct 09 14:14:29 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:14:29 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:14:29 BST 2011 +++MISSING+++ phrase-trace-impl : add
+Sun Oct 09 14:14:29 BST 2011 a-differance complete cycle with phrase( grapheme3044785007005600422, 8.880s )
+Sun Oct 09 14:14:29 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:14:29 BST 2011 meta-diff difference algorithm step
+Sun Oct 09 14:14:29 BST 2011 meta-diff determining rotation duration
+Sun Oct 09 14:14:29 BST 2011 ==== meta-diff wait for algorithm step ====
+Sun Oct 09 14:14:29 BST 2011 phrase-impl : cache feature extraction
+Sun Oct 09 14:14:29 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:14:29 BST 2011 overwrite-selector-impl : found 3.773s
+---stretch from 2.744s to 2.983s (108.7%)
+Sun Oct 09 14:14:29 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:14:29 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:14:29 BST 2011 overwrite-selector-impl : found 7.233s
+---stretch from 3.743s to 4.117s (110.0%)
+Sun Oct 09 14:14:29 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:14:29 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:14:29 BST 2011 overwrite-selector-impl : found 3.599s
+---stretch from 2.866s to 3.144s (109.7%)
+Sun Oct 09 14:14:29 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:14:29 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:14:29 BST 2011 overwrite-selector-impl : found 7.523s
+---stretch from 2.642s to 2.893s (109.4%)
+Sun Oct 09 14:14:29 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:14:29 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:14:29 BST 2011 overwrite-selector-impl : found 3.784s
+---stretch from 2.419s to 2.646s (109.3%)
+Sun Oct 09 14:14:29 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:14:29 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:14:29 BST 2011 overwrite-selector-impl : found 6.002s
+---stretch from 3.597s to 3.954s (109.9%)
+Sun Oct 09 14:14:29 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:14:29 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:14:30 BST 2011 overwrite-selector-impl : found 3.250s
+---stretch from 2.379s to 2.617s (110.0%)
+Sun Oct 09 14:14:30 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:14:30 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:14:30 BST 2011 overwrite-selector-impl : found 4.574s
+---stretch from 2.653s to 2.918s (110.0%)
+Sun Oct 09 14:14:30 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:14:30 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:14:30 BST 2011 overwrite-selector-impl : found 3.842s
+---stretch from 2.545s to 2.790s (109.6%)
+Sun Oct 09 14:14:30 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:14:30 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:14:30 BST 2011 overwrite-selector-impl : found 3.250s
+---stretch from 1.855s to 2.032s (109.5%)
+Sun Oct 09 14:14:30 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:14:30 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:14:30 BST 2011 overwrite-selector-impl : found 4.574s
+---stretch from 2.660s to 2.908s (109.3%)
+Sun Oct 09 14:14:30 BST 2011 a-differance : filler.perform
+Sun Oct 09 14:14:30 BST 2011 a-database-filler : gathering 19.229s
+Sun Oct 09 14:14:35 BST 2011 phrase-impl : stop proc
+Sun Oct 09 14:14:35 BST 2011 proc : stopped listener
+Sun Oct 09 14:14:35 BST 2011 a-differance-spat : dispose phrase process
+Sun Oct 09 14:14:49 BST 2011 live-television-impl stop process
+Sun Oct 09 14:14:49 BST 2011 live-television-impl return path
+Sun Oct 09 14:14:49 BST 2011 a-database-filler : appending 19.229s
+Sun Oct 09 14:14:49 BST 2011 threadFuture started : database-impl : append 19.229s
+Sun Oct 09 14:14:51 BST 2011 database-impl : update finalize
+---punch in[0.000s-0.584s] / out [2.181s-3.551s] / minPunch = 2.710s / maxPunch = 2.710s
+Sun Oct 09 14:14:51 BST 2011 a-differance : database query over( [0.000s-2.866s] -> 109.7% )
+Sun Oct 09 14:14:51 BST 2011 threadFuture started : database-impl : copy file
+Sun Oct 09 14:14:51 BST 2011 database-impl : extract
+Created tmp file : audio_work/database/database128741891848270562/grapheme4307855365540014730.aif
+Created tmp file : audio_work/database/database128741891848270562/grapheme2200235040935528802_feat.xml
+Sun Oct 09 14:14:52 BST 2011 database-impl : cache feature extraction
+---punch in[0.000s-0.581s] / out [1.833s-2.930s] / minPunch = 2.341s / maxPunch = 2.341s
+Sun Oct 09 14:14:52 BST 2011 a-differance : database query over( [0.002s-2.382s] -> 109.9% )
+---punch in[0.000s-0.783s] / out [2.156s-3.365s] / minPunch = 2.618s / maxPunch = 2.618s
+Sun Oct 09 14:14:53 BST 2011 a-differance : database query over( [0.100s-2.760s] -> 109.3% )
+---punch in[0.000s-0.862s] / out [2.304s-3.588s] / minPunch = 2.685s / maxPunch = 2.685s
+Sun Oct 09 14:14:53 BST 2011 a-differance : database query over( [0.201s-2.946s] -> 108.7% )
+---punch in[0.000s-1.023s] / out [1.660s-2.764s] / minPunch = 1.787s / maxPunch = 1.787s
+Sun Oct 09 14:14:54 BST 2011 a-differance : database query over( [0.356s-2.212s] -> 109.5% )
+---punch in[0.018s-1.297s] / out [2.665s-3.740s] / minPunch = 2.371s / maxPunch = 2.371s
+Sun Oct 09 14:14:55 BST 2011 a-differance : database query over( [0.658s-3.203s] -> 109.6% )
+---punch in[1.444s-2.309s] / out [3.884s-4.709s] / minPunch = 2.161s / maxPunch = 2.161s
+Sun Oct 09 14:14:55 BST 2011 a-differance : database query over( [1.876s-4.296s] -> 109.3% )
+---punch in[2.851s-3.643s] / out [5.543s-6.258s] / minPunch = 2.420s / maxPunch = 2.420s
+Sun Oct 09 14:14:56 BST 2011 a-differance : database query over( [3.247s-5.901s] -> 109.9% )
+---punch in[3.860s-4.546s] / out [7.519s-8.082s] / minPunch = 3.280s / maxPunch = 3.280s
+Sun Oct 09 14:14:56 BST 2011 a-differance : database query over( [4.203s-7.801s] -> 109.9% )
+---punch in[4.874s-5.399s] / out [0.930s-8.880s] / minPunch = 3.545s / maxPunch = 3.545s
+Sun Oct 09 14:14:56 BST 2011 a-differance : database query over( [5.137s-8.880s] -> 109.9% )
+---punch in[5.004s-5.539s] / out [7.641s-8.188s] / minPunch = 2.447s / maxPunch = 2.447s
+Sun Oct 09 14:14:58 BST 2011 a-differance : database query over( [5.272s-7.914s] -> 109.4% )
+Sun Oct 09 14:14:58 BST 2011 a-differance : overwriter perform match( [2:32.880s-2:35.747s] )
+Sun Oct 09 14:14:58 BST 2011 a-differance : thinner remove 11 regions
+Sun Oct 09 14:14:58 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:14:58 BST 2011 threadFuture started : database-impl : remove
+Sun Oct 09 14:14:58 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:14:58 BST 2011 a-differance : overwriter perform match( [2:32.752s-2:37.535s] )
+Sun Oct 09 14:14:58 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:14:59 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:14:59 BST 2011 a-differance : overwriter perform match( [40.449s-44.814s] )
+Sun Oct 09 14:14:59 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:14:59 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:14:59 BST 2011 a-differance : overwriter perform match( [1:33.274s-1:36.258s] )
+Sun Oct 09 14:14:59 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:14:59 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:14:59 BST 2011 a-differance : overwriter perform match( [2:28.630s-2:31.765s] )
+Sun Oct 09 14:14:59 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:14:59 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:14:59 BST 2011 a-differance : overwriter perform match( [1:42.690s-1:45.975s] )
+Sun Oct 09 14:14:59 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:14:59 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:14:59 BST 2011 a-differance : overwriter perform match( [1:20.944s-1:23.104s] )
+Sun Oct 09 14:14:59 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:14:59 BST 2011 database-impl : update finalize
+Sun Oct 09 14:14:59 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:14:59 BST 2011 a-differance : overwriter perform match( [1:48.390s-1:51.316s] )
+Sun Oct 09 14:14:59 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:14:59 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:14:59 BST 2011 a-differance : overwriter perform match( [56.099s-58.804s] )
+Sun Oct 09 14:14:59 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:14:59 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:14:59 BST 2011 a-differance : overwriter perform match( [56.099s-58.456s] )
+Sun Oct 09 14:14:59 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:15:00 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:15:00 BST 2011 a-differance : overwriter perform match( [1:19.795s-1:22.755s] )
+Sun Oct 09 14:15:00 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:15:00 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:15:00 BST 2011 +++MISSING+++ phrase-trace-impl : add
+Sun Oct 09 14:15:00 BST 2011 a-differance complete cycle with phrase( grapheme1934240219796135698, 13.299s )
+Sun Oct 09 14:15:00 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:15:00 BST 2011 meta-diff difference algorithm step
+Sun Oct 09 14:15:00 BST 2011 meta-diff determining rotation duration
+Sun Oct 09 14:15:00 BST 2011 ==== meta-diff wait for algorithm step ====
+Sun Oct 09 14:15:00 BST 2011 phrase-impl : cache feature extraction
+Sun Oct 09 14:15:00 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:15:00 BST 2011 overwrite-selector-impl : found 4.063s
+---stretch from 2.090s to 2.245s (107.3%)
+Sun Oct 09 14:15:00 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:15:00 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:15:00 BST 2011 overwrite-selector-impl : found 4.179s
+---stretch from 2.806s to 3.033s (108.0%)
+Sun Oct 09 14:15:00 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:15:00 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:15:00 BST 2011 overwrite-selector-impl : found 4.214s
+---stretch from 3.969s to 4.271s (107.6%)
+Sun Oct 09 14:15:00 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:15:00 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:15:00 BST 2011 overwrite-selector-impl : found 6.362s
+---stretch from 2.579s to 2.742s (106.3%)
+Sun Oct 09 14:15:00 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:15:00 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:15:00 BST 2011 overwrite-selector-impl : found 6.385s
+---stretch from 4.210s to 4.509s (107.0%)
+Sun Oct 09 14:15:00 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:15:00 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:15:01 BST 2011 overwrite-selector-impl : found 6.594s
+---stretch from 3.865s to 4.200s (108.6%)
+Sun Oct 09 14:15:01 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:15:01 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:15:01 BST 2011 overwrite-selector-impl : found 6.594s
+---stretch from 4.956s to 5.439s (109.7%)
+Sun Oct 09 14:15:01 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:15:01 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:15:01 BST 2011 overwrite-selector-impl : found 6.594s
+---stretch from 5.162s to 5.664s (109.7%)
+Sun Oct 09 14:15:01 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:15:01 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:15:01 BST 2011 overwrite-selector-impl : found 6.385s
+---stretch from 3.457s to 3.775s (109.2%)
+Sun Oct 09 14:15:01 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:15:01 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:15:01 BST 2011 overwrite-selector-impl : found 6.385s
+---stretch from 2.924s to 3.137s (107.2%)
+Sun Oct 09 14:15:01 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:15:01 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:15:01 BST 2011 overwrite-selector-impl : found 6.965s
+---stretch from 5.812s to 6.311s (108.5%)
+Sun Oct 09 14:15:01 BST 2011 a-differance : filler.perform
+Sun Oct 09 14:15:01 BST 2011 a-database-filler : gathering 19.786s
+Sun Oct 09 14:15:07 BST 2011 phrase-impl : stop proc
+Sun Oct 09 14:15:07 BST 2011 proc : stopped listener
+Sun Oct 09 14:15:07 BST 2011 a-differance-spat : dispose phrase process
+Sun Oct 09 14:15:21 BST 2011 live-television-impl stop process
+Sun Oct 09 14:15:21 BST 2011 live-television-impl return path
+Sun Oct 09 14:15:21 BST 2011 a-database-filler : appending 19.786s
+Sun Oct 09 14:15:21 BST 2011 threadFuture started : database-impl : append 19.786s
+Sun Oct 09 14:15:21 BST 2011 database-impl : update finalize
+---punch in[1.972s-2.486s] / out [5.933s-6.465s] / minPunch = 3.656s / maxPunch = 3.656s
+Sun Oct 09 14:15:21 BST 2011 a-differance : database query over( [2.229s-6.199s] -> 107.6% )
+Sun Oct 09 14:15:21 BST 2011 threadFuture started : database-impl : copy file
+Sun Oct 09 14:15:21 BST 2011 database-impl : extract
+Created tmp file : audio_work/database/database8365475338660904645/grapheme954778361008897509.aif
+Created tmp file : audio_work/database/database8365475338660904645/grapheme908729363965654920_feat.xml
+Sun Oct 09 14:15:22 BST 2011 database-impl : cache feature extraction
+---punch in[2.277s-2.760s] / out [5.080s-5.571s] / minPunch = 2.581s / maxPunch = 2.581s
+Sun Oct 09 14:15:23 BST 2011 a-differance : database query over( [2.519s-5.326s] -> 108.0% )
+DifferanceDatabaseQuery : Ouch. No matches. Need to handle this case!
+Sun Oct 09 14:15:23 BST 2011 database-query-impl : failure match
+---punch in[2.413s-2.891s] / out [4.523s-4.962s] / minPunch = 1.880s / maxPunch = 1.880s
+Sun Oct 09 14:15:23 BST 2011 a-differance : database query over( [2.652s-4.743s] -> 107.3% )
+---punch in[2.772s-3.275s] / out [5.632s-6.264s] / minPunch = 2.699s / maxPunch = 2.699s
+Sun Oct 09 14:15:24 BST 2011 a-differance : database query over( [3.023s-5.948s] -> 107.2% )
+---punch in[3.502s-4.251s] / out [7.645s-8.530s] / minPunch = 3.894s / maxPunch = 3.894s
+Sun Oct 09 14:15:24 BST 2011 a-differance : database query over( [3.877s-8.088s] -> 107.0% )
+DifferanceDatabaseQuery : Ouch. No matches. Need to handle this case!
+Sun Oct 09 14:15:24 BST 2011 database-query-impl : failure match
+---punch in[3.687s-4.442s] / out [9.406s-10.349s] / minPunch = 5.306s / maxPunch = 5.306s
+Sun Oct 09 14:15:24 BST 2011 a-differance : database query over( [4.065s-9.877s] -> 108.5% )
+---punch in[3.521s-4.615s] / out [7.345s-8.522s] / minPunch = 3.654s / maxPunch = 3.654s
+Sun Oct 09 14:15:25 BST 2011 a-differance : database query over( [4.068s-7.933s] -> 108.6% )
+---punch in[3.560s-4.671s] / out [8.554s-9.591s] / minPunch = 4.584s / maxPunch = 4.584s
+Sun Oct 09 14:15:25 BST 2011 a-differance : database query over( [4.116s-9.072s] -> 109.7% )
+---punch in[3.812s-4.663s] / out [8.950s-9.850s] / minPunch = 4.897s / maxPunch = 4.897s
+Sun Oct 09 14:15:26 BST 2011 a-differance : database query over( [4.237s-9.400s] -> 109.7% )
+---punch in[4.661s-5.471s] / out [8.185s-8.861s] / minPunch = 3.322s / maxPunch = 3.322s
+Sun Oct 09 14:15:26 BST 2011 a-differance : database query over( [5.066s-8.523s] -> 109.2% )
+---punch in[5.376s-5.923s] / out [7.934s-8.525s] / minPunch = 2.396s / maxPunch = 2.396s
+Sun Oct 09 14:15:27 BST 2011 a-differance : database query over( [5.650s-8.230s] -> 106.3% )
+Sun Oct 09 14:15:27 BST 2011 a-differance : overwriter perform match( [2:17.090s-2:19.702s] )
+Sun Oct 09 14:15:27 BST 2011 a-differance : thinner remove 11 regions
+Sun Oct 09 14:15:27 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:15:27 BST 2011 threadFuture started : database-impl : remove
+Sun Oct 09 14:15:27 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:15:27 BST 2011 a-differance : overwriter perform match( [2:13.537s-2:16.881s] )
+Sun Oct 09 14:15:27 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:15:27 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:15:27 BST 2011 a-differance : overwriter perform match( [2:14.176s-2:19.621s] )
+Sun Oct 09 14:15:27 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:15:28 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:15:28 BST 2011 a-differance : overwriter perform match( [2:40.333s-2:45.082s] )
+Sun Oct 09 14:15:28 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:15:28 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:15:28 BST 2011 a-differance : overwriter perform match( [2:51.456s-2:55.531s] )
+Sun Oct 09 14:15:28 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:15:28 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:15:28 BST 2011 a-differance : overwriter perform match( [54.044s-59.872s] )
+Sun Oct 09 14:15:28 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:15:29 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:15:29 BST 2011 a-differance : overwriter perform match( [0.000s-1.000s] )
+Sun Oct 09 14:15:29 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:15:29 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:15:29 BST 2011 a-differance : overwriter perform match( [2:09.323s-2:12.504s] )
+Sun Oct 09 14:15:29 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:15:29 BST 2011 database-impl : update finalize
+Sun Oct 09 14:15:29 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:15:29 BST 2011 a-differance : overwriter perform match( [1:51.548s-1:53.882s] )
+Sun Oct 09 14:15:29 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:15:29 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:15:29 BST 2011 a-differance : overwriter perform match( [0.000s-1.000s] )
+Sun Oct 09 14:15:29 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:15:29 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:15:29 BST 2011 a-differance : overwriter perform match( [2:40.333s-2:44.606s] )
+Sun Oct 09 14:15:29 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:15:29 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:15:29 BST 2011 +++MISSING+++ phrase-trace-impl : add
+Sun Oct 09 14:15:29 BST 2011 a-differance complete cycle with phrase( grapheme3525627672826602089, 9.092s )
+Sun Oct 09 14:15:29 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:15:29 BST 2011 meta-diff difference algorithm step
+Sun Oct 09 14:15:29 BST 2011 meta-diff determining rotation duration
+Sun Oct 09 14:15:29 BST 2011 ==== meta-diff wait for algorithm step ====
+Sun Oct 09 14:15:30 BST 2011 phrase-impl : cache feature extraction
+Sun Oct 09 14:15:30 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:15:30 BST 2011 overwrite-selector-impl : found 6.501s
+---stretch from 2.710s to 2.952s (108.9%)
+Sun Oct 09 14:15:30 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:15:30 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:15:30 BST 2011 overwrite-selector-impl : found 6.489s
+---stretch from 4.687s to 5.156s (110.0%)
+Sun Oct 09 14:15:30 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:15:31 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:15:31 BST 2011 overwrite-selector-impl : found 6.489s
+---stretch from 3.389s to 3.727s (110.0%)
+Sun Oct 09 14:15:31 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:15:31 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:15:31 BST 2011 overwrite-selector-impl : found 6.489s
+---stretch from 3.663s to 4.030s (110.0%)
+Sun Oct 09 14:15:31 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:15:31 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:15:31 BST 2011 overwrite-selector-impl : found 6.489s
+---stretch from 2.590s to 2.849s (110.0%)
+Sun Oct 09 14:15:31 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:15:31 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:15:31 BST 2011 overwrite-selector-impl : found 6.489s
+---stretch from 3.558s to 3.871s (108.8%)
+Sun Oct 09 14:15:31 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:15:31 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:15:31 BST 2011 overwrite-selector-impl : found 6.489s
+---stretch from 4.325s to 4.622s (106.8%)
+Sun Oct 09 14:15:31 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:15:31 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:15:32 BST 2011 overwrite-selector-impl : found 7.279s
+---stretch from 4.275s to 4.585s (107.2%)
+Sun Oct 09 14:15:32 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:15:32 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:15:32 BST 2011 overwrite-selector-impl : found 7.697s
+---stretch from 5.780s to 6.144s (106.3%)
+Sun Oct 09 14:15:32 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:15:32 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:15:32 BST 2011 overwrite-selector-impl : found 1.428s
+---stretch from 3.871s to 4.167s (107.6%)
+Sun Oct 09 14:15:32 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:15:32 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:15:32 BST 2011 overwrite-selector-impl : found 5.793s
+---stretch from 4.506s to 4.841s (107.4%)
+Sun Oct 09 14:15:32 BST 2011 a-differance : filler.perform
+Sun Oct 09 14:15:32 BST 2011 a-database-filler : gathering 15.602s
+Sun Oct 09 14:15:42 BST 2011 phrase-impl : stop proc
+Sun Oct 09 14:15:42 BST 2011 proc : stopped listener
+Sun Oct 09 14:15:42 BST 2011 a-differance-spat : dispose phrase process
+Sun Oct 09 14:15:47 BST 2011 live-television-impl stop process
+Sun Oct 09 14:15:48 BST 2011 live-television-impl return path
+Sun Oct 09 14:15:48 BST 2011 a-database-filler : appending 15.602s
+Sun Oct 09 14:15:48 BST 2011 threadFuture started : database-impl : append 15.602s
+Sun Oct 09 14:15:48 BST 2011 database-impl : update finalize
+---punch in[0.000s-0.335s] / out [3.473s-4.269s] / minPunch = 3.593s / maxPunch = 3.593s
+Sun Oct 09 14:15:48 BST 2011 a-differance : database query over( [0.000s-3.871s] -> 107.6% )
+Sun Oct 09 14:15:48 BST 2011 threadFuture started : database-impl : copy file
+Sun Oct 09 14:15:48 BST 2011 database-impl : extract
+Created tmp file : audio_work/database/database7061273073867405704/grapheme37303658254783645.aif
+Created tmp file : audio_work/database/database7061273073867405704/grapheme5064924703537184737_feat.xml
+Sun Oct 09 14:15:49 BST 2011 database-impl : cache feature extraction
+---punch in[0.000s-0.564s] / out [4.046s-4.798s] / minPunch = 4.059s / maxPunch = 4.059s
+Sun Oct 09 14:15:50 BST 2011 a-differance : database query over( [0.147s-4.422s] -> 107.2% )
+---punch in[0.000s-0.509s] / out [4.441s-5.269s] / minPunch = 4.441s / maxPunch = 4.441s
+Sun Oct 09 14:15:50 BST 2011 a-differance : database query over( [0.167s-4.855s] -> 109.9% )
+---punch in[0.000s-0.601s] / out [2.450s-3.118s] / minPunch = 2.480s / maxPunch = 2.480s
+Sun Oct 09 14:15:50 BST 2011 a-differance : database query over( [0.193s-2.784s] -> 109.9% )
+---punch in[0.032s-0.645s] / out [3.391s-4.064s] / minPunch = 3.116s / maxPunch = 3.116s
+Sun Oct 09 14:15:51 BST 2011 a-differance : database query over( [0.339s-3.728s] -> 109.9% )
+---punch in[0.000s-5.887s] / out [4.726s-5.390s] / minPunch = 3.293s / maxPunch = 3.293s
+Sun Oct 09 14:15:51 BST 2011 a-differance : database query over( [1.500s-5.058s] -> 108.8% )
+---punch in[3.018s-3.606s] / out [8.777s-9.092s] / minPunch = 5.349s / maxPunch = 5.349s
+Sun Oct 09 14:15:52 BST 2011 a-differance : database query over( [3.312s-9.092s] -> 106.3% )
+---punch in[3.193s-3.886s] / out [3.085s-9.092s] / minPunch = 4.179s / maxPunch = 4.179s
+Sun Oct 09 14:15:53 BST 2011 a-differance : database query over( [3.539s-8.046s] -> 107.4% )
+---punch in[3.281s-3.937s] / out [7.665s-8.204s] / minPunch = 4.098s / maxPunch = 4.098s
+Sun Oct 09 14:15:54 BST 2011 a-differance : database query over( [3.609s-7.935s] -> 106.8% )
+---punch in[4.429s-4.886s] / out [8.121s-8.521s] / minPunch = 3.490s / maxPunch = 3.490s
+Sun Oct 09 14:15:54 BST 2011 a-differance : database query over( [4.658s-8.321s] -> 109.9% )
+---punch in[4.561s-4.961s] / out [7.261s-7.682s] / minPunch = 2.546s / maxPunch = 2.546s
+Sun Oct 09 14:15:55 BST 2011 a-differance : database query over( [4.761s-7.472s] -> 108.9% )
+Sun Oct 09 14:15:55 BST 2011 a-differance : overwriter perform match( [4.702s-7.441s] )
+Sun Oct 09 14:15:55 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:15:55 BST 2011 a-differance : thinner remove 11 regions
+Sun Oct 09 14:15:55 BST 2011 threadFuture started : database-impl : remove
+Sun Oct 09 14:15:55 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:15:55 BST 2011 a-differance : overwriter perform match( [22.465s-26.552s] )
+Sun Oct 09 14:15:55 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:15:55 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:15:55 BST 2011 a-differance : overwriter perform match( [1:27.806s-1:32.043s] )
+Sun Oct 09 14:15:55 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:15:55 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:15:55 BST 2011 a-differance : overwriter perform match( [35.387s-40.739s] )
+Sun Oct 09 14:15:55 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:15:55 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:15:55 BST 2011 a-differance : overwriter perform match( [2:33.147s-2:39.788s] )
+Sun Oct 09 14:15:55 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:15:55 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:15:55 BST 2011 a-differance : overwriter perform match( [2:38.104s-2:41.483s] )
+Sun Oct 09 14:15:55 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:15:56 BST 2011 database-impl : update finalize
+Sun Oct 09 14:15:56 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:15:56 BST 2011 a-differance : overwriter perform match( [2:37.082s-2:41.494s] )
+Sun Oct 09 14:15:56 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:15:56 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:15:56 BST 2011 a-differance : overwriter perform match( [1:31.475s-1:34.505s] )
+Sun Oct 09 14:15:56 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:15:56 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:15:56 BST 2011 a-differance : overwriter perform match( [1:53.603s-1:58.166s] )
+Sun Oct 09 14:15:56 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:15:56 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:15:56 BST 2011 a-differance : overwriter perform match( [2:37.059s-2:42.156s] )
+Sun Oct 09 14:15:56 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:15:56 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:15:56 BST 2011 a-differance : overwriter perform match( [13.920s-17.519s] )
+Sun Oct 09 14:15:56 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:15:56 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:15:56 BST 2011 +++MISSING+++ phrase-trace-impl : add
+Sun Oct 09 14:15:56 BST 2011 a-differance complete cycle with phrase( grapheme5054880294286250470, 12.435s )
+Sun Oct 09 14:15:56 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:15:56 BST 2011 meta-diff difference algorithm step
+Sun Oct 09 14:15:56 BST 2011 meta-diff determining rotation duration
+Sun Oct 09 14:15:56 BST 2011 ==== meta-diff wait for algorithm step ====
+Sun Oct 09 14:15:56 BST 2011 phrase-impl : cache feature extraction
+Sun Oct 09 14:15:56 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:15:56 BST 2011 overwrite-selector-impl : found 3.610s
+---stretch from 4.570s to 4.972s (108.7%)
+Sun Oct 09 14:15:56 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:15:56 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:15:56 BST 2011 overwrite-selector-impl : found 3.552s
+---stretch from 4.900s to 5.252s (107.1%)
+Sun Oct 09 14:15:56 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:15:56 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:15:56 BST 2011 overwrite-selector-impl : found 1.764s
+---stretch from 5.060s to 5.391s (106.5%)
+Sun Oct 09 14:15:56 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:15:56 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:15:56 BST 2011 overwrite-selector-impl : found 1.764s
+---stretch from 4.207s to 4.450s (105.7%)
+Sun Oct 09 14:15:56 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:15:56 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:15:56 BST 2011 overwrite-selector-impl : found 2.066s
+---stretch from 4.237s to 4.525s (106.7%)
+Sun Oct 09 14:15:56 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:15:56 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:15:57 BST 2011 overwrite-selector-impl : found 3.552s
+---stretch from 5.267s to 5.627s (106.8%)
+Sun Oct 09 14:15:57 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:15:57 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:15:57 BST 2011 overwrite-selector-impl : found 3.552s
+---stretch from 5.618s to 5.930s (105.5%)
+Sun Oct 09 14:15:57 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:15:57 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:15:57 BST 2011 overwrite-selector-impl : found 3.274s
+---stretch from 4.189s to 4.459s (106.4%)
+Sun Oct 09 14:15:57 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:15:57 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:15:57 BST 2011 overwrite-selector-impl : found 3.552s
+---stretch from 5.641s to 6.013s (106.5%)
+Sun Oct 09 14:15:57 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:15:57 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:15:57 BST 2011 overwrite-selector-impl : found 3.262s
+---stretch from 3.507s to 3.793s (108.1%)
+Sun Oct 09 14:15:57 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:15:57 BST 2011 overwrite-selector-impl : correlation motion
+Sun Oct 09 14:15:57 BST 2011 overwrite-selector-impl : found 3.343s
+---stretch from 4.085s to 4.402s (107.7%)
+Sun Oct 09 14:15:57 BST 2011 a-differance : filler.perform
+Sun Oct 09 14:15:57 BST 2011 a-database-filler : gathering 18.276s
+Sun Oct 09 14:15:59 BST 2011 phrase-impl : stop proc
+Sun Oct 09 14:15:59 BST 2011 proc : stopped listener
+Sun Oct 09 14:15:59 BST 2011 a-differance-spat : dispose phrase process
+Sun Oct 09 14:16:15 BST 2011 live-television-impl stop process
+Sun Oct 09 14:16:15 BST 2011 live-television-impl return path
+Sun Oct 09 14:16:15 BST 2011 a-database-filler : appending 18.276s
+Sun Oct 09 14:16:15 BST 2011 threadFuture started : database-impl : append 18.276s
+Sun Oct 09 14:16:16 BST 2011 database-impl : update finalize
+---punch in[0.000s-0.235s] / out [4.860s-5.260s] / minPunch = 4.687s / maxPunch = 4.687s
+Sun Oct 09 14:16:16 BST 2011 a-differance : database query over( [0.000s-5.060s] -> 106.5% )
+Sun Oct 09 14:16:16 BST 2011 threadFuture started : database-impl : copy file
+Sun Oct 09 14:16:16 BST 2011 database-impl : extract
+Created tmp file : audio_work/database/database1023231292670933009/grapheme2045594114276466580.aif
+Created tmp file : audio_work/database/database1023231292670933009/grapheme6173073187965458978_feat.xml
+Sun Oct 09 14:16:17 BST 2011 database-impl : cache feature extraction
+---punch in[0.000s-0.200s] / out [3.984s-4.430s] / minPunch = 4.005s / maxPunch = 4.005s
+Sun Oct 09 14:16:17 BST 2011 a-differance : database query over( [0.000s-4.207s] -> 105.7% )
+---punch in[0.000s-0.244s] / out [4.009s-4.466s] / minPunch = 4.073s / maxPunch = 4.073s
+Sun Oct 09 14:16:18 BST 2011 a-differance : database query over( [0.000s-4.237s] -> 106.7% )
+---punch in[0.000s-0.246s] / out [5.417s-5.868s] / minPunch = 5.306s / maxPunch = 5.306s
+Sun Oct 09 14:16:18 BST 2011 a-differance : database query over( [0.001s-5.642s] -> 106.5% )
+---punch in[0.000s-0.320s] / out [5.491s-5.987s] / minPunch = 5.337s / maxPunch = 5.337s
+Sun Oct 09 14:16:18 BST 2011 a-differance : database query over( [0.120s-5.739s] -> 105.5% )
+---punch in[0.000s-0.414s] / out [5.219s-5.640s] / minPunch = 4.932s / maxPunch = 4.932s
+Sun Oct 09 14:16:19 BST 2011 a-differance : database query over( [0.162s-5.430s] -> 106.8% )
+---punch in[0.074s-0.475s] / out [4.975s-5.375s] / minPunch = 4.727s / maxPunch = 4.727s
+Sun Oct 09 14:16:19 BST 2011 a-differance : database query over( [0.274s-5.175s] -> 107.1% )
+---punch in[0.107s-0.507s] / out [4.193s-4.593s] / minPunch = 3.937s / maxPunch = 3.937s
+Sun Oct 09 14:16:19 BST 2011 a-differance : database query over( [0.307s-4.393s] -> 107.7% )
+---punch in[0.273s-0.673s] / out [4.463s-4.863s] / minPunch = 4.014s / maxPunch = 4.014s
+Sun Oct 09 14:16:20 BST 2011 a-differance : database query over( [0.473s-4.663s] -> 106.4% )
+---punch in[0.338s-0.789s] / out [4.915s-5.354s] / minPunch = 4.333s / maxPunch = 4.333s
+Sun Oct 09 14:16:20 BST 2011 a-differance : database query over( [0.564s-5.134s] -> 108.7% )
+---punch in[0.441s-0.841s] / out [3.904s-4.393s] / minPunch = 3.237s / maxPunch = 3.237s
+Sun Oct 09 14:16:20 BST 2011 a-differance : database query over( [0.641s-4.149s] -> 108.1% )
+DifferanceDatabaseQuery : Ouch. No matches. Need to handle this case!
+Sun Oct 09 14:16:21 BST 2011 database-query-impl : failure match
+Sun Oct 09 14:16:21 BST 2011 a-differance : overwriter perform match( [0.000s-1.000s] )
+Sun Oct 09 14:16:21 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:16:21 BST 2011 a-differance : thinner remove 11 regions
+Sun Oct 09 14:16:21 BST 2011 threadFuture started : database-impl : remove
+Sun Oct 09 14:16:21 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:16:21 BST 2011 a-differance : overwriter perform match( [1:14.930s-1:20.317s] )
+Sun Oct 09 14:16:21 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:16:21 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:16:21 BST 2011 a-differance : overwriter perform match( [14.199s-18.715s] )
+Sun Oct 09 14:16:21 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:16:21 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:16:21 BST 2011 a-differance : overwriter perform match( [2:12.818s-2:17.102s] )
+Sun Oct 09 14:16:21 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:16:21 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:16:21 BST 2011 a-differance : overwriter perform match( [13.990s-18.796s] )
+Sun Oct 09 14:16:21 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:16:21 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:16:21 BST 2011 a-differance : overwriter perform match( [2:02.729s-2:08.174s] )
+Sun Oct 09 14:16:21 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:16:21 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:16:21 BST 2011 a-differance : overwriter perform match( [1:16.892s-1:22.337s] )
+Sun Oct 09 14:16:21 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:16:21 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:16:21 BST 2011 a-differance : overwriter perform match( [16.579s-22.581s] )
+Sun Oct 09 14:16:21 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:16:21 BST 2011 database-impl : update finalize
+Sun Oct 09 14:16:21 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:16:21 BST 2011 a-differance : overwriter perform match( [2:36.583s-2:41.192s] )
+Sun Oct 09 14:16:21 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:16:21 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:16:21 BST 2011 a-differance : overwriter perform match( [2:48.553s-2:52.698s] )
+Sun Oct 09 14:16:21 BST 2011 threadFuture started : a-overwriter : perform 
+Sun Oct 09 14:16:21 BST 2011 a-overwriter : phrase from file
+Sun Oct 09 14:16:21 BST 2011 a-differance : overwriter perform match( [2:21.548s-2:26.901s] )
+Sun Oct 09 14:16:21 BST 2011 +++MISSING+++ phrase-trace-impl : add
+Sun Oct 09 14:16:21 BST 2011 a-differance complete cycle with phrase( grapheme1617644084751702489, 0.000s )
+---pDur = 0.000s -> grow
+Sun Oct 09 14:16:21 BST 2011 a-overwrite-selector : select parts
+Sun Oct 09 14:16:21 BST 2011 meta-diff difference algorithm step
+Sun Oct 09 14:16:21 BST 2011 meta-diff determining rotation duration
+Sun Oct 09 14:16:21 BST 2011 ==== meta-diff wait for algorithm step ====
+Sun Oct 09 14:16:22 BST 2011 phrase-impl : cache feature extraction
+Sun Oct 09 14:16:22 BST 2011 overwrite-selector-impl : correlation motion
+de.sciss.strugatzki.FeatureSegmentation$$anon$1@5f1483a0: caught java.lang.IndexOutOfBoundsException: 0
+java.lang.IndexOutOfBoundsException: 0
+	at scala.collection.immutable.Vector.checkRangeConvert(Vector.scala:113)
+	at scala.collection.immutable.Vector.apply(Vector.scala:103)
+	at de.sciss.grapheme.impl.DifferanceOverwriteSelectorImpl$$anonfun$3.apply(DifferanceOverwriteSelectorImpl.scala:154)
+	at de.sciss.grapheme.impl.DifferanceOverwriteSelectorImpl$$anonfun$3.apply(DifferanceOverwriteSelectorImpl.scala:143)
+	at de.sciss.strugatzki.FeatureSegmentation$$anon$1$$anonfun$act$2.apply$mcV$sp(FeatureSegmentation.scala:350)
+	at de.sciss.strugatzki.FeatureSegmentation$$anon$1$$anonfun$act$2.apply(FeatureSegmentation.scala:350)
+	at de.sciss.strugatzki.FeatureSegmentation$$anon$1$$anonfun$act$2.apply(FeatureSegmentation.scala:350)
+	at scala.actors.Reactor$$anonfun$seq$1$$anonfun$apply$1.apply(Reactor.scala:277)
+	at scala.actors.ReactorTask.run(ReactorTask.scala:31)
+	at scala.actors.ReactorTask.compute(ReactorTask.scala:63)
+	at scala.concurrent.forkjoin.RecursiveAction.exec(RecursiveAction.java:147)
+	at scala.concurrent.forkjoin.ForkJoinTask.quietlyExec(ForkJoinTask.java:422)
+	at scala.concurrent.forkjoin.ForkJoinWorkerThread.mainLoop(ForkJoinWorkerThread.java:340)
+	at scala.concurrent.forkjoin.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:325)

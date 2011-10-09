@@ -37,7 +37,7 @@ object GraphemeUtil {
     */
    var tmpDir                 = new File( "/tmp" )
 
-   val seed                   = 3L  // System.currentTimeMillis()
+   val seed                   = System.currentTimeMillis()  // 0L
    private val rng            = new util.Random( seed )
 
    val deleteTempFilesOnExit  = true   // false

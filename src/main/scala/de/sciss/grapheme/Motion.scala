@@ -39,6 +39,8 @@ object Motion {
 
    def linexp( in: Motion, inLo: Double, inHi: Double, outLo: Double, outHi: Double ) : Motion =
       Impl.linexp( in, inLo, inHi, outLo, outHi )
+
+   def coin( prob: Double, a: Motion, b: Motion ) : Motion = Impl.coin( prob, a, b )
 }
 trait Motion {
    def step( implicit tx: Tx ) : Double

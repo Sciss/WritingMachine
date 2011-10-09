@@ -43,6 +43,8 @@ object MotionImpl {
    def linexp( in: Motion, inLo: Double, inHi: Double, outLo: Double, outHi: Double ) : Motion =
       LinExp( in, inLo, inHi, outLo, outHi )
 
+   def coin( prob: Double, a: Motion, b: Motion ) : Motion = Coin( prob, a, b )
+
    private final case class Constant( value: Double ) extends Motion {
       def step( implicit tx: Tx ) : Double = value
    }
@@ -81,6 +83,14 @@ object MotionImpl {
          val p = phase()
          phase.set( (p + 1) % period )
          math.sin( p * factor ) * mul + add
+      }
+   }
+
+   private final case class Coin( prob: Double, a: Motion, b: Motion )
+   extends Motion {
+      def step( implicit tx: Tx ) : Double = {
+         val m = if( random >= prob ) a else b
+         m.step
       }
    }
 

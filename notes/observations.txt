@@ -18,5 +18,9 @@ with stretch 1 it drifts towards shortening. we should thus replace motion with 
 
 ::::
 
+111009
+
 exception in real time: alloc failed, increase server's memory allocation (e.g. via ServerOptions)
 command FIFO full
+
+should make the sector += 1 also transactional!

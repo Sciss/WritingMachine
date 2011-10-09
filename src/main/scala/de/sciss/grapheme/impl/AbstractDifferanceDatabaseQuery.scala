@@ -26,22 +26,24 @@
 package de.sciss.grapheme
 package impl
 
-import de.sciss.synth
-
+object AbstractDifferanceDatabaseQuery {
+   private val verbose  = true
+}
 abstract class AbstractDifferanceDatabaseQuery extends DifferanceDatabaseQuery {
    import GraphemeUtil._
    import DifferanceDatabaseQuery._
+   import AbstractDifferanceDatabaseQuery._
 
    /**
     * Approximate duration of the cross-correlation in seconds.
     */
    def matchDurationMotion : Motion
 
-   /**
-    * Maximum allowed deviation from match duration (factor-offset,
-    * e.g. 0 = no deviation allowed, 0.5 = 50% deviation allowed).
-    */
-   def matchDeviationMotion : Motion
+//   /**
+//    * Maximum allowed deviation from match duration (factor-offset,
+//    * e.g. 0 = no deviation allowed, 0.5 = 50% deviation allowed).
+//    */
+//   def matchDeviationMotion : Motion
 
    /**
     * Spectral weight in strugatzki (0 = temporal breaks, 1 = spectral breaks,
@@ -62,15 +64,17 @@ abstract class AbstractDifferanceDatabaseQuery extends DifferanceDatabaseQuery {
     */
    def rankMotion : Motion
 
-   private def matchLength( implicit tx: Tx ) : Long = {
-      import synth._
-      val matchDur   = matchDeviationMotion.step
-      val matchDev   = matchDeviationMotion.step
-      val minFact    = 1.0 / (1 + matchDev)
-      val maxFact    = 1 + matchDev
-      val fact       = random.linexp( 0, 1, minFact, maxFact )
-      secondsToFrames( fact * matchDur )
+   private def matchLength()( implicit tx: Tx ) : Long = {
+//      import synth._
+      val matchDur   = matchDurationMotion.step
+//      val matchDev   = matchDeviationMotion.step
+//      val minFact    = 1.0 / (1 + matchDev)
+//      val maxFact    = 1 + matchDev
+//      val fact       = random.linexp( 0, 1, minFact, maxFact )
+      secondsToFrames( /* fact * */ matchDur )
    }
+
+   def minPhraseDur : Double
 
    def findMatch( rank: Int, phrase: Phrase, punchIn: Span, punchOut: Span,
                   minPunch: Long, maxPunch: Long, weight: Double )( implicit tx: Tx ) : FutureResult[ Match ]
@@ -80,11 +84,18 @@ abstract class AbstractDifferanceDatabaseQuery extends DifferanceDatabaseQuery {
 
       val stretchDev = stretchDeviationMotion.step
       val minConstr  = secondsToFrames( 0.1 )
-      val minPunch   = max( minConstr, min( phrase.length/2, (overwrite.newLength / (1 + stretchDev)).toLong ))
-      val maxPunch   = max( minConstr, min( phrase.length/2, (overwrite.newLength * (1 + stretchDev)).toLong ))
+//      val minPunch   = max( minConstr, min( phrase.length/2, (overwrite.newLength / (1 + stretchDev)).toLong ))
+//      val maxPunch   = max( minConstr, min( phrase.length/2, (overwrite.newLength * (1 + stretchDev)).toLong ))
+      val min0       = (overwrite.newLength / (1 + stretchDev)).toLong
+      val max0       = (overwrite.newLength * (1 + stretchDev)).toLong
+      val pDur       = framesToSeconds( phrase.length )
+      val min1       = if( pDur > minPhraseDur ) min( phrase.length/2, min0 ) else min0
+      val max1       = if( pDur > minPhraseDur ) min( phrase.length/2, max0 ) else max0
+      val minPunch   = max( minConstr, min1 )
+      val maxPunch   = max( minConstr, max1 )
 
-      val inLen      = matchLength
-      val outLen     = matchLength
+      val inLen      = matchLength()
+      val outLen     = matchLength()
       val inner      = (minPunch + 1)/2 + maxPunch/2
       val (piStop, poStart) = if( inner >= overwrite.span.length ) {
          (overwrite.span.start + (inLen + 1) /2,
@@ -99,6 +110,9 @@ abstract class AbstractDifferanceDatabaseQuery extends DifferanceDatabaseQuery {
 
       val punchIn    = Span( piStart, piStop )
       val punchOut   = Span( poStart, poStop )
+
+if( verbose ) println( "---punch in" + formatSpan( punchIn ) + " / out " + formatSpan( punchOut ) + " / minPunch = " +
+   formatSeconds( framesToSeconds( minPunch )) + " / maxPunch = " + formatSeconds( framesToSeconds( minPunch )))
 
       val rank       = random( max( 0, rankMotion.step.toInt ) + 1 )
 
