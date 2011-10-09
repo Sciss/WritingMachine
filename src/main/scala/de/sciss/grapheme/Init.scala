@@ -47,22 +47,21 @@ object Init {
       val panel   = r.frame.panel
       val coll    = panel.collector.getOrElse( sys.error( "Requires nuages to use collector" ))
       val spat    = DifferanceSpat( coll )
-      val db      = Database( databaseDir )
 //      val tv      = Television.fromFile( new File( testDir, "aljazeera1.aif" ))
       val tv      = if( tvUseTestFile ) {
          Television.fromFile( new File( testDir, "mulholland_drive_ct.aif" ))
       } else {
          Television.live()
       }
-      val filler  = DifferanceDatabaseFiller( db, tv )
-      val thinner = DifferanceDatabaseThinner( db )
-      val trace   = PhraseTrace()
-      val query   = DifferanceDatabaseQuery( db )
-      val over    = DifferanceOverwriter()
-      val overSel = DifferanceOverwriteSelector()
-      val start   = Phrase.fromFile( new File( testDir, "amazonas_m.aif" ))
-      val diff    = DifferanceAlgorithm( /* spat, */ thinner, filler, trace, query, over, overSel, start )
-      val i       = new Init( start, spat, diff )
+//      val filler  = DifferanceDatabaseFiller( db, tv )
+//      val thinner = DifferanceDatabaseThinner( db )
+//      val trace   = PhraseTrace()
+//      val query   = DifferanceDatabaseQuery( db )
+//      val over    = DifferanceOverwriter()
+//      val overSel = DifferanceOverwriteSelector()
+////      val start   = Phrase.fromFile( new File( testDir, "amazonas_m.aif" ))
+//      val diff    = DifferanceAlgorithm( /* spat, */ thinner, filler, trace, query, over, overSel, start )
+      val i       = new Init( /* start, diff, */ spat, tv )
       instanceRef.set( i )
 
       tx.afterCommit { _ =>
@@ -101,7 +100,8 @@ object Init {
       }, s  )
    }
 }
-final class Init private ( _phrase0: Phrase, val spat: DifferanceSpat, val differance: DifferanceAlgorithm ) {
+final class Init private ( /* _phrase0: Phrase, val differance: DifferanceAlgorithm, */ val spat: DifferanceSpat,
+                            val tv: Television ) {
    import GraphemeUtil._
 
    val numSectors = WritingMachine.masterNumChannels
@@ -112,7 +112,25 @@ final class Init private ( _phrase0: Phrase, val spat: DifferanceSpat, val diffe
 
    private lazy val actor = new Actor {
       def act() {
-         var p          = _phrase0 // atomic( "Init query current phrase" )( tx => differance.currentPhrase( tx ))
+//      val start   = Phrase.fromFile( new File( testDir, "amazonas_m.aif" ))
+//         var p          = _phrase0 // atomic( "Init query current phrase" )( tx => differance.currentPhrase( tx ))
+         val futP0   = atomic( "meta-diff initial tv capture" )( tx => tv.capture( secondsToFrames( 4.0 ))( tx ))
+         logNoTx( "==== meta-diff wait for initial tv capture ====" )
+         val fP0     = futP0.apply()
+//         logNoTx( "==== meta-diff get first phrase ====" )
+         val (differance, _p0) = atomic( "meta-diff initialize algorithm" ) { tx =>
+            val p0      = Phrase.fromFile( fP0 )( tx )
+            val db      = Database( databaseDir )( tx )
+            val filler  = DifferanceDatabaseFiller( db, tv )( tx )
+            val thinner = DifferanceDatabaseThinner( db )
+            val trace   = PhraseTrace()
+            val query   = DifferanceDatabaseQuery( db )
+            val over    = DifferanceOverwriter()
+            val overSel = DifferanceOverwriteSelector()
+            (DifferanceAlgorithm( /* spat, */ thinner, filler, trace, query, over, overSel, p0 ), p0)
+         }
+
+         var p          = _p0
          val spatFuts   = Array.fill( numSectors )( futureOf( () ))
          var sector     = 0
          while( keepGoing ) {

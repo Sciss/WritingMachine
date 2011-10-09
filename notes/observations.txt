@@ -15,3 +15,8 @@ with stretch 1 it drifts towards shortening. we should thus replace motion with 
 
 - with small probability include long insertions!
 - also oscillate the shrink amount of removals, so that occasionally there is almost no database thinning for a small while
+
+::::
+
+exception in real time: alloc failed, increase server's memory allocation (e.g. via ServerOptions)
+command FIFO full
