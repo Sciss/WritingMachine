@@ -30,6 +30,7 @@ import de.sciss.synth.proc.ProcTxn
 import java.io.File
 import de.sciss.strugatzki.Strugatzki
 import collection.immutable.{IndexedSeq => IIdxSeq}
+import de.sciss.osc.TCP
 
 object WritingMachine {
    val autoStart           = true
@@ -77,6 +78,8 @@ object WritingMachine {
       cfg.beforeShutdown   = quit _
       cfg.doneAction       = booted _
       val o                = cfg.serverOptions
+      o.pickPort()
+//      o.transport          = TCP
       o.deviceNames        = Some( (inDevice, outDevice) )
       val masterChans      = (masterChannelOffset until (masterChannelOffset + masterNumChannels)).toIndexedSeq
       val soloChans        = soloChannelOffset.map( off => IIdxSeq( off, off + 1 )).getOrElse( IIdxSeq.empty )

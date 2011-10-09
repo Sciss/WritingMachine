@@ -32,27 +32,52 @@ import java.io.File
 
 object DifferanceOverwriteSelectorImpl {
    def apply() : DifferanceOverwriteSelector = new  DifferanceOverwriteSelectorImpl()
+
+   private val minDur         = 2.0
+   private val maxDur         = 150.0
+   private val stableDurProb  = 3.0/100
+   private val identifier  = "overwrite-selector-impl"
 }
 final class DifferanceOverwriteSelectorImpl () extends AbstractDifferanceOverwriteSelector {
    import GraphemeUtil._
-
-   private val identifier  = "overwrite-selector-impl"
+   import DifferanceOverwriteSelectorImpl._
 
 //   val stretchMotion             = Motion.linexp( Motion.sine( 0, 1, 30 ), 0, 1, 0.5, 2.0 )
-   val stretchMotion             = Motion.constant( 1.0 )   // XXX
-   val fragmentDurationMotion    = Motion.exprand( 0.5, 4.0 )
+//   val stretchMotion             = Motion.constant( 1.0 )   // XXX
+   val fragmentDurationMotion    = Motion.linexp( Motion.walk( 0, 1, 0.1 ), 0, 1, 0.5, 4.0 ) //  Motion.exprand( 0.5, 4.0 )
    val fragmentDeviationMotion   = Motion.constant( 0.5 )
-   val positionMotion            = Motion.constant( 1 )
+   val positionMotion            = Motion.linexp( Motion.walk( 0, 1, 0.1 ), 0, 1, 0.25, 4.0 )
 //   val frequencyMotion           = Motion.constant( 4 )
-   val frequencyMotion           = Motion.constant( 8 )     // XXX
-   val spectralMotion            = Motion.linrand( 0.25, 0.75 )
+   val frequencyMotion           = Motion.walk( 2, 16, 1.0 ) // Motion.constant( 8 )
+   val spectralMotion            = Motion.walk( 0.25, 0.75, 0.1 ) // Motion.linrand( 0.25, 0.75 )
 
    /**
     * Length of correlation in seconds
     */
-   val correlationMotion         = Motion.exprand( 0.250, 1.250 )
+   val correlationMotion         = Motion.linexp( Motion.walk( 0, 1, 0.1 ), 0, 1, 0.2, 2.0 ) // Motion.exprand( 0.250, 1.250 )
 
-   val numBreaks                 = 200
+//   val numBreaks                 = 200
+
+   private val stretchStable  = Motion.linexp( Motion.walk( 0, 1, 0.1 ), 0, 1, 1.0/1.1, 1.1 )
+   private val stretchGrow    = Motion.walk( 1.1, 2.0, 0.2 )
+   private val stretchShrink  = Motion.walk( 0.6, 0.95, 0.2 )
+   private val stretchMotion  = Ref( stretchStable )
+
+   def stretchMotion( phrase: Phrase )( implicit tx: Tx ) : Motion = {
+      val pDur = framesToSeconds( phrase.length )
+      if( pDur <= minDur ) {
+         stretchMotion.set( stretchGrow )
+         stretchGrow
+      } else if( pDur >= maxDur ) {
+         stretchMotion.set( stretchShrink )
+         stretchShrink
+      } else if( random < stableDurProb ) {
+         stretchMotion.set( stretchStable )
+         stretchStable
+      } else {
+         stretchMotion()
+      }
+   }
 
    /**
     * Note that currently Strugatzki doesn't allow a 'punchOut' for segmentation.

@@ -48,15 +48,26 @@ object PhraseImpl {
       val factName   = "file-" + fileNameWithoutExtension( file ) // XXX hrmpfff
       val fact       = ProcDemiurg.factories.find( _.name == factName ).getOrElse {
          gen( factName ) {
+            val pRelease = pControl( "release", ParamSpec( 0, 1, LinWarp, 1 ), 0 )
             graph {
-               val buf  = bufCue( path )
-               val disk = DiskIn.ar( spec.numChannels, buf.id )
-               // Done.kr( disk )
-               val me   = Proc.local
-               Done.kr( Line.kr( dur = spec.numFrames.toDouble / SampleRate.ir )).react {
+               val buf     = bufCue( path )
+//               val disk = DiskIn.ar( spec.numChannels, buf.id )
+               val disk    = DiskIn.ar( spec.numChannels, buf.id, loop = 1 )
+               val rls     = pRelease.kr
+//               val pDur = spec.numFrames.toDouble / SampleRate.ir
+               val pDur    = framesToSeconds( spec.numFrames )
+               val pFreq   = 1.0 / pDur
+               val lTim    = pDur - 1.0
+               val lPhase  = lTim / pDur
+               val lTrig   = Impulse.kr( pFreq, lPhase )
+               val envGate = 1 - Latch.kr( rls, lTrig )
+               val env     = EnvGen.kr( Env.asr( attack = 0.01, release = 1.0, shape = sinShape ), gate = envGate )
+//             val env = Line.kr( 1, 1, dur = pDur )
+               val me      = Proc.local
+               Done.kr( env ).react {
                   threadAtomic( identifier + " : stop proc" ) { implicit tx => me.stop }
                }
-               Mix.mono( disk )
+               Mix.mono( disk ) * env
             }
          }
       }

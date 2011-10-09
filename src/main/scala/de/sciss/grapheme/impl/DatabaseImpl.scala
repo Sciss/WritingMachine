@@ -52,31 +52,35 @@ object DatabaseImpl {
       // left-overs from aborted apps
       subs.drop( 1 ).foreach( deleteDir( _ ))
 
-      val (spec, extr) = subs.headOption match {
+      val /*(*/spec /*, extr)*/ = subs.headOption match {
          case Some( sub ) =>
-            val fExtr   = new File( sub, xmlName )
-            val fNorm   = new File( sub, normName )
-            if( fExtr.isFile && fNorm.isFile ) {
+//            val fExtr   = new File( sub, xmlName )
+//            val fNorm   = new File( sub, normName )
+//            if( fExtr.isFile && fNorm.isFile ) {
+            val fAudio     = new File( sub, audioName )
+            if( fAudio.isFile ) {
                try {
-                  val extr       = FeatureExtraction.Settings.fromXMLFile( fExtr )
-                  val spec       = AudioFile.readSpec( extr.audioInput )
-                  val normSpec   = AudioFile.readSpec( fNorm )
-                  if( normSpec.numFrames == 2 ) {  // make sure this is there and was fully written
-                     (Some( (extr.audioInput, spec) ), Some( fExtr ))
-                  } else {
-                     (None, None)
-                  }
+//                  val extr       = FeatureExtraction.Settings.fromXMLFile( fExtr )
+//                  val spec       = AudioFile.readSpec( extr.audioInput )
+                  val spec       = AudioFile.readSpec( fAudio )
+                  Some( (fAudio, spec) )
+//                  val normSpec   = AudioFile.readSpec( fNorm )
+//                  if( normSpec.numFrames == 2 ) {  // make sure this is there and was fully written
+//                     (Some( (extr.audioInput, spec) ), Some( fExtr ))
+//                  } else {
+//                     (None, None)
+//                  }
                } catch {
                   case e =>
                      e.printStackTrace()
-                     (None, None)
+                     None // (None, None)
                }
-            } else (None, None)
+            } else None // (None, None)
 
-         case None => (None, None)
+         case None => None // (None, None)
       }
 
-      new DatabaseImpl( dir, normFile, State( spec, extr ))
+      new DatabaseImpl( dir, normFile, State( spec, None /* extr */))
    }
 
    /*

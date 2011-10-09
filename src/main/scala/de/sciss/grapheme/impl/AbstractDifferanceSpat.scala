@@ -34,7 +34,12 @@ abstract class AbstractDifferanceSpat extends DifferanceSpat {
    def numChannels : Int
    def diffusion( chan: Int )( implicit tx: Tx ) : Proc
 
-   private val chanRef = Ref( -1 )
+   private val chanRef  = Ref( -1 )
+   private val procRef  = Ref( Option.empty[ Proc ])
+
+//   def releasePhrase( implicit tx: Tx ) {
+//
+//   }
 
    def rotateAndProject( phrase: Phrase )( implicit tx: Tx ) : FutureResult[ Unit ] = {
       val chan = (chanRef() + 1) % numChannels
@@ -45,6 +50,9 @@ abstract class AbstractDifferanceSpat extends DifferanceSpat {
       val pDiff   = diffusion( chan )
       pProc ~> pDiff
       pProc.play
+      procRef.swap( Some( pProc )).foreach { oldProc =>
+         oldProc.control( "release" ).v = 1
+      }
       pProc.futureStopped.map { _ =>
          atomic( identifier + " : dispose phrase process" ) { implicit tx =>
             pProc.remove

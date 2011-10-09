@@ -117,31 +117,32 @@ final class Init private ( _phrase0: Phrase, val spat: DifferanceSpat, val diffe
          var sector     = 0
          while( keepGoing ) {
             if( !spatFuts( sector ).isSet ) {
-               logNoTx( "==== Init wait for busy spat sector " + (sector+1) + " ====" )
+               logNoTx( "==== meta-diff wait for busy spat sector " + (sector+1) + " ====" )
                spatFuts( sector )()
             }
             // differance process
-            val (spatFut, stepFut) = atomic( "Init difference algorithm step" ) { tx =>
+            val (spatFut, stepFut) = atomic( "meta-diff difference algorithm step" ) { tx =>
                val _spatFut = spat.rotateAndProject( p )( tx )
                val _stepFut = differance.step( tx )
                (_spatFut, _stepFut)
             }
             spatFuts( sector ) = spatFut
-            val dur = atomic( "Init determining rotation duration" ) { tx =>
+            val dur = atomic( "meta-diff determining rotation duration" ) { tx =>
                val olap = overlapMotion.step( tx )
                framesToSeconds( p.length ) / olap
             }
             val t1      = System.currentTimeMillis()
-            logNoTx( "==== Init wait for algorithm step ====" )
+            logNoTx( "==== meta-diff wait for algorithm step ====" )
             p = stepFut()
             val dur2    = (System.currentTimeMillis() - t1) * 0.001
             val dur3    = dur - dur2
             if( dur3 > 0.0 ) {
-               logNoTx( "==== Init waiting " + dur3 + " secs to next rotation ====" )
+               logNoTx( "==== meta-diff waiting " + dur3 + " secs to next rotation ====" )
                receiveWithin( (dur3 * 1000).toLong ) {
                   case TIMEOUT =>
                }
             }
+//            atomic( "meta-diff releasing spat phrase" ) { tx => spat.releasePhrase( tx )}
 
             sector = (sector + 1) % numSectors
          }

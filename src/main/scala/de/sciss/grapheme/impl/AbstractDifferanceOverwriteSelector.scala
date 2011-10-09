@@ -38,7 +38,8 @@ extends DifferanceOverwriteSelector {
    /**
     * Temporal stretch factor (1 = preserve duration, <1 = shorten, >1 = elongate).
     */
-   def stretchMotion : Motion
+//   def stretchMotion : Motion
+   def stretchMotion( phrase: Phrase )( implicit tx: Tx ) : Motion
 
    /**
     * Spectral weight in strugatzki (0 = temporal breaks, 1 = spectral breaks,
@@ -85,7 +86,8 @@ extends DifferanceOverwriteSelector {
             val (stretch, futSpan) = atomic( identifier + " : select parts" ) { tx1 =>
                import synth._
 
-               val stre    = stretchMotion.step( tx1 )
+//               val stre    = stretchMotion.step( tx1 )
+               val stre    = stretchMotion( phrase )( tx1 ).step( tx1 )
                val spect   = spectralMotion.step( tx1 )
                val fragDur = fragmentDurationMotion.step( tx1 )
                val fragDev = fragmentDeviationMotion.step( tx1 )
