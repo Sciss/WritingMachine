@@ -53,10 +53,11 @@ abstract class AbstractDifferanceSpat extends DifferanceSpat {
       procRef.swap( Some( pProc )).foreach { oldProc =>
          oldProc.control( "release" ).v = 1
       }
-      pProc.futureStopped.map { _ =>
+      pProc.futureStopped.map { e =>   // even in case of failure
          atomic( identifier + " : dispose phrase process" ) { implicit tx =>
             pProc.remove
          }
+         e  // pass on failure!
       }
    }
 }

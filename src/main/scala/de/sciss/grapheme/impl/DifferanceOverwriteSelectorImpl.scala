@@ -111,7 +111,7 @@ if( verbose ) println( "---pDur = " + formatSeconds( pDur ) + " -> stable" )
    def bestPart( phrase: Phrase, center: Long, minLen: Long, maxLen: Long, weight: Double )
                ( implicit tx: Tx ) : FutureResult[ Span ] = {
       val strugFut = phrase.asStrugatzkiInput
-      strugFut.flatMap { metaInput =>
+      strugFut.flatMapSuccess { metaInput =>
          bestPartWith( metaInput, center, minLen, maxLen, weight )
       }
    }
@@ -142,24 +142,22 @@ if( verbose ) println( "---pDur = " + formatSeconds( pDur ) + " -> stable" )
             val setb             = set.build
             val segm             = FeatureSegmentation( setb ) {
                case FeatureSegmentation.Aborted =>
-                  println( "DifferanceOverwriteSelector : Ouch. Aborted. Need to handle this case!" )
-                  res.set( Span( 0L, min( spec.numFrames, secondsToFrames( 1.0 ))))
+                  val e = new RuntimeException( identifier + " process aborted" )
+                  res.fail( e )
 
                case FeatureSegmentation.Failure( e ) =>
-                  println( "DifferanceOverwriteSelector : Ouch. Failure. Need to handle this case!" )
-                  e.printStackTrace()
-                  res.set( Span( 0L, min( spec.numFrames, secondsToFrames( 1.0 ))))
+                  res.fail( e )
 
                case FeatureSegmentation.Success( coll ) =>
-                  val s = if( coll.isEmpty ) {
-                     println( "DifferanceOverwriteSelector : Ouch. Empty result. Need to handle this case!" )
-                     Span( 0L, min( spec.numFrames, secondsToFrames( 1.0 )))
+                  if( coll.isEmpty ) {
+                     val e = new RuntimeException( identifier + " process yielded no break" )
+                     res.fail( e )
                   } else {
                      val b    = if( coll( 0 ).sim.isNaN ) coll( 1 ) else coll( 0 )
                      val len  = atomic( identifier + " : found " + formatSeconds( framesToSeconds( b.pos ))) { tx2 =>
                         (random( tx2 ) * (maxLen - minLen) + minLen).toLong
                      }
-                     if( b.pos <= center ) {
+                     val s = if( b.pos <= center ) {
                         val stop0   = max( center, b.pos + len/2 )
                         val start   = max( 0L, stop0 - len )
                         val stop    = min( spec.numFrames, start + len )
@@ -170,8 +168,8 @@ if( verbose ) println( "---pDur = " + formatSeconds( pDur ) + " -> stable" )
                         val start   = max( 0L, stop - len )
                         Span( start, stop )
                      }
+                     res.succeed( s )
                   }
-                  res.set( s )
 
                case FeatureSegmentation.Progress( p ) =>
             }

@@ -147,16 +147,20 @@ if( keep ) println( "Created tmp file : " + res )
       f
    }
 
-   def futureOf[ A ]( value: A ) : FutureResult[ A ] = FutureResult.now( value )
+   def futureOf[ A ]( value: A ) : FutureResult[ A ] = FutureResult.nowSucceed( value )
 
-   def threadFuture[ A ]( name: String )( code: => A )( implicit tx: Tx ) : FutureResult[ A ] = {
+   def threadFuture[ A ]( name: String )( code: => FutureResult.Result[ A ])( implicit tx: Tx ) : FutureResult[ A ] = {
       val ev = FutureResult.event[ A ]()
       tx.afterCommit { _ =>
          new Thread( name ) {
             start()
             override def run() {
                logNoTx( "threadFuture started : " + name )
-               ev.set( code )
+               ev.set( try {
+                  code
+               } catch {
+                  case e => FutureResult.Failure( e )
+               })
             }
          }
       }

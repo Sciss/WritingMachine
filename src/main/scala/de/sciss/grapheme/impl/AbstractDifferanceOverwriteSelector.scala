@@ -30,7 +30,7 @@ import de.sciss.synth
 import collection.immutable.{IndexedSeq => IIdxSeq}
 
 object AbstractDifferanceOverwriteSelector {
-   private val verbose = true
+   private val verbose = false
 }
 abstract class AbstractDifferanceOverwriteSelector
 extends DifferanceOverwriteSelector {
@@ -86,7 +86,7 @@ extends DifferanceOverwriteSelector {
    private def selectPartsWith( ovrNow: FutureResult[ IIdxSeq[ OverwriteInstruction ]], phrase: Phrase,
                                 num : Int ) : FutureResult[ IIdxSeq[ OverwriteInstruction ]] = {
       (0 until num).foldLeft( ovrNow ) { case (futPred, i) =>
-         futPred.flatMap { coll =>
+         futPred.flatMapSuccess { coll =>
             val (stretch, futSpan) = atomic( identifier + " : select parts" ) { tx1 =>
                import synth._
 
@@ -103,7 +103,7 @@ extends DifferanceOverwriteSelector {
 
                (stre, bestPart( phrase, pos, minFrag, maxFrag, spect )( tx1 ))
             }
-            futSpan.map { span =>
+            futSpan.mapSuccess { span =>
                val newLen  = (span.length * stretch).toLong
 if( verbose ) println( "---stretch from " + formatSeconds( framesToSeconds( span.length )) + " to " + formatSeconds( framesToSeconds( newLen )) + " (" + formatPercent( stretch ) + ")" )
                val ins     = OverwriteInstruction( span, newLen )

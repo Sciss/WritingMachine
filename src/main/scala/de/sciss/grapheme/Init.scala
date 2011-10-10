@@ -116,7 +116,7 @@ final class Init private ( /* _phrase0: Phrase, val differance: DifferanceAlgori
 //         var p          = _phrase0 // atomic( "Init query current phrase" )( tx => differance.currentPhrase( tx ))
          val futP0   = atomic( "meta-diff initial tv capture" )( tx => tv.capture( secondsToFrames( 4.0 ))( tx ))
          logNoTx( "==== meta-diff wait for initial tv capture ====" )
-         val fP0     = futP0.apply()
+         val fP0     = futP0.apply().get
 //         logNoTx( "==== meta-diff get first phrase ====" )
          val (differance, _p0) = atomic( "meta-diff initialize algorithm" ) { tx =>
             val p0      = Phrase.fromFile( fP0 )( tx )
@@ -152,7 +152,7 @@ try {
             }
             val t1      = System.currentTimeMillis()
             logNoTx( "==== meta-diff wait for algorithm step ====" )
-            p = stepFut()
+            p = stepFut().get
             val dur2    = (System.currentTimeMillis() - t1) * 0.001
             val dur3    = dur - dur2
             if( dur3 > 0.0 ) {
@@ -162,13 +162,16 @@ try {
                }
             }
 //            atomic( "meta-diff releasing spat phrase" ) { tx => spat.releasePhrase( tx )}
+            sector = (sector + 1) % numSectors
+
 } catch {
    case e =>
       logNoTx( "==== meta-diff caught exception ====" )
       e.printStackTrace()
+      Thread.sleep( 1000 )
 }
 
-            sector = (sector + 1) % numSectors
+//            sector = (sector + 1) % numSectors
          }
       }
    }

@@ -41,7 +41,7 @@ object RichProc {
                if( state.valid && !state.playing ) {
                   atomic( "proc : stopped listener" ) { implicit tx =>
                      proc.removeListener( l )
-                     fut.set( () )
+                     fut.succeed( () )
                   }
                }
             }

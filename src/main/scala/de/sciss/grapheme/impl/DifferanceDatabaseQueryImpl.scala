@@ -66,8 +66,8 @@ class DifferanceDatabaseQueryImpl private ( db: Database ) extends AbstractDiffe
       val dirFut     = db.asStrugatziDatabase
       val metaFut    = phrase.asStrugatzkiInput
 
-      dirFut.flatMap { dir =>
-         metaFut.flatMap { metaInput =>
+      dirFut.flatMapSuccess { dir =>
+         metaFut.flatMapSuccess { metaInput =>
             findMatchIn( dir, metaInput, maxBoost, minSpc, rank, phrase, punchIn, punchOut,
                minPunch, maxPunch, weight )
          }
@@ -102,24 +102,22 @@ class DifferanceDatabaseQueryImpl private ( db: Database ) extends AbstractDiffe
 
       val process          = apply( setb ) {
          case Aborted =>
-            println( "DifferanceDatabaseQuery : Ouch. Aborted. Need to handle this case!" )
-            res.set( failureMatch )
+            val e = new RuntimeException( identifier + " process aborted" )
+            res.fail( e )
 
          case Failure( e ) =>
-            println( "DifferanceDatabaseQuery : Ouch. Failure. Need to handle this case!" )
-            e.printStackTrace()
-            res.set( failureMatch )
+            res.fail( e )
 
          case Success( coll ) =>
             val idx0 = min( coll.size - 1, rank )
             val idx  = if( idx0 == 0 && coll( idx0 ).sim.isNaN ) idx0 + 1 else idx0
-            res.set( if( idx < 0 || idx >= coll.size ) {
-               println( "DifferanceDatabaseQuery : Ouch. No matches. Need to handle this case!" )
-               failureMatch
+            if( idx < 0 || idx >= coll.size ) {
+               val e = new RuntimeException( identifier + " process yielded no matches" )
+               res.fail( e )
             } else {
                val m = coll( idx )
-               Match( db, Span( m.punch.start, m.punch.stop ), m.boostIn, m.boostOut )
-            })
+               res.succeed( Match( db, Span( m.punch.start, m.punch.stop ), m.boostIn, m.boostOut ))
+            }
 
          case Progress( p ) =>
       }

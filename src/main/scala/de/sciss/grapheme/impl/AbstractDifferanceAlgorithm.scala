@@ -50,7 +50,7 @@ abstract class AbstractDifferanceAlgorithm extends DifferanceAlgorithm {
    private def step0( tx0: Tx ) : FutureResult[ Phrase ] = {
       val p          = phraseRef()( tx0 )
       val futOvrSel  = overwriteSelector.selectParts( p )( tx0 )
-      futOvrSel.flatMap( mapOverwrites( p ) _ )
+      futOvrSel.flatMapSuccess( mapOverwrites( p ) _ )
    }
 
    private def mapOverwrites( p: Phrase /*, fut0: FutureResult[ Unit ]*/ )
@@ -59,32 +59,32 @@ abstract class AbstractDifferanceAlgorithm extends DifferanceAlgorithm {
       val futFill = atomic( identifier + " : filler.perform" )( tx5 => filler.perform( tx5 ))
 
       val ovs     = instrs.sortBy( _.span.start )
-      val tgtNow  = futFill.map( _ => IIdxSeq.empty[ DifferanceDatabaseQuery.Match ])
+      val tgtNow  = futFill.mapSuccess( _ => IIdxSeq.empty[ DifferanceDatabaseQuery.Match ])
       val futTgt  = ovs.foldLeft( tgtNow ) { case (futTgt1, ov) =>
-         futTgt1.flatMap { coll =>
+         futTgt1.flatMapSuccess { coll =>
             atomic( identifier + " : database query " + ov.printFormat ) { tx2 =>
                val futOne = databaseQuery.find( p, ov )( tx2 )
-               futOne.map { m =>
+               futOne.mapSuccess { m =>
                   coll :+ m
                }
             }
          }
       }
       val pNow    = futureOf( p )
-      val futPNew = futTgt flatMap { targets =>
+      val futPNew = futTgt flatMapSuccess { targets =>
          (ovs zip targets).foldRight( pNow ) { case ((ov, target), futP1) =>
-            futP1.flatMap { p1 =>
+            futP1.flatMapSuccess { p1 =>
                atomic( identifier + " : overwriter perform " + target.printFormat ) { tx2 =>
                   overwriter.perform( p1, ov, target )( tx2 )
                }
             }
          }
       }
-      val futThin = futTgt flatMap { targets =>
+      val futThin = futTgt flatMapSuccess { targets =>
          atomic( identifier + " : thinner remove " + targets.size + " regions" )( tx3 =>
             thinner.remove( targets.map( _.span )( breakOut ))( tx3 ))
       }
-      val futResult = futPNew.map { pNew =>
+      val futResult = futPNew.mapSuccess { pNew =>
          atomic( identifier + " complete cycle with " + pNew.printFormat ) { tx4 =>
             phraseRef.set( pNew )( tx4 )
             phraseTrace.add( pNew )( tx4 )
@@ -92,6 +92,6 @@ abstract class AbstractDifferanceAlgorithm extends DifferanceAlgorithm {
          }
       }
 
-      futThin.flatMap( _ => futResult )
+      futThin.flatMapSuccess( _ => futResult )
    }
 }

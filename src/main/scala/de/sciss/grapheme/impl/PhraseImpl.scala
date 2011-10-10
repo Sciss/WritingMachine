@@ -78,6 +78,8 @@ object PhraseImpl {
    private final class Impl( file: File, fact: ProcFactory, val length: Long ) extends Phrase with ExtractionImpl {
       import GraphemeUtil._
 
+      def identifier = PhraseImpl.identifier
+
       override def toString = "Phrase.fromFile(" + file + ")"
 
       def printFormat : String = {
@@ -91,7 +93,7 @@ object PhraseImpl {
       def asStrugatzkiInput( implicit tx: Tx ) : FutureResult[ File ] = featureRef() match {
          case Some( res ) => futureOf( res )
          case None =>
-            extract( file, None, false ).map { res =>
+            extract( file, None, false ).mapSuccess { res =>
                atomic( identifier + " : cache feature extraction" ) { implicit tx =>
                   featureRef.set( Some( res ))
                }

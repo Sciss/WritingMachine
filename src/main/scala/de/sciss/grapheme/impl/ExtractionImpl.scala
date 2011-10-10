@@ -7,6 +7,8 @@ import de.sciss.strugatzki.FeatureExtraction
 trait ExtractionImpl {
    import GraphemeUtil._
 
+   protected def identifier: String
+
    /**
     * Starts an extraction process for a given audio file input. The process
     * is started after the transaction commits, and the method returns
@@ -23,16 +25,14 @@ trait ExtractionImpl {
          set.metaOutput    = Some( meta )
          val process       = apply( set ) {
             case Aborted =>
-               println( "Extraction : Ouch : Aborted. Need to handle this case!" )
-               res.set( meta )
+               val e = new RuntimeException( identifier + " process aborted" )
+               res.fail( e )
 
             case Failure( e ) =>
-               println( "Extraction : Ouch. Failure. Need to handle this case!" )
-               e.printStackTrace()
-               res.set( meta )
+               res.fail( e )
 
             case Success( _ ) =>
-               res.set( meta )
+               res.succeed( meta )
 
             case Progress( p ) =>
          }

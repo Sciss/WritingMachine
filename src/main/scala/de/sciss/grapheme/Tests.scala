@@ -69,7 +69,7 @@ object Tests {
          // make sure we truncate or expand from the end, as that way the successive overwrites still make sense
          val sorted  = zipped.sortBy { case (ov, _) => -ov.span.start }
          val pFut    = sorted.foldLeft( futureOf( phrase )) { case (fut, (ov, m)) =>
-            fut.flatMap( p => atomic( "Test perform overwrite" )( tx1 => ovr.perform( p, ov, m )( tx1 )))
+            fut.flatMapSuccess( p => atomic( "Test perform overwrite" )( tx1 => ovr.perform( p, ov, m )( tx1 )))
          }
          println( "Test ==== Waiting for Overwrites ====")
          val newPhrase = pFut()
@@ -86,17 +86,17 @@ object Tests {
          val query   = DifferanceDatabaseQuery( fill.database )
          val tgtNow  = futureOf( IIdxSeq.empty[ DifferanceDatabaseQuery.Match ])
          val futTgt  = ovs.foldLeft( tgtNow ) { case (futTgt1, ov) =>
-            futTgt1.flatMap { coll =>
+            futTgt1.flatMapSuccess { coll =>
                atomic( "Test databaseQuery" ) { tx2 =>
                   val futOne = query.find( phrase, ov )( tx2 )
-                  futOne.map { m =>
+                  futOne.mapSuccess { m =>
                      coll :+ m
                   }
                }
             }
          }
          println( "Test ==== Waiting for Matches ====")
-         val ms = futTgt()
+         val ms = futTgt().get
          println( "Test ==== Match Results ====")
          ms.foreach( println _ )
          fun( phrase, ovs, ms )
@@ -132,7 +132,7 @@ object Tests {
          start()
          def act() {
             println( "Test ==== Waiting for Overwrites ====")
-            val ovs = spanFut.apply()
+            val ovs = spanFut.apply().get
             println( "Test ==== Results ====")
             ovs.foreach( println _ )
             fun( phrase, ovs )
@@ -152,7 +152,7 @@ object Tests {
          println( "Test spawing actor 2" )
          actor {
             reactWithin( 3000L ) {
-               case TIMEOUT => ev.set( 33 )
+               case TIMEOUT => ev.succeed( 33 )
             }
          }
          println( "Test entering await" )
@@ -172,7 +172,7 @@ object Tests {
          val ev = FutureResult.event[ Int ]()
          println( "Test spawing actor 2" )
          actor {
-            ev.set( 33 )
+            ev.succeed( 33 )
          }
          println( "Test sleeping" )
          receiveWithin( 3000L ) {
@@ -193,10 +193,10 @@ object Tests {
 
       actor {
          val ev = FutureResult.event[ Int ]()
-         val evP1 = ev.map( _ + 1 )
+         val evP1 = ev.mapSuccess( _ + 1 )
          actor {
             reactWithin( 3000L ) {
-               case TIMEOUT => ev.set( 33 )
+               case TIMEOUT => ev.succeed( 33 )
             }
          }
          println( "Test entering await" )
@@ -214,13 +214,13 @@ object Tests {
 
       actor {
          val ev = FutureResult.event[ Int ]()
-         val evm = ev.flatMap { i =>
+         val evm = ev.flatMapSuccess { i =>
             val ev2 = FutureResult.event[ Int ]()
             actor {
                reactWithin( 3000L ) {
                   case TIMEOUT =>
                      println( "Test Setting ev2" )
-                     ev2.set( i * i )
+                     ev2.succeed( i * i )
                }
             }
             ev2
@@ -229,7 +229,7 @@ object Tests {
             reactWithin( 3000L ) {
                case TIMEOUT =>
                   println( "Test Setting ev" )
-                  ev.set( 33 )
+                  ev.succeed( 33 )
             }
          }
          println( "Test entering await" )

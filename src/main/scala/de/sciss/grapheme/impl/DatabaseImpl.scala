@@ -101,6 +101,7 @@ object DatabaseImpl {
             val afTgt = AudioFile.openWrite( target, afSrc.spec )
             try {
                afSrc.copyTo( afTgt, afSrc.numFrames )
+               () // oops... old stuff, copyTo should return Unit these days
             } finally {
                afTgt.close()
             }
@@ -117,6 +118,8 @@ class DatabaseImpl private ( dir: File, normFile: File, state0: DatabaseImpl.Sta
 extends AbstractDatabase with ExtractionImpl {
    import GraphemeUtil._
    import DatabaseImpl._
+
+   def identifier = DatabaseImpl.identifier
 
 //   private val extrRef        = Ref( extr0 )
 //   private val specRef        = Ref( spec0 )
@@ -198,7 +201,7 @@ extends AbstractDatabase with ExtractionImpl {
             if( afNew.isOpen ) afNew.close()
          }
 
-      } catch {
+      } catch {   // FFF
          case e =>
             println( "Database update - Ooops, should handle exceptions" )
             e.printStackTrace()
@@ -329,7 +332,7 @@ extends AbstractDatabase with ExtractionImpl {
 
    private def extractAndUpdate( audioInput: File, sub: File ) : FutureResult[ File ] = {
       atomic( identifier + " : extract" ) { implicit tx =>
-         extract( audioInput, Some( sub ), true ).map { meta =>
+         extract( audioInput, Some( sub ), true ).mapSuccess { meta =>
             assert( meta.getParentFile == sub )
             updateState( meta )
             sub

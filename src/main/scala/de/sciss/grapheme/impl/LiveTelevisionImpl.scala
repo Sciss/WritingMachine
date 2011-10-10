@@ -44,7 +44,11 @@ final class LiveTelevisionImpl private () extends Television {
    def latency = lookAheadLim * 2
 
    private val procRef  = Ref( Option.empty[ synth.proc.Proc ])
-   private val futRef   = Ref({ val ev = FutureResult.event[ File ](); ev.set( new File( "" )); ev })
+   private val futRef   = Ref({
+      val ev = FutureResult.event[ File ]()
+      ev.fail( new RuntimeException( identifier + " : capture file not yet initialized" ))
+      ev
+   })
 
    def capture( length: Long )( implicit tx: Tx ) : FutureResult[ File ] = {
       import synth._
@@ -52,8 +56,8 @@ final class LiveTelevisionImpl private () extends Television {
       import proc._
       import DSL._
 
-      val dur = framesToSeconds( length ) + latency
-      val res = FutureResult.event[ File ]()
+      val dur     = framesToSeconds( length ) + latency
+      val res     = FutureResult.event[ File ]()
       val oldFut  = futRef.swap( res )
       require( oldFut.isSet, identifier + " : still in previous capture" )
 
@@ -81,14 +85,14 @@ final class LiveTelevisionImpl private () extends Television {
                            val spec = AudioFile.readSpec( path )
                            len      = spec.numFrames
                         } catch {
-                           case _ =>
+                           case _ =>   // FFF
                         }
                         if( len == 0L ) Thread.sleep( 200 )
                         i -= 1
                      }
 //                     res.set( path )
                      atomic( identifier + " return path" ) { implicit tx =>
-                        futRef().set( path )
+                        futRef().succeed( path )
                      }
                   }
                }
@@ -103,9 +107,10 @@ final class LiveTelevisionImpl private () extends Television {
          _p
       }
 
-//      require( !p.isPlaying, identifier + " : still in previous capture" )
-      p.control( "dur" ).v      = dur
+      p.control( "dur" ).v = dur
       p.play
+// XXX TODO : this should be somewhat handled (ProcTxn needs addition)
+//      tx.afterFailure { e => res.fail( e )}
 
       res
    }

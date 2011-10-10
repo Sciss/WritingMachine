@@ -73,11 +73,11 @@ class FileTelevisionImpl private ( f: File, spec: AudioFileSpec ) extends Televi
                } finally {
                   afTV.close()
                }
-            } catch {
-               case e =>
-                  println( "FileTelevisionImpl capture - Oops. exception. Should handle" )
-                  e.printStackTrace()
-                  fNew // que puede... XXX
+//            } catch {
+//               case e =>
+//                  println( "FileTelevisionImpl capture - Oops. exception. Should handle" )
+//                  e.printStackTrace()
+//                  fNew // que puede... XXX
             } finally {
                afNew.close()
             }

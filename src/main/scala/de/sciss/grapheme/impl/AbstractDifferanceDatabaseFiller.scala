@@ -52,7 +52,7 @@ abstract class AbstractDifferanceDatabaseFiller extends DifferanceDatabaseFiller
       logTx( identifier + " : gathering " + formatSeconds( framesToSeconds( inc )))
 
       if( inc > 0 ) {
-         television.capture( inc ).flatMap { f =>
+         television.capture( inc ).flatMapSuccess { f =>
             performWithFile( f, secondsToFrames( television.latency ), inc )
          }
       } else {
