@@ -80,19 +80,25 @@ final class LiveTelevisionImpl private () extends Television {
                      // some effort to make sure the file was closed by the server
                      // ; unfortunately we can't guarantee this with the current
                      // sound processes (or can we?)
+                     var e: Throwable = null
                      while( len == 0L && i > 0 ) {
                         try {
                            val spec = AudioFile.readSpec( path )
                            len      = spec.numFrames
                         } catch {
-                           case _ =>   // FFF
+                           case _e => e = _e
                         }
                         if( len == 0L ) Thread.sleep( 200 )
                         i -= 1
                      }
 //                     res.set( path )
                      atomic( identifier + " return path" ) { implicit tx =>
-                        futRef().succeed( path )
+//                        futRef().succeed( path )
+                        futRef().set( if( (len == 0L) && (e != null) ) {
+                           FutureResult.Failure( e )
+                        } else {
+                           FutureResult.Success( path )
+                        })
                      }
                   }
                }

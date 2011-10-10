@@ -49,7 +49,7 @@ object Init {
       val spat    = DifferanceSpat( coll )
 //      val tv      = Television.fromFile( new File( testDir, "aljazeera1.aif" ))
       val tv      = if( tvUseTestFile ) {
-         Television.fromFile( new File( testDir, "mulholland_drive_ct.aif" ))
+         Television.fromFile( new File( testDir, "euronews.aif" ))
       } else {
          Television.live()
       }

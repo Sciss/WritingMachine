@@ -42,7 +42,7 @@ object WritingMachine {
    val tvNumChannels       = 2
    val tvPhaseFlip         = true
    val tvBoostDB           = 0   // decibels
-   val tvUseTestFile       = false
+   val tvUseTestFile       = true // false
 //   val strugatzkiDatabase  = new File( "/Users/hhrutz/Documents/devel/LeereNull/feature/" )
    val inDevice            = "MOTU 828mk2"
    val outDevice           = inDevice

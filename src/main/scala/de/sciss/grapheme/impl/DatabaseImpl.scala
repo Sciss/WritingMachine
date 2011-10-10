@@ -181,7 +181,7 @@ extends AbstractDatabase with ExtractionImpl {
    }
 
    private def updateLoop( fun: AudioFile => Unit ) {
-      try {
+//      try {
          val sub     = createDir( dir, dirPrefix )
          val fNew    = new File( sub, audioName )
          val afNew   = openMonoWrite( fNew )
@@ -201,11 +201,11 @@ extends AbstractDatabase with ExtractionImpl {
             if( afNew.isOpen ) afNew.close()
          }
 
-      } catch {   // FFF
-         case e =>
-            println( "Database update - Ooops, should handle exceptions" )
-            e.printStackTrace()
-      }
+//      } catch {   // FFF
+//         case e =>
+//            println( "Database update - Ooops, should handle exceptions" )
+//            e.printStackTrace()
+//      }
    }
 
    private def removalBody( fOld: File, entries: IIdxSeq[ RemovalInstruction ]) {
