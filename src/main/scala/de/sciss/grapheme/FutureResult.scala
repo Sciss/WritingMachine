@@ -30,85 +30,91 @@ import actors.{Futures, Future}
 import concurrent.stm.Txn
 
 trait FutureResult[ +A ] {
+   import FutureResult._
+
    def isSet : Boolean
-   def apply() : A
-//   def respond( fun: A => Unit ) : Unit
-   def map[ B ]( fun: A => B ) : FutureResult[ B ]
-   def flatMap[ B ]( fun: A => FutureResult[ B ]) : FutureResult[ B ]
-   private[grapheme] def peer : Future[ A ]
+   def apply() : Result[ A ]
+   def map[ B ]( fun: Result[ A ] => Result[ B ]) : FutureResult[ B ]
+   def flatMap[ B ]( fun: Result[ A ] => FutureResult[ B ]) : FutureResult[ B ]
+
+   final def mapSuccess[ B ]( fun: A => Result[ B ]) : FutureResult[ B ] =
+      map {
+         case Success( value ) => fun( value )
+         case f @ Failure( _ ) => f
+      }
+
+   final def flatMapSuccess[ B ]( fun: A => FutureResult[ B ]) : FutureResult[ B ] =
+      flatMap {
+         case Success( value ) => fun( value )
+         case f @ Failure( _ ) => now( f )
+      }
+
+   private[grapheme] def peer : Future[ Result[ A ]]
 }
 
 object FutureResult {
-   import GraphemeUtil._
+   sealed trait Result[ +A ] { def toOption: Option[ A ]}
+   final case class Failure( e: Throwable ) extends Result[ Nothing ] { def toOption = None }
+   final case class Success[ A ]( value: A ) extends Result[ A ] { def toOption = Some( value )}
 
-//   def enrich[ A ]( f: IIdxSeq[ FutureResult[ A ]]) : FutureResult[ IIdxSeq[ A ]] = sys.error( "TODO" )
-
-   def now[ A ]( value: A ) : FutureResult[ A ] = {
+   def now[ A ]( value: Result[ A ]) : FutureResult[ A ] = {
       val ev = event[ A ]()  // hmmmm... too much effort?
       ev.set( value )
       ev
    }
 
-//   def unitSeq( fs: FutureResult[ _ ]* ) : FutureResult[ Unit ] = sys.error( "TODO" )
-
-   def par[ A ]( fs: FutureResult[ A ]* ) : FutureResult[ Unit ] = {
-      warnToDo( "FutureResult : par" )
-      fs.headOption match {
-         case Some( fut0 ) =>
-            val seq = fs.drop( 1 ).foldLeft[ FutureResult[ Any ]]( fut0 )( (futPred, futSucc) => futPred.flatMap( _ => futSucc ))
-            seq.map { _ => }
-         case None => futureOf( () )
-      }
-   }
-
-//   /**
-//    * Strictly sequentially resolves the futures, that is, it awaits the result of the
-//    * first future first, then the one of next one, and so forth
-//    */
-//   def seq[ A ]( f: FutureResult[ A ]* ) : FutureResult[ A ] = sys.error( "TODO" )
+   def nowSucceed[ A ]( value: A ) : FutureResult[ A ] = now( Success( value ))
+   def nowFail[ A ]( e: Throwable ) : FutureResult[ A ] = now( Failure( e ))
 
    trait Event[ A ] extends FutureResult[ A ] {
-      def set( result: A ) : Unit
+      def set( result: Result[ A ]) : Unit
+      final def succeed( value :A ) { set( Success( value ))}
+      final def fail( e: Throwable ) { set( Failure( e ))}
    }
 
-//   private final case class Set[ A ]( value :A )
-
    def event[ A ]() : FutureResult.Event[ A ] = new FutureResult.Event[ A ] with Basic[ A ] {
-      case class Set( value: A ) // warning: don't make this final -- scalac bug
+      case class Set( value: Result[ A ]) // warning: don't make this final -- scalac bug
 
-      val c = FutureActor.newChannel[ A ]()
-      val peer: FutureActor[ A ] = new FutureActor[ A ]({ syncVar =>
+      val c = FutureActor.newChannel[ Result[ A ]]()
+      val peer: FutureActor[ Result[ A ]] = new FutureActor[ Result[ A ]]({ syncVar =>
          peer.react {
             case Set( value ) => syncVar.set( value )
          }
       }, c )
       peer.start()
 
-      def set( value: A ) { peer ! Set( value )}
+      def set( value: Result[ A ]) { peer ! Set( value )}
    }
 
-   def wrap[ A ]( fut: Future[ A ]) : FutureResult[ A ] = new FutureResult[ A ] with Basic[ A ] {
-      def peer = fut
-   }
+   private def wrap[ A ]( fut: Future[ Result[ A ]]) : FutureResult[ A ] =
+      new FutureResult[ A ] with Basic[ A ] {
+         def peer = fut
+      }
 
    private sealed trait Basic[ A ] {
       me: FutureResult[ A ] =>
 
-      def map[ B ]( fun: A => B ) : FutureResult[ B ] = wrap( Futures.future {
-         fun( me.peer.apply() )
+      def map[ B ]( fun: Result[ A ] => Result[ B ]) : FutureResult[ B ] = wrap( Futures.future {
+         try {
+            fun( me.peer.apply() )
+         } catch {
+            case e => Failure( e )
+         }
       })
 
-      def flatMap[ B ]( fun: A => FutureResult[ B ]) : FutureResult[ B ] = wrap( Futures.future {
-         fun( me.peer.apply() ).peer.apply()
+      def flatMap[ B ]( fun: Result[ A ] => FutureResult[ B ]) : FutureResult[ B ] = wrap( Futures.future {
+         try {
+            fun( me.peer.apply() ).peer.apply()
+         } catch {
+            case e => Failure( e )
+         }
       })
 
       def isSet : Boolean = peer.isSet
 
-      def apply() : A = {
+      def apply() : Result[ A ] = {
          require( Txn.findCurrent.isEmpty, "Must not call future-apply within an active transaction" )
          peer.apply()
       }
-
-//      def respond( fun: A => Unit ) { peer.respond( fun )}
    }
 }
