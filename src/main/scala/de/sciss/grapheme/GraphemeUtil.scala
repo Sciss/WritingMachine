@@ -135,7 +135,7 @@ object GraphemeUtil {
 
    def createTempFile( suffix: String, dir: Option[ File ], keep: Boolean ) : File = {
       val res = File.createTempFile( "grapheme", suffix, dir.getOrElse( tmpDir ))
-if( keep ) println( "Created tmp file : " + res )
+//if( keep ) println( "Created tmp file : " + res )
       if( !keep && deleteTempFilesOnExit ) res.deleteOnExit()
       res
    }

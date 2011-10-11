@@ -25,12 +25,15 @@
 
 package de.sciss.grapheme
 
-import de.sciss.nuages.NuagesLauncher
 import de.sciss.synth.proc.ProcTxn
 import java.io.File
 import de.sciss.strugatzki.Strugatzki
 import collection.immutable.{IndexedSeq => IIdxSeq}
 import de.sciss.osc.TCP
+import swing.Swing
+import de.sciss.nuages.{NuagesFrame, NuagesLauncher}
+import java.awt.event.ActionEvent
+import javax.swing.{JButton, AbstractAction}
 
 object WritingMachine {
    val autoStart           = true
@@ -129,11 +132,26 @@ actors.Actor.actor {
       println( "Bye bye..." )
    }
 
+   def shutDownComputer() {
+      val pb = new ProcessBuilder( "/bin/sh", new File( "shutdown.sh" ).getAbsolutePath )
+      pb.start()
+   }
    def booted( r: NuagesLauncher.Ready ) {
       Strugatzki.tmpDir = GraphemeUtil.tmpDir
 //      FeatureExtraction.verbose = true
+
+      Swing.onEDT( initGUI( r.frame ))
+
       ProcTxn.atomic { implicit tx =>
          Init( r )
       }
+   }
+
+   def initGUI( f: NuagesFrame ) {
+      f.bottom.add( new JButton( new AbstractAction( "SHUTDOWN" ) {
+         def actionPerformed( e: ActionEvent ) {
+            shutDownComputer()
+         }
+      }))
    }
 }
