@@ -1,0 +1,600 @@
+/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/bin/java -Xmx1024m -Didea.launcher.port=7532 -Didea.launcher.bin.path=/Applications/IntelliJ IDEA 10 CE.app/bin -Dfile.encoding=UTF-8 -classpath /System/Library/Frameworks/JavaVM.framework/Versions/A/Resources/Deploy.bundle/Contents/Resources/Java/deploy.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/lib/dt.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/lib/javaws.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/lib/jce.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/lib/management-agent.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/lib/plugin.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/lib/sa-jdi.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Classes/alt-rt.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Classes/charsets.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Classes/classes.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Classes/jconsole.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Classes/jsse.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Classes/ui.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/lib/ext/apple_provider.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/lib/ext/dnsns.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/lib/ext/localedata.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/lib/ext/sunjce_provider.jar:/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/lib/ext/sunpkcs11.jar:/Users/hhrutz/Documents/devel/WritingMachine/target/scala-2.9.1/classes:/Users/hhrutz/Documents/devel/WritingMachine/lib_managed/jars/de.sciss/audiowidgets_2.9.1/audiowidgets_2.9.1-0.10.jar:/Users/hhrutz/Documents/devel/WritingMachine/lib_managed/jars/de.sciss/prefuse-core/prefuse-core-0.21.jar:/Users/hhrutz/Documents/devel/WritingMachine/lib_managed/jars/de.sciss/scalaaudiofile_2.9.1/scalaaudiofile_2.9.1-0.20.jar:/Users/hhrutz/Documents/devel/WritingMachine/lib_managed/jars/de.sciss/scalaaudiowidgets_2.9.1/scalaaudiowidgets_2.9.1-0.10.jar:/Users/hhrutz/Documents/devel/WritingMachine/lib_managed/jars/de.sciss/scalacollider_2.9.1/scalacollider_2.9.1-0.30-SNAPSHOT.jar:/Users/hhrutz/Documents/devel/WritingMachine/lib_managed/jars/de.sciss/scalacolliderswing_2.9.1/scalacolliderswing_2.9.1-0.30-SNAPSHOT.jar:/Users/hhrutz/Documents/devel/WritingMachine/lib_managed/jars/de.sciss/soundprocesses_2.9.1/soundprocesses_2.9.1-0.30-SNAPSHOT.jar:/Users/hhrutz/Documents/devel/WritingMachine/lib_managed/jars/de.sciss/wolkenpumpe_2.9.1/wolkenpumpe_2.9.1-0.30-SNAPSHOT.jar:/Users/hhrutz/Documents/devel/WritingMachine/lib_managed/jars/jsyntaxpane/jsyntaxpane/jsyntaxpane-0.9.5-b29.jar:/Users/hhrutz/.sbt/boot/scala-2.9.1/lib/scala-compiler.jar:/Users/hhrutz/.sbt/boot/scala-2.9.1/lib/scala-library.jar:/Users/hhrutz/Documents/devel/WritingMachine/lib_managed/jars/org.scala-lang/scala-swing/scala-swing-2.9.1.jar:/Users/hhrutz/Documents/devel/WritingMachine/lib_managed/jars/org.scala-tools/scala-stm_2.9.1/scala-stm_2.9.1-0.3.jar:/Users/hhrutz/Documents/devel/WritingMachine/lib_managed/jars/org.scalatest/scalatest_2.9.1/scalatest_2.9.1-1.6.1.jar:/Users/hhrutz/Documents/devel/WritingMachine/lib_managed/jars/de.sciss/scalaosc_2.9.1/scalaosc_2.9.1-0.30.jar:/Users/hhrutz/Documents/devel/WritingMachine/lib_managed/jars/de.sciss/scalainterpreterpane_2.9.1/scalainterpreterpane_2.9.1-0.18.jar:/Users/hhrutz/Documents/devel/WritingMachine/lib_managed/jars/de.sciss/nuagespompe_2.9.1/nuagespompe_2.9.1-0.10.jar:/Users/hhrutz/Documents/devel/WritingMachine/lib_managed/jars/de.sciss/strugatzki_2.9.1/strugatzki_2.9.1-0.14-SNAPSHOT.jar:/Users/hhrutz/Documents/devel/WritingMachine/lib_managed/jars/com.github.scopt/scopt_2.9.1/scopt_2.9.1-1.1.2.jar:/Applications/IntelliJ IDEA 10 CE.app/lib/idea_rt.jar com.intellij.rt.execution.application.AppMain de.sciss.grapheme.WritingMachine
+fCoreAudioDriverUID AppleHDAEngineInput:1B,0,1,0:1
+Number of Devices: 12
+   0 : "Built-in Microphone"
+   1 : "Built-in Input"
+   2 : "Built-in Output"
+   3 : "CD Spin Doctor Capture Support"
+   4 : "Soundflower (2ch)"
+   5 : "Soundflower (16ch)"
+   6 : "Adobe Encore DVD 4.0.1"
+   7 : "Adobe Media Encoder 4.0"
+   8 : "After Effects 9.0.2"
+   9 : "Premiere Pro 4.0"
+   10 : "Soundbooth 2.0"
+   11 : "MOTU 828mk2"
+
+"MOTU 828mk2" Input Device
+   Streams: 5
+      0  channels 2
+      1  channels 8
+      2  channels 2
+      3  channels 2
+      4  channels 8
+
+"MOTU 828mk2" Output Device
+   Streams: 5
+      0  channels 2
+      1  channels 8
+      2  channels 2
+      3  channels 2
+      4  channels 8
+
+SC_AudioDriver: sample rate = 44100.000000, driver's block size = 512
+SuperCollider 3 server ready..
+Tue Oct 11 11:12:18 CEST 2011 WritingMachine : start
+Tue Oct 11 11:12:18 CEST 2011 meta-diff initial tv capture
+Tue Oct 11 11:12:18 CEST 2011 threadFuture started : file-television-impl : capture
+Tue Oct 11 11:12:18 CEST 2011 ==== meta-diff wait for initial tv capture ====
+Tue Oct 11 11:12:18 CEST 2011 meta-diff : initialize algorithm
+Tue Oct 11 11:12:18 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:12:18 CEST 2011 meta-diff : difference algorithm step
+Tue Oct 11 11:12:18 CEST 2011 meta-diff : determining rotation duration
+Tue Oct 11 11:12:18 CEST 2011 ==== meta-diff wait for algorithm step ====
+Tue Oct 11 11:12:19 CEST 2011 phrase-impl : cache feature extraction
+Tue Oct 11 11:12:19 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:12:20 CEST 2011 overwrite-selector-impl : found 1.880s
+Tue Oct 11 11:12:20 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:12:20 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:12:20 CEST 2011 overwrite-selector-impl : found 3.366s
+Tue Oct 11 11:12:20 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:12:20 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:12:20 CEST 2011 overwrite-selector-impl : found 2.043s
+Tue Oct 11 11:12:20 CEST 2011 a-differance : filler.perform
+Tue Oct 11 11:12:20 CEST 2011 a-database-filler : gathering 0.100s
+Tue Oct 11 11:12:20 CEST 2011 threadFuture started : file-television-impl : capture
+Tue Oct 11 11:12:20 CEST 2011 a-database-filler : appending 0.100s
+Tue Oct 11 11:12:20 CEST 2011 threadFuture started : database-impl : append 0.100s
+Tue Oct 11 11:12:21 CEST 2011 database-impl : update finalize
+Tue Oct 11 11:12:21 CEST 2011 a-differance : database query over( [1.558s-2.203s] -> 102.3% )
+Tue Oct 11 11:12:21 CEST 2011 threadFuture started : database-impl : copy file
+Tue Oct 11 11:12:21 CEST 2011 database-impl : extract
+Tue Oct 11 11:12:22 CEST 2011 database-impl : cache feature extraction
+Tue Oct 11 11:12:23 CEST 2011 a-differance : database query over( [1.632s-2.592s] -> 99.6% )
+Tue Oct 11 11:12:23 CEST 2011 a-differance : database query over( [2.874s-3.891s] -> 101.1% )
+Tue Oct 11 11:12:24 CEST 2011 a-differance : thinner remove 3 regions
+Tue Oct 11 11:12:24 CEST 2011 threadFuture started : database-impl : remove
+Tue Oct 11 11:12:24 CEST 2011 a-differance : overwriter perform match( [2:29.582s-2:30.616s] )
+Tue Oct 11 11:12:24 CEST 2011 threadFuture started : a-overwriter : perform 
+Tue Oct 11 11:12:24 CEST 2011 a-overwriter : phrase from file
+Tue Oct 11 11:12:24 CEST 2011 a-differance : overwriter perform match( [1:02.868s-1:03.831s] )
+Tue Oct 11 11:12:24 CEST 2011 threadFuture started : a-overwriter : perform 
+Tue Oct 11 11:12:24 CEST 2011 a-overwriter : phrase from file
+Tue Oct 11 11:12:24 CEST 2011 a-differance : overwriter perform match( [1:35.178s-1:35.793s] )
+Tue Oct 11 11:12:24 CEST 2011 threadFuture started : a-overwriter : perform 
+Tue Oct 11 11:12:24 CEST 2011 a-overwriter : phrase from file
+Tue Oct 11 11:12:24 CEST 2011 +++MISSING+++ phrase-trace-impl : add
+Tue Oct 11 11:12:24 CEST 2011 a-differance complete cycle with phrase( grapheme5698764995788778824, 3.989s )
+Tue Oct 11 11:12:24 CEST 2011 database-impl : update finalize
+Tue Oct 11 11:12:24 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:12:25 CEST 2011 meta-diff : difference algorithm step
+Tue Oct 11 11:12:25 CEST 2011 meta-diff : determining rotation duration
+Tue Oct 11 11:12:25 CEST 2011 ==== meta-diff wait for algorithm step ====
+Tue Oct 11 11:12:25 CEST 2011 phrase-impl : cache feature extraction
+Tue Oct 11 11:12:25 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:12:25 CEST 2011 overwrite-selector-impl : found 3.285s
+Tue Oct 11 11:12:25 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:12:25 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:12:25 CEST 2011 overwrite-selector-impl : found 2.623s
+Tue Oct 11 11:12:25 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:12:25 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:12:25 CEST 2011 overwrite-selector-impl : found 3.320s
+Tue Oct 11 11:12:25 CEST 2011 a-differance : filler.perform
+Tue Oct 11 11:12:25 CEST 2011 a-database-filler : gathering 1.732s
+Tue Oct 11 11:12:25 CEST 2011 threadFuture started : file-television-impl : capture
+Tue Oct 11 11:12:25 CEST 2011 a-database-filler : appending 1.732s
+Tue Oct 11 11:12:25 CEST 2011 threadFuture started : database-impl : append 1.732s
+Tue Oct 11 11:12:25 CEST 2011 database-impl : update finalize
+Tue Oct 11 11:12:25 CEST 2011 a-differance : database query over( [2.347s-2.899s] -> 101.4% )
+Tue Oct 11 11:12:25 CEST 2011 threadFuture started : database-impl : copy file
+Tue Oct 11 11:12:25 CEST 2011 database-impl : extract
+Tue Oct 11 11:12:26 CEST 2011 database-impl : cache feature extraction
+Tue Oct 11 11:12:26 CEST 2011 a-differance : database query over( [2.904s-3.666s] -> 100.1% )
+Tue Oct 11 11:12:27 CEST 2011 a-differance : database query over( [3.356s-3.728s] -> 103.2% )
+Tue Oct 11 11:12:27 CEST 2011 a-differance : overwriter perform match( [2:39.683s-2:39.997s] )
+Tue Oct 11 11:12:27 CEST 2011 a-differance : thinner remove 3 regions
+Tue Oct 11 11:12:27 CEST 2011 threadFuture started : a-overwriter : perform 
+Tue Oct 11 11:12:27 CEST 2011 threadFuture started : database-impl : remove
+Tue Oct 11 11:12:27 CEST 2011 a-overwriter : phrase from file
+Tue Oct 11 11:12:27 CEST 2011 a-differance : overwriter perform match( [38.220s-38.916s] )
+Tue Oct 11 11:12:27 CEST 2011 threadFuture started : a-overwriter : perform 
+Tue Oct 11 11:12:27 CEST 2011 a-overwriter : phrase from file
+Tue Oct 11 11:12:27 CEST 2011 a-differance : overwriter perform match( [2:32.195s-2:32.903s] )
+Tue Oct 11 11:12:27 CEST 2011 threadFuture started : a-overwriter : perform 
+Tue Oct 11 11:12:27 CEST 2011 a-overwriter : phrase from file
+Tue Oct 11 11:12:27 CEST 2011 +++MISSING+++ phrase-trace-impl : add
+Tue Oct 11 11:12:27 CEST 2011 a-differance complete cycle with phrase( grapheme7651788906187124004, 4.021s )
+Tue Oct 11 11:12:28 CEST 2011 database-impl : update finalize
+Tue Oct 11 11:12:28 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:12:28 CEST 2011 meta-diff : difference algorithm step
+Tue Oct 11 11:12:28 CEST 2011 meta-diff : determining rotation duration
+Tue Oct 11 11:12:28 CEST 2011 ==== meta-diff wait for algorithm step ====
+Tue Oct 11 11:12:28 CEST 2011 phrase-impl : cache feature extraction
+Tue Oct 11 11:12:28 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:12:28 CEST 2011 overwrite-selector-impl : found 3.227s
+Tue Oct 11 11:12:28 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:12:28 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:12:28 CEST 2011 overwrite-selector-impl : found 3.494s
+Tue Oct 11 11:12:28 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:12:28 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:12:28 CEST 2011 overwrite-selector-impl : found 2.716s
+Tue Oct 11 11:12:28 CEST 2011 a-differance : filler.perform
+Tue Oct 11 11:12:28 CEST 2011 a-database-filler : gathering 1.303s
+Tue Oct 11 11:12:28 CEST 2011 threadFuture started : file-television-impl : capture
+Tue Oct 11 11:12:28 CEST 2011 a-database-filler : appending 1.303s
+Tue Oct 11 11:12:28 CEST 2011 threadFuture started : database-impl : append 1.303s
+Tue Oct 11 11:12:28 CEST 2011 phrase-impl : stop proc
+Tue Oct 11 11:12:28 CEST 2011 proc : stopped listener
+Tue Oct 11 11:12:28 CEST 2011 a-differance-spat : dispose phrase process
+Tue Oct 11 11:12:28 CEST 2011 database-impl : update finalize
+Tue Oct 11 11:12:28 CEST 2011 a-differance : database query over( [2.439s-2.994s] -> 103.7% )
+Tue Oct 11 11:12:28 CEST 2011 threadFuture started : database-impl : copy file
+Tue Oct 11 11:12:28 CEST 2011 database-impl : extract
+Tue Oct 11 11:12:29 CEST 2011 database-impl : cache feature extraction
+Tue Oct 11 11:12:30 CEST 2011 a-differance : database query over( [3.212s-3.972s] -> 102.9% )
+Tue Oct 11 11:12:30 CEST 2011 a-differance : database query over( [3.215s-3.623s] -> 104.0% )
+Tue Oct 11 11:12:31 CEST 2011 phrase-impl : stop proc
+Tue Oct 11 11:12:31 CEST 2011 proc : stopped listener
+Tue Oct 11 11:12:31 CEST 2011 a-differance-spat : dispose phrase process
+Tue Oct 11 11:12:31 CEST 2011 a-differance : overwriter perform match( [2:35.376s-2:35.875s] )
+Tue Oct 11 11:12:31 CEST 2011 a-differance : thinner remove 3 regions
+Tue Oct 11 11:12:31 CEST 2011 threadFuture started : a-overwriter : perform 
+Tue Oct 11 11:12:31 CEST 2011 threadFuture started : database-impl : remove
+Tue Oct 11 11:12:31 CEST 2011 a-overwriter : phrase from file
+Tue Oct 11 11:12:31 CEST 2011 a-differance : overwriter perform match( [46.416s-47.357s] )
+Tue Oct 11 11:12:31 CEST 2011 threadFuture started : a-overwriter : perform 
+Tue Oct 11 11:12:31 CEST 2011 a-overwriter : phrase from file
+Tue Oct 11 11:12:31 CEST 2011 a-differance : overwriter perform match( [2:51.200s-2:51.711s] )
+Tue Oct 11 11:12:31 CEST 2011 threadFuture started : a-overwriter : perform 
+Tue Oct 11 11:12:31 CEST 2011 a-overwriter : phrase from file
+Tue Oct 11 11:12:31 CEST 2011 +++MISSING+++ phrase-trace-impl : add
+Tue Oct 11 11:12:31 CEST 2011 a-differance complete cycle with phrase( grapheme6620719818397284028, 4.249s )
+Tue Oct 11 11:12:31 CEST 2011 database-impl : update finalize
+Tue Oct 11 11:12:31 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:12:31 CEST 2011 meta-diff : difference algorithm step
+Tue Oct 11 11:12:31 CEST 2011 meta-diff : determining rotation duration
+Tue Oct 11 11:12:31 CEST 2011 ==== meta-diff wait for algorithm step ====
+Tue Oct 11 11:12:31 CEST 2011 phrase-impl : cache feature extraction
+Tue Oct 11 11:12:31 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:12:31 CEST 2011 overwrite-selector-impl : found 2.844s
+Tue Oct 11 11:12:31 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:12:31 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:12:31 CEST 2011 overwrite-selector-impl : found 1.160s
+Tue Oct 11 11:12:31 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:12:31 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:12:31 CEST 2011 overwrite-selector-impl : found 3.842s
+Tue Oct 11 11:12:31 CEST 2011 a-differance : filler.perform
+Tue Oct 11 11:12:31 CEST 2011 a-database-filler : gathering 1.501s
+Tue Oct 11 11:12:31 CEST 2011 threadFuture started : file-television-impl : capture
+Tue Oct 11 11:12:31 CEST 2011 a-database-filler : appending 1.501s
+Tue Oct 11 11:12:31 CEST 2011 threadFuture started : database-impl : append 1.501s
+Tue Oct 11 11:12:32 CEST 2011 database-impl : update finalize
+Tue Oct 11 11:12:32 CEST 2011 a-differance : database query over( [0.992s-1.329s] -> 105.2% )
+Tue Oct 11 11:12:32 CEST 2011 threadFuture started : database-impl : copy file
+Tue Oct 11 11:12:32 CEST 2011 database-impl : extract
+Tue Oct 11 11:12:32 CEST 2011 database-impl : cache feature extraction
+Tue Oct 11 11:12:33 CEST 2011 a-differance : database query over( [2.496s-3.192s] -> 104.1% )
+Tue Oct 11 11:12:34 CEST 2011 a-differance : database query over( [3.637s-4.217s] -> 104.3% )
+Tue Oct 11 11:12:34 CEST 2011 phrase-impl : stop proc
+Tue Oct 11 11:12:34 CEST 2011 proc : stopped listener
+Tue Oct 11 11:12:34 CEST 2011 a-differance-spat : dispose phrase process
+Tue Oct 11 11:12:34 CEST 2011 a-differance : overwriter perform match( [2:00.662s-2:01.417s] )
+Tue Oct 11 11:12:34 CEST 2011 a-differance : thinner remove 2 regions
+Tue Oct 11 11:12:34 CEST 2011 threadFuture started : a-overwriter : perform 
+Tue Oct 11 11:12:34 CEST 2011 threadFuture started : database-impl : remove
+Tue Oct 11 11:12:34 CEST 2011 a-overwriter : phrase from file
+Tue Oct 11 11:12:34 CEST 2011 a-differance : overwriter perform match( [2:35.190s-2:35.469s] )
+Tue Oct 11 11:12:34 CEST 2011 threadFuture started : a-overwriter : perform 
+Tue Oct 11 11:12:34 CEST 2011 a-overwriter : phrase from file
+Tue Oct 11 11:12:34 CEST 2011 +++MISSING+++ phrase-trace-impl : add
+Tue Oct 11 11:12:34 CEST 2011 a-differance complete cycle with phrase( grapheme713160722479937193, 4.249s )
+Tue Oct 11 11:12:34 CEST 2011 database-impl : update finalize
+Tue Oct 11 11:12:34 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:12:34 CEST 2011 meta-diff : difference algorithm step
+Tue Oct 11 11:12:34 CEST 2011 meta-diff : determining rotation duration
+Tue Oct 11 11:12:34 CEST 2011 ==== meta-diff wait for algorithm step ====
+Tue Oct 11 11:12:35 CEST 2011 phrase-impl : cache feature extraction
+Tue Oct 11 11:12:35 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:12:35 CEST 2011 overwrite-selector-impl : found 1.195s
+Tue Oct 11 11:12:35 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:12:35 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:12:35 CEST 2011 overwrite-selector-impl : found 3.529s
+Tue Oct 11 11:12:35 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:12:35 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:12:35 CEST 2011 overwrite-selector-impl : found 3.529s
+Tue Oct 11 11:12:35 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:12:35 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:12:35 CEST 2011 overwrite-selector-impl : found 3.610s
+Tue Oct 11 11:12:35 CEST 2011 a-differance : filler.perform
+Tue Oct 11 11:12:35 CEST 2011 a-database-filler : gathering 1.163s
+Tue Oct 11 11:12:35 CEST 2011 threadFuture started : file-television-impl : capture
+Tue Oct 11 11:12:35 CEST 2011 a-database-filler : appending 1.163s
+Tue Oct 11 11:12:35 CEST 2011 threadFuture started : database-impl : append 1.163s
+Tue Oct 11 11:12:35 CEST 2011 database-impl : update finalize
+Tue Oct 11 11:12:35 CEST 2011 a-differance : database query over( [0.863s-1.528s] -> 104.6% )
+Tue Oct 11 11:12:35 CEST 2011 threadFuture started : database-impl : copy file
+Tue Oct 11 11:12:35 CEST 2011 database-impl : extract
+Tue Oct 11 11:12:36 CEST 2011 database-impl : cache feature extraction
+Tue Oct 11 11:12:37 CEST 2011 a-differance : database query over( [3.135s-3.589s] -> 106.5% )
+Tue Oct 11 11:12:37 CEST 2011 a-differance : database query over( [3.191s-3.867s] -> 104.5% )
+Tue Oct 11 11:12:37 CEST 2011 phrase-impl : stop proc
+Tue Oct 11 11:12:37 CEST 2011 proc : stopped listener
+Tue Oct 11 11:12:37 CEST 2011 a-differance-spat : dispose phrase process
+Tue Oct 11 11:12:38 CEST 2011 a-differance : database query over( [3.240s-3.980s] -> 107.6% )
+Tue Oct 11 11:12:38 CEST 2011 a-differance : overwriter perform match( [1:01.416s-1:02.113s] )
+Tue Oct 11 11:12:38 CEST 2011 a-differance : thinner remove 4 regions
+Tue Oct 11 11:12:38 CEST 2011 threadFuture started : a-overwriter : perform 
+Tue Oct 11 11:12:38 CEST 2011 threadFuture started : database-impl : remove
+Tue Oct 11 11:12:38 CEST 2011 a-overwriter : phrase from file
+Tue Oct 11 11:12:38 CEST 2011 a-differance : overwriter perform match( [30.731s-31.474s] )
+Tue Oct 11 11:12:38 CEST 2011 threadFuture started : a-overwriter : perform 
+Tue Oct 11 11:12:38 CEST 2011 a-overwriter : phrase from file
+Tue Oct 11 11:12:38 CEST 2011 a-differance : overwriter perform match( [30.615s-31.010s] )
+Tue Oct 11 11:12:38 CEST 2011 threadFuture started : a-overwriter : perform 
+Tue Oct 11 11:12:38 CEST 2011 a-overwriter : phrase from file
+Tue Oct 11 11:12:38 CEST 2011 a-differance : overwriter perform match( [2:24.184s-2:24.811s] )
+Tue Oct 11 11:12:38 CEST 2011 threadFuture started : a-overwriter : perform 
+Tue Oct 11 11:12:38 CEST 2011 a-overwriter : phrase from file
+Tue Oct 11 11:12:38 CEST 2011 +++MISSING+++ phrase-trace-impl : add
+Tue Oct 11 11:12:38 CEST 2011 a-differance complete cycle with phrase( grapheme2935829273502011052, 4.175s )
+Tue Oct 11 11:12:39 CEST 2011 database-impl : update finalize
+Tue Oct 11 11:12:39 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:12:39 CEST 2011 meta-diff : difference algorithm step
+Tue Oct 11 11:12:39 CEST 2011 meta-diff : determining rotation duration
+Tue Oct 11 11:12:39 CEST 2011 ==== meta-diff wait for algorithm step ====
+Tue Oct 11 11:12:39 CEST 2011 phrase-impl : cache feature extraction
+Tue Oct 11 11:12:39 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:12:39 CEST 2011 overwrite-selector-impl : found 2.275s
+Tue Oct 11 11:12:39 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:12:39 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:12:39 CEST 2011 overwrite-selector-impl : found 2.902s
+Tue Oct 11 11:12:39 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:12:39 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:12:39 CEST 2011 overwrite-selector-impl : found 1.335s
+Tue Oct 11 11:12:39 CEST 2011 a-differance : filler.perform
+Tue Oct 11 11:12:39 CEST 2011 a-database-filler : gathering 1.401s
+Tue Oct 11 11:12:39 CEST 2011 threadFuture started : file-television-impl : capture
+Tue Oct 11 11:12:39 CEST 2011 a-database-filler : appending 1.401s
+Tue Oct 11 11:12:39 CEST 2011 threadFuture started : database-impl : append 1.401s
+Tue Oct 11 11:12:39 CEST 2011 database-impl : update finalize
+Tue Oct 11 11:12:39 CEST 2011 a-differance : database query over( [1.150s-1.778s] -> 109.8% )
+Tue Oct 11 11:12:39 CEST 2011 threadFuture started : database-impl : copy file
+Tue Oct 11 11:12:39 CEST 2011 database-impl : extract
+Tue Oct 11 11:12:40 CEST 2011 database-impl : cache feature extraction
+Tue Oct 11 11:12:41 CEST 2011 a-differance : database query over( [1.944s-2.606s] -> 109.5% )
+Tue Oct 11 11:12:41 CEST 2011 phrase-impl : stop proc
+Tue Oct 11 11:12:41 CEST 2011 proc : stopped listener
+Tue Oct 11 11:12:41 CEST 2011 a-differance-spat : dispose phrase process
+Tue Oct 11 11:12:41 CEST 2011 a-differance : database query over( [2.662s-3.142s] -> 108.8% )
+Tue Oct 11 11:12:42 CEST 2011 a-differance : overwriter perform match( [2:43.851s-2:44.536s] )
+Tue Oct 11 11:12:42 CEST 2011 a-differance : thinner remove 3 regions
+Tue Oct 11 11:12:42 CEST 2011 threadFuture started : a-overwriter : perform 
+Tue Oct 11 11:12:42 CEST 2011 threadFuture started : database-impl : remove
+Tue Oct 11 11:12:42 CEST 2011 a-overwriter : phrase from file
+Tue Oct 11 11:12:42 CEST 2011 a-differance : overwriter perform match( [2:02.287s-2:03.100s] )
+Tue Oct 11 11:12:42 CEST 2011 threadFuture started : a-overwriter : perform 
+Tue Oct 11 11:12:42 CEST 2011 a-overwriter : phrase from file
+Tue Oct 11 11:12:42 CEST 2011 a-differance : overwriter perform match( [2:56.680s-2:57.307s] )
+Tue Oct 11 11:12:42 CEST 2011 threadFuture started : a-overwriter : perform 
+Tue Oct 11 11:12:42 CEST 2011 a-overwriter : phrase from file
+Tue Oct 11 11:12:42 CEST 2011 +++MISSING+++ phrase-trace-impl : add
+Tue Oct 11 11:12:42 CEST 2011 a-differance complete cycle with phrase( grapheme7606787467226079672, 4.529s )
+Tue Oct 11 11:12:42 CEST 2011 database-impl : update finalize
+Tue Oct 11 11:12:42 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:12:42 CEST 2011 meta-diff : difference algorithm step
+Tue Oct 11 11:12:42 CEST 2011 meta-diff : determining rotation duration
+Tue Oct 11 11:12:42 CEST 2011 ==== meta-diff wait for algorithm step ====
+Tue Oct 11 11:12:42 CEST 2011 phrase-impl : cache feature extraction
+Tue Oct 11 11:12:42 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:12:42 CEST 2011 overwrite-selector-impl : found 3.517s
+Tue Oct 11 11:12:42 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:12:42 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:12:42 CEST 2011 overwrite-selector-impl : found 3.738s
+Tue Oct 11 11:12:42 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:12:42 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:12:42 CEST 2011 overwrite-selector-impl : found 3.285s
+Tue Oct 11 11:12:42 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:12:42 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:12:42 CEST 2011 overwrite-selector-impl : found 3.552s
+Tue Oct 11 11:12:42 CEST 2011 a-differance : filler.perform
+Tue Oct 11 11:12:42 CEST 2011 a-database-filler : gathering 1.875s
+Tue Oct 11 11:12:42 CEST 2011 threadFuture started : file-television-impl : capture
+Tue Oct 11 11:12:42 CEST 2011 a-database-filler : appending 1.875s
+Tue Oct 11 11:12:42 CEST 2011 threadFuture started : database-impl : append 1.875s
+Tue Oct 11 11:12:43 CEST 2011 database-impl : update finalize
+Tue Oct 11 11:12:43 CEST 2011 a-differance : database query over( [2.981s-3.815s] -> 108.9% )
+Tue Oct 11 11:12:43 CEST 2011 threadFuture started : database-impl : copy file
+Tue Oct 11 11:12:43 CEST 2011 database-impl : extract
+Tue Oct 11 11:12:44 CEST 2011 database-impl : cache feature extraction
+Tue Oct 11 11:12:45 CEST 2011 a-differance : database query over( [3.181s-3.923s] -> 109.0% )
+Tue Oct 11 11:12:45 CEST 2011 phrase-impl : stop proc
+Tue Oct 11 11:12:45 CEST 2011 proc : stopped listener
+Tue Oct 11 11:12:45 CEST 2011 a-differance-spat : dispose phrase process
+Tue Oct 11 11:12:45 CEST 2011 a-differance : database query over( [3.192s-4.033s] -> 109.0% )
+Tue Oct 11 11:12:46 CEST 2011 a-differance : database query over( [3.499s-4.283s] -> 108.7% )
+Tue Oct 11 11:12:46 CEST 2011 a-differance : overwriter perform match( [2:38.615s-2:39.637s] )
+Tue Oct 11 11:12:46 CEST 2011 a-differance : thinner remove 4 regions
+Tue Oct 11 11:12:46 CEST 2011 threadFuture started : a-overwriter : perform 
+Tue Oct 11 11:12:46 CEST 2011 threadFuture started : database-impl : remove
+Tue Oct 11 11:12:46 CEST 2011 a-overwriter : phrase from file
+Tue Oct 11 11:12:46 CEST 2011 a-differance : overwriter perform match( [30.162s-30.847s] )
+Tue Oct 11 11:12:46 CEST 2011 threadFuture started : a-overwriter : perform 
+Tue Oct 11 11:12:46 CEST 2011 a-overwriter : phrase from file
+Tue Oct 11 11:12:46 CEST 2011 a-differance : overwriter perform match( [2:38.313s-2:39.230s] )
+Tue Oct 11 11:12:46 CEST 2011 threadFuture started : a-overwriter : perform 
+Tue Oct 11 11:12:46 CEST 2011 a-overwriter : phrase from file
+Tue Oct 11 11:12:46 CEST 2011 a-differance : overwriter perform match( [2:13.735s-2:14.548s] )
+Tue Oct 11 11:12:46 CEST 2011 threadFuture started : a-overwriter : perform 
+Tue Oct 11 11:12:47 CEST 2011 a-overwriter : phrase from file
+Tue Oct 11 11:12:47 CEST 2011 +++MISSING+++ phrase-trace-impl : add
+Tue Oct 11 11:12:47 CEST 2011 a-differance complete cycle with phrase( grapheme677964619564415569, 4.764s )
+Tue Oct 11 11:12:47 CEST 2011 database-impl : update finalize
+Tue Oct 11 11:12:47 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:12:47 CEST 2011 meta-diff : difference algorithm step
+Tue Oct 11 11:12:47 CEST 2011 meta-diff : determining rotation duration
+Tue Oct 11 11:12:47 CEST 2011 ==== meta-diff wait for algorithm step ====
+Tue Oct 11 11:12:47 CEST 2011 phrase-impl : cache feature extraction
+Tue Oct 11 11:12:47 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:12:47 CEST 2011 overwrite-selector-impl : found 3.680s
+Tue Oct 11 11:12:47 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:12:47 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:12:47 CEST 2011 overwrite-selector-impl : found 3.332s
+Tue Oct 11 11:12:47 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:12:47 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:12:47 CEST 2011 overwrite-selector-impl : found 2.519s
+Tue Oct 11 11:12:47 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:12:47 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:12:47 CEST 2011 overwrite-selector-impl : found 2.113s
+Tue Oct 11 11:12:47 CEST 2011 a-differance : filler.perform
+Tue Oct 11 11:12:47 CEST 2011 a-database-filler : gathering 2.465s
+Tue Oct 11 11:12:47 CEST 2011 threadFuture started : file-television-impl : capture
+Tue Oct 11 11:12:47 CEST 2011 a-database-filler : appending 2.465s
+Tue Oct 11 11:12:47 CEST 2011 threadFuture started : database-impl : append 2.465s
+Tue Oct 11 11:12:47 CEST 2011 database-impl : update finalize
+Tue Oct 11 11:12:47 CEST 2011 a-differance : database query over( [1.554s-2.242s] -> 109.7% )
+Tue Oct 11 11:12:47 CEST 2011 threadFuture started : database-impl : copy file
+Tue Oct 11 11:12:47 CEST 2011 database-impl : extract
+Tue Oct 11 11:12:48 CEST 2011 database-impl : cache feature extraction
+Tue Oct 11 11:12:49 CEST 2011 phrase-impl : stop proc
+Tue Oct 11 11:12:49 CEST 2011 proc : stopped listener
+Tue Oct 11 11:12:49 CEST 2011 a-differance-spat : dispose phrase process
+Tue Oct 11 11:12:49 CEST 2011 a-differance : database query over( [2.378s-3.233s] -> 108.3% )
+Tue Oct 11 11:12:49 CEST 2011 a-differance : database query over( [2.801s-3.959s] -> 107.7% )
+Tue Oct 11 11:12:50 CEST 2011 a-differance : database query over( [3.357s-4.003s] -> 108.4% )
+Tue Oct 11 11:12:50 CEST 2011 a-differance : overwriter perform match( [1:58.677s-1:59.304s] )
+Tue Oct 11 11:12:50 CEST 2011 a-differance : thinner remove 4 regions
+Tue Oct 11 11:12:50 CEST 2011 threadFuture started : a-overwriter : perform 
+Tue Oct 11 11:12:50 CEST 2011 threadFuture started : database-impl : remove
+Tue Oct 11 11:12:50 CEST 2011 a-overwriter : phrase from file
+Tue Oct 11 11:12:50 CEST 2011 a-differance : overwriter perform match( [2:12.493s-2:13.723s] )
+Tue Oct 11 11:12:50 CEST 2011 threadFuture started : a-overwriter : perform 
+Tue Oct 11 11:12:50 CEST 2011 a-overwriter : phrase from file
+Tue Oct 11 11:12:50 CEST 2011 a-differance : overwriter perform match( [2:08.348s-2:09.323s] )
+Tue Oct 11 11:12:50 CEST 2011 threadFuture started : a-overwriter : perform 
+Tue Oct 11 11:12:50 CEST 2011 a-overwriter : phrase from file
+Tue Oct 11 11:12:50 CEST 2011 a-differance : overwriter perform match( [29.791s-30.360s] )
+Tue Oct 11 11:12:50 CEST 2011 threadFuture started : a-overwriter : perform 
+Tue Oct 11 11:12:50 CEST 2011 a-overwriter : phrase from file
+Tue Oct 11 11:12:50 CEST 2011 +++MISSING+++ phrase-trace-impl : add
+Tue Oct 11 11:12:50 CEST 2011 a-differance complete cycle with phrase( grapheme3643371836600333458, 4.819s )
+Tue Oct 11 11:12:51 CEST 2011 database-impl : update finalize
+Tue Oct 11 11:12:51 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:12:51 CEST 2011 meta-diff : difference algorithm step
+Tue Oct 11 11:12:51 CEST 2011 meta-diff : determining rotation duration
+Tue Oct 11 11:12:51 CEST 2011 ==== meta-diff wait for algorithm step ====
+Tue Oct 11 11:12:51 CEST 2011 phrase-impl : cache feature extraction
+Tue Oct 11 11:12:51 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:12:51 CEST 2011 overwrite-selector-impl : found 3.633s
+Tue Oct 11 11:12:51 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:12:51 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:12:51 CEST 2011 overwrite-selector-impl : found 3.575s
+Tue Oct 11 11:12:51 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:12:51 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:12:51 CEST 2011 overwrite-selector-impl : found 3.993s
+Tue Oct 11 11:12:51 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:12:51 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:12:51 CEST 2011 overwrite-selector-impl : found 3.680s
+Tue Oct 11 11:12:51 CEST 2011 a-differance : filler.perform
+Tue Oct 11 11:12:51 CEST 2011 a-database-filler : gathering 2.742s
+Tue Oct 11 11:12:51 CEST 2011 threadFuture started : file-television-impl : capture
+Tue Oct 11 11:12:51 CEST 2011 a-database-filler : appending 2.742s
+Tue Oct 11 11:12:51 CEST 2011 threadFuture started : database-impl : append 2.742s
+Tue Oct 11 11:12:52 CEST 2011 database-impl : update finalize
+Tue Oct 11 11:12:52 CEST 2011 a-differance : database query over( [2.983s-4.168s] -> 109.9% )
+Tue Oct 11 11:12:52 CEST 2011 threadFuture started : database-impl : copy file
+Tue Oct 11 11:12:52 CEST 2011 database-impl : extract
+Tue Oct 11 11:12:52 CEST 2011 database-impl : cache feature extraction
+Tue Oct 11 11:12:53 CEST 2011 a-differance : database query over( [3.028s-4.485s] -> 108.7% )
+Tue Oct 11 11:12:53 CEST 2011 a-differance : database query over( [3.578s-4.513s] -> 109.9% )
+Tue Oct 11 11:12:54 CEST 2011 phrase-impl : stop proc
+Tue Oct 11 11:12:54 CEST 2011 proc : stopped listener
+Tue Oct 11 11:12:54 CEST 2011 a-differance-spat : dispose phrase process
+Tue Oct 11 11:12:54 CEST 2011 a-differance : database query over( [3.847s-4.677s] -> 109.9% )
+Tue Oct 11 11:12:55 CEST 2011 a-differance : overwriter perform match( [2:38.104s-2:38.928s] )
+Tue Oct 11 11:12:55 CEST 2011 a-differance : thinner remove 4 regions
+Tue Oct 11 11:12:55 CEST 2011 threadFuture started : a-overwriter : perform 
+Tue Oct 11 11:12:55 CEST 2011 threadFuture started : database-impl : remove
+Tue Oct 11 11:12:55 CEST 2011 a-overwriter : phrase from file
+Tue Oct 11 11:12:55 CEST 2011 a-differance : overwriter perform match( [2:37.976s-2:38.998s] )
+Tue Oct 11 11:12:55 CEST 2011 threadFuture started : a-overwriter : perform 
+Tue Oct 11 11:12:55 CEST 2011 a-overwriter : phrase from file
+Tue Oct 11 11:12:55 CEST 2011 a-differance : overwriter perform match( [2:43.642s-2:45.523s] )
+Tue Oct 11 11:12:55 CEST 2011 threadFuture started : a-overwriter : perform 
+Tue Oct 11 11:12:55 CEST 2011 a-overwriter : phrase from file
+Tue Oct 11 11:12:55 CEST 2011 a-differance : overwriter perform match( [1:30.348s-1:31.405s] )
+Tue Oct 11 11:12:55 CEST 2011 threadFuture started : a-overwriter : perform 
+Tue Oct 11 11:12:55 CEST 2011 a-overwriter : phrase from file
+Tue Oct 11 11:12:55 CEST 2011 +++MISSING+++ phrase-trace-impl : add
+Tue Oct 11 11:12:55 CEST 2011 a-differance complete cycle with phrase( grapheme3303806906203187945, 5.197s )
+Tue Oct 11 11:12:55 CEST 2011 database-impl : update finalize
+Tue Oct 11 11:12:55 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:12:55 CEST 2011 meta-diff : difference algorithm step
+Tue Oct 11 11:12:55 CEST 2011 meta-diff : determining rotation duration
+Tue Oct 11 11:12:55 CEST 2011 ==== meta-diff wait for algorithm step ====
+Tue Oct 11 11:12:55 CEST 2011 phrase-impl : cache feature extraction
+Tue Oct 11 11:12:55 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:12:55 CEST 2011 overwrite-selector-impl : found 2.623s
+Tue Oct 11 11:12:55 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:12:55 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:12:55 CEST 2011 overwrite-selector-impl : found 4.342s
+Tue Oct 11 11:12:55 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:12:55 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:12:55 CEST 2011 overwrite-selector-impl : found 4.295s
+Tue Oct 11 11:12:55 CEST 2011 a-differance : filler.perform
+Tue Oct 11 11:12:55 CEST 2011 a-database-filler : gathering 2.024s
+Tue Oct 11 11:12:55 CEST 2011 threadFuture started : file-television-impl : capture
+Tue Oct 11 11:12:55 CEST 2011 a-database-filler : appending 2.024s
+Tue Oct 11 11:12:55 CEST 2011 threadFuture started : database-impl : append 2.024s
+Tue Oct 11 11:12:56 CEST 2011 database-impl : update finalize
+Tue Oct 11 11:12:56 CEST 2011 a-differance : database query over( [1.355s-2.890s] -> 108.8% )
+Tue Oct 11 11:12:56 CEST 2011 threadFuture started : database-impl : copy file
+Tue Oct 11 11:12:56 CEST 2011 database-impl : extract
+Tue Oct 11 11:12:57 CEST 2011 database-impl : cache feature extraction
+Tue Oct 11 11:12:57 CEST 2011 a-differance : database query over( [3.412s-5.179s] -> 108.9% )
+Tue Oct 11 11:12:58 CEST 2011 phrase-impl : stop proc
+Tue Oct 11 11:12:58 CEST 2011 proc : stopped listener
+Tue Oct 11 11:12:58 CEST 2011 a-differance-spat : dispose phrase process
+Tue Oct 11 11:12:58 CEST 2011 a-differance : database query over( [3.662s-5.021s] -> 107.5% )
+Tue Oct 11 11:12:58 CEST 2011 a-differance : overwriter perform match( [2:58.607s-2:59.884s] )
+Tue Oct 11 11:12:58 CEST 2011 a-differance : thinner remove 3 regions
+Tue Oct 11 11:12:58 CEST 2011 threadFuture started : a-overwriter : perform 
+Tue Oct 11 11:12:58 CEST 2011 threadFuture started : database-impl : remove
+Tue Oct 11 11:12:58 CEST 2011 a-overwriter : phrase from file
+Tue Oct 11 11:12:58 CEST 2011 a-differance : overwriter perform match( [1:30.035s-1:31.533s] )
+Tue Oct 11 11:12:58 CEST 2011 threadFuture started : a-overwriter : perform 
+Tue Oct 11 11:12:58 CEST 2011 a-overwriter : phrase from file
+Tue Oct 11 11:12:58 CEST 2011 a-differance : overwriter perform match( [2:42.771s-2:44.896s] )
+Tue Oct 11 11:12:58 CEST 2011 threadFuture started : a-overwriter : perform 
+Tue Oct 11 11:12:58 CEST 2011 a-overwriter : phrase from file
+Tue Oct 11 11:12:58 CEST 2011 +++MISSING+++ phrase-trace-impl : add
+Tue Oct 11 11:12:58 CEST 2011 a-differance complete cycle with phrase( grapheme2709737869360932291, 5.499s )
+Tue Oct 11 11:12:59 CEST 2011 database-impl : update finalize
+Tue Oct 11 11:12:59 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:12:59 CEST 2011 meta-diff : difference algorithm step
+Tue Oct 11 11:12:59 CEST 2011 meta-diff : determining rotation duration
+Tue Oct 11 11:12:59 CEST 2011 ==== meta-diff wait for algorithm step ====
+Tue Oct 11 11:12:59 CEST 2011 phrase-impl : cache feature extraction
+Tue Oct 11 11:12:59 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:12:59 CEST 2011 overwrite-selector-impl : found 2.844s
+Tue Oct 11 11:12:59 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:12:59 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:12:59 CEST 2011 overwrite-selector-impl : found 2.879s
+Tue Oct 11 11:12:59 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:12:59 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:12:59 CEST 2011 overwrite-selector-impl : found 4.435s
+Tue Oct 11 11:12:59 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:12:59 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:12:59 CEST 2011 overwrite-selector-impl : found 4.284s
+Tue Oct 11 11:12:59 CEST 2011 a-differance : filler.perform
+Tue Oct 11 11:12:59 CEST 2011 a-database-filler : gathering 1.448s
+Tue Oct 11 11:12:59 CEST 2011 threadFuture started : file-television-impl : capture
+Tue Oct 11 11:12:59 CEST 2011 a-database-filler : appending 1.448s
+Tue Oct 11 11:12:59 CEST 2011 threadFuture started : database-impl : append 1.448s
+Tue Oct 11 11:13:00 CEST 2011 database-impl : update finalize
+Tue Oct 11 11:13:00 CEST 2011 a-differance : database query over( [2.023s-3.735s] -> 109.9% )
+Tue Oct 11 11:13:00 CEST 2011 threadFuture started : database-impl : copy file
+Tue Oct 11 11:13:00 CEST 2011 database-impl : extract
+Tue Oct 11 11:13:00 CEST 2011 database-impl : cache feature extraction
+Tue Oct 11 11:13:01 CEST 2011 a-differance : database query over( [2.145s-3.543s] -> 109.9% )
+Tue Oct 11 11:13:01 CEST 2011 a-differance : database query over( [3.941s-4.928s] -> 109.4% )
+Tue Oct 11 11:13:02 CEST 2011 a-differance : database query over( [3.949s-5.314s] -> 109.0% )
+Tue Oct 11 11:13:02 CEST 2011 a-differance : overwriter perform match( [2:06.107s-2:07.814s] )
+Tue Oct 11 11:13:02 CEST 2011 a-differance : thinner remove 4 regions
+Tue Oct 11 11:13:02 CEST 2011 threadFuture started : a-overwriter : perform 
+Tue Oct 11 11:13:02 CEST 2011 threadFuture started : database-impl : remove
+Tue Oct 11 11:13:02 CEST 2011 a-overwriter : phrase from file
+Tue Oct 11 11:13:02 CEST 2011 a-differance : overwriter perform match( [1:29.466s-1:30.418s] )
+Tue Oct 11 11:13:02 CEST 2011 threadFuture started : a-overwriter : perform 
+Tue Oct 11 11:13:02 CEST 2011 a-overwriter : phrase from file
+Tue Oct 11 11:13:02 CEST 2011 a-differance : overwriter perform match( [2:31.359s-2:32.880s] )
+Tue Oct 11 11:13:02 CEST 2011 threadFuture started : a-overwriter : perform 
+Tue Oct 11 11:13:02 CEST 2011 a-overwriter : phrase from file
+Tue Oct 11 11:13:02 CEST 2011 a-differance : overwriter perform match( [2:51.966s-2:53.708s] )
+Tue Oct 11 11:13:02 CEST 2011 threadFuture started : a-overwriter : perform 
+Tue Oct 11 11:13:02 CEST 2011 phrase-impl : stop proc
+Tue Oct 11 11:13:02 CEST 2011 proc : stopped listener
+Tue Oct 11 11:13:02 CEST 2011 a-overwriter : phrase from file
+Tue Oct 11 11:13:02 CEST 2011 +++MISSING+++ phrase-trace-impl : add
+Tue Oct 11 11:13:02 CEST 2011 a-differance complete cycle with phrase( grapheme1650917413025380501, 5.958s )
+Tue Oct 11 11:13:02 CEST 2011 a-differance-spat : dispose phrase process
+Tue Oct 11 11:13:03 CEST 2011 database-impl : update finalize
+Tue Oct 11 11:13:03 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:13:03 CEST 2011 meta-diff : difference algorithm step
+Tue Oct 11 11:13:03 CEST 2011 meta-diff : determining rotation duration
+Tue Oct 11 11:13:03 CEST 2011 ==== meta-diff wait for algorithm step ====
+Tue Oct 11 11:13:03 CEST 2011 phrase-impl : cache feature extraction
+Tue Oct 11 11:13:03 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:13:03 CEST 2011 overwrite-selector-impl : found 4.353s
+Tue Oct 11 11:13:03 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:13:03 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:13:03 CEST 2011 overwrite-selector-impl : found 4.028s
+Tue Oct 11 11:13:03 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:13:03 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:13:03 CEST 2011 overwrite-selector-impl : found 4.713s
+Tue Oct 11 11:13:03 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:13:03 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:13:03 CEST 2011 overwrite-selector-impl : found 3.959s
+Tue Oct 11 11:13:03 CEST 2011 a-differance : filler.perform
+Tue Oct 11 11:13:03 CEST 2011 a-database-filler : gathering 2.840s
+Tue Oct 11 11:13:03 CEST 2011 threadFuture started : file-television-impl : capture
+Tue Oct 11 11:13:03 CEST 2011 a-database-filler : appending 2.840s
+Tue Oct 11 11:13:03 CEST 2011 threadFuture started : database-impl : append 2.840s
+Tue Oct 11 11:13:03 CEST 2011 database-impl : update finalize
+Tue Oct 11 11:13:03 CEST 2011 a-differance : database query over( [3.165s-4.752s] -> 106.5% )
+Tue Oct 11 11:13:03 CEST 2011 threadFuture started : database-impl : copy file
+Tue Oct 11 11:13:03 CEST 2011 database-impl : extract
+Tue Oct 11 11:13:04 CEST 2011 database-impl : cache feature extraction
+Tue Oct 11 11:13:05 CEST 2011 a-differance : database query over( [3.252s-4.804s] -> 106.4% )
+Tue Oct 11 11:13:05 CEST 2011 a-differance : database query over( [3.407s-5.299s] -> 107.9% )
+Tue Oct 11 11:13:06 CEST 2011 a-differance : database query over( [3.792s-5.634s] -> 106.2% )
+Tue Oct 11 11:13:06 CEST 2011 a-differance : overwriter perform match( [2:28.212s-2:30.105s] )
+Tue Oct 11 11:13:06 CEST 2011 a-differance : thinner remove 3 regions
+Tue Oct 11 11:13:06 CEST 2011 threadFuture started : database-impl : remove
+Tue Oct 11 11:13:06 CEST 2011 threadFuture started : a-overwriter : perform 
+Tue Oct 11 11:13:06 CEST 2011 a-overwriter : phrase from file
+Tue Oct 11 11:13:06 CEST 2011 a-differance : overwriter perform match( [2:50.597s-2:52.013s] )
+Tue Oct 11 11:13:06 CEST 2011 threadFuture started : a-overwriter : perform 
+Tue Oct 11 11:13:06 CEST 2011 a-overwriter : phrase from file
+Tue Oct 11 11:13:06 CEST 2011 a-differance : overwriter perform match( [2:07.918s-2:09.822s] )
+Tue Oct 11 11:13:06 CEST 2011 threadFuture started : a-overwriter : perform 
+Tue Oct 11 11:13:06 CEST 2011 a-overwriter : phrase from file
+Tue Oct 11 11:13:06 CEST 2011 +++MISSING+++ phrase-trace-impl : add
+Tue Oct 11 11:13:06 CEST 2011 a-differance complete cycle with phrase( grapheme3836873777626379879, 6.139s )
+Tue Oct 11 11:13:06 CEST 2011 database-impl : update finalize
+Tue Oct 11 11:13:06 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:13:06 CEST 2011 phrase-impl : stop proc
+Tue Oct 11 11:13:06 CEST 2011 proc : stopped listener
+Tue Oct 11 11:13:06 CEST 2011 meta-diff : difference algorithm step
+Tue Oct 11 11:13:07 CEST 2011 phrase-impl : cache feature extraction
+Tue Oct 11 11:13:07 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:13:07 CEST 2011 overwrite-selector-impl : found 4.493s
+Tue Oct 11 11:13:07 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:13:07 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:13:07 CEST 2011 overwrite-selector-impl : found 4.969s
+Tue Oct 11 11:13:07 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:13:07 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:13:07 CEST 2011 overwrite-selector-impl : found 3.482s
+Tue Oct 11 11:13:07 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:13:07 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:13:07 CEST 2011 overwrite-selector-impl : found 5.003s
+Tue Oct 11 11:13:07 CEST 2011 a-overwrite-selector : select parts
+Tue Oct 11 11:13:07 CEST 2011 overwrite-selector-impl : correlation motion
+Tue Oct 11 11:13:07 CEST 2011 overwrite-selector-impl : found 4.911s
+Tue Oct 11 11:13:07 CEST 2011 a-differance : filler.perform
+Tue Oct 11 11:13:07 CEST 2011 a-database-filler : gathering 2.533s
+Tue Oct 11 11:13:07 CEST 2011 threadFuture started : file-television-impl : capture
+Tue Oct 11 11:13:07 CEST 2011 a-database-filler : appending 2.533s
+Tue Oct 11 11:13:07 CEST 2011 threadFuture started : database-impl : append 2.533s
+Tue Oct 11 11:13:07 CEST 2011 database-impl : update finalize
+Tue Oct 11 11:13:07 CEST 2011 a-differance : database query over( [2.664s-4.301s] -> 109.9% )
+Tue Oct 11 11:13:07 CEST 2011 threadFuture started : database-impl : copy file

@@ -55,7 +55,8 @@ object PhraseImpl {
                val disk    = DiskIn.ar( spec.numChannels, buf.id, loop = 1 )
                val rls     = pRelease.kr
 //               val pDur = spec.numFrames.toDouble / SampleRate.ir
-               val pDur    = framesToSeconds( spec.numFrames )
+//               val pDur    = framesToSeconds( spec.numFrames )
+val pDur    = math.max( 0.5, framesToSeconds( spec.numFrames ))
                val pFreq   = 1.0 / pDur
                val lTim    = pDur - 1.0
                val lPhase  = lTim / pDur

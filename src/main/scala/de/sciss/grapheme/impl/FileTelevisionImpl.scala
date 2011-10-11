@@ -43,7 +43,8 @@ class FileTelevisionImpl private ( f: File, spec: AudioFileSpec ) extends Televi
    import GraphemeUtil._
    import FileTelevisionImpl._
 
-   private val posRef = Ref( 0L )
+//   private val posRef = Ref( 0L )
+   private val posRef = Ref( (math.random * (spec.numFrames - 1)).toLong )
 
    def latency = 0.0
 

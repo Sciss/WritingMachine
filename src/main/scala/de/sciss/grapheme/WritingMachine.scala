@@ -39,8 +39,8 @@ object WritingMachine {
    val autoStart           = true
    val logPanel            = false
    val masterChannelOffset = 0 // 2
-   val soloChannelOffset   = Some( 10 ) // Some( 0 )
-   val masterNumChannels   = 9
+   val soloChannelOffset   = Option.empty[ Int ] // Some( 10 ) // Some( 0 )
+   val masterNumChannels   = 6 // 9
    val tvChannelOffset     = 2   // 0
    val tvNumChannels       = 2
    val tvPhaseFlip         = true
@@ -49,8 +49,10 @@ object WritingMachine {
 //   val strugatzkiDatabase  = new File( "/Users/hhrutz/Documents/devel/LeereNull/feature/" )
    val inDevice            = "MOTU 828mk2"
    val outDevice           = inDevice
-   val databaseDir         = new File( "audio_work", "database" )
-   val testDir             = new File( "audio_work", "test" )
+   val baseDir             = "/Applications/WritingMachine"
+   val databaseDir         = new File( new File( baseDir, "audio_work" ), "database" )
+   val testDir             = new File( new File( baseDir, "audio_work" ), "test" )
+   val quitUponTimeout     = true
 
    val name          = "WritingMachine"
    val version       = 0.10
@@ -138,6 +140,10 @@ actors.Actor.actor {
    }
    def booted( r: NuagesLauncher.Ready ) {
       Strugatzki.tmpDir = GraphemeUtil.tmpDir
+      if( quitUponTimeout ) ProcTxn.timeoutFun = () => {
+         sys.exit( 1 )
+      }
+
 //      FeatureExtraction.verbose = true
 
       Swing.onEDT( initGUI( r.frame ))

@@ -27,11 +27,11 @@ where=`absdir ${where}`
 cd ${where}
 
 echo "Launching WritingMachine..."
-sleep(10)
+sleep 10
 lastResult=1
 while [ $lastResult -ge 1 ]
 do
-  sleep(4)
+  sleep 4
   killall scsynth
   WritingMachine.app/Contents/MacOS/JavaApplicationStub
   lastResult=$?
