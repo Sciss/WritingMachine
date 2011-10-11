@@ -78,6 +78,7 @@ object WritingMachine {
       cfg.beforeShutdown   = quit _
       cfg.doneAction       = booted _
       val o                = cfg.serverOptions
+      o.host               = "127.0.0.1"
       o.pickPort()
 //      o.transport          = TCP
       o.deviceNames        = Some( (inDevice, outDevice) )

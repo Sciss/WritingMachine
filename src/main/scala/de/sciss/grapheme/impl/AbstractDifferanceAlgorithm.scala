@@ -59,19 +59,23 @@ abstract class AbstractDifferanceAlgorithm extends DifferanceAlgorithm {
       val futFill = atomic( identifier + " : filler.perform" )( tx5 => filler.perform( tx5 ))
 
       val ovs     = instrs.sortBy( _.span.start )
-      val tgtNow  = futFill.mapSuccess( _ => IIdxSeq.empty[ DifferanceDatabaseQuery.Match ])
+      val tgtNow  = futFill.mapSuccess( _ => FutureResult.Success( IIdxSeq.empty[ Option[ DifferanceDatabaseQuery.Match ]]))
       val futTgt  = ovs.foldLeft( tgtNow ) { case (futTgt1, ov) =>
          futTgt1.flatMapSuccess { coll =>
             atomic( identifier + " : database query " + ov.printFormat ) { tx2 =>
                val futOne = databaseQuery.find( p, ov )( tx2 )
-               futOne.mapSuccess { m =>
-                  coll :+ m
+//               futOne.mapSuccess { m =>
+//                  coll :+ m
+//               }
+               futOne.map { res =>
+                  coll :+ res.toOption
                }
             }
          }
       }
       val pNow    = futureOf( p )
-      val futPNew = futTgt flatMapSuccess { targets =>
+      val futPNew = futTgt flatMapSuccess { targets0 =>
+val targets = targets0.collect({ case Some( tgt ) => tgt })
          (ovs zip targets).foldRight( pNow ) { case ((ov, target), futP1) =>
             futP1.flatMapSuccess { p1 =>
                atomic( identifier + " : overwriter perform " + target.printFormat ) { tx2 =>
@@ -80,7 +84,8 @@ abstract class AbstractDifferanceAlgorithm extends DifferanceAlgorithm {
             }
          }
       }
-      val futThin = futTgt flatMapSuccess { targets =>
+      val futThin = futTgt flatMapSuccess { targets0 =>
+val targets = targets0.collect({ case Some( tgt ) => tgt })
          atomic( identifier + " : thinner remove " + targets.size + " regions" )( tx3 =>
             thinner.remove( targets.map( _.span )( breakOut ))( tx3 ))
       }

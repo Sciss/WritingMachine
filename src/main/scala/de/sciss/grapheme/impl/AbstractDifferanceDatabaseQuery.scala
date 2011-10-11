@@ -27,7 +27,7 @@ package de.sciss.grapheme
 package impl
 
 object AbstractDifferanceDatabaseQuery {
-   private val verbose  = true
+   private val verbose  = false
 }
 abstract class AbstractDifferanceDatabaseQuery extends DifferanceDatabaseQuery {
    import GraphemeUtil._
