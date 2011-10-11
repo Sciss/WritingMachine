@@ -37,6 +37,8 @@ import de.sciss.nuages.{ControlPanel, NuagesLauncher}
 object Init {
    import WritingMachine._
 
+   private val identifier = "meta-diff"
+
    private val instanceRef = Ref.empty[ Init ]
 
    def instance( implicit tx: Tx ) : Init = instanceRef()
@@ -103,6 +105,7 @@ object Init {
 final class Init private ( /* _phrase0: Phrase, val differance: DifferanceAlgorithm, */ val spat: DifferanceSpat,
                             val tv: Television ) {
    import GraphemeUtil._
+   import Init._
 
    val numSectors = WritingMachine.masterNumChannels
 
@@ -110,15 +113,28 @@ final class Init private ( /* _phrase0: Phrase, val differance: DifferanceAlgori
 
    var keepGoing = true
 
+   private def reboot() {
+      warnToDo( identifier + " : reboot" )
+   }
+
    private lazy val actor = new Actor {
       def act() {
-//      val start   = Phrase.fromFile( new File( testDir, "amazonas_m.aif" ))
-//         var p          = _phrase0 // atomic( "Init query current phrase" )( tx => differance.currentPhrase( tx ))
-         val futP0   = atomic( "meta-diff initial tv capture" )( tx => tv.capture( secondsToFrames( 4.0 ))( tx ))
-         logNoTx( "==== meta-diff wait for initial tv capture ====" )
-         val fP0     = futP0.apply().get
-//         logNoTx( "==== meta-diff get first phrase ====" )
-         val (differance, _p0) = atomic( "meta-diff initialize algorithm" ) { tx =>
+         for( i <- 0 to 10 ) {
+            val futP0   = atomic( "meta-diff initial tv capture" )( tx => tv.capture( secondsToFrames( 4.0 ))( tx ))
+            logNoTx( "==== " + identifier + " wait for initial tv capture ====" )
+            futP0.apply() match {
+               case FutureResult.Failure( e ) =>
+                  logNoTx( "==== " + identifier + " initial capture failed: ====" )
+                  e.printStackTrace()
+                  Thread.sleep( 1000 )
+               case FutureResult.Success( fP0 ) => actWithFile( fP0 )
+            }
+         }
+         reboot()
+      }
+
+      private def actWithFile( fP0: File ) {
+         val (differance, _p0) = atomic( identifier + " : initialize algorithm" ) { tx =>
             val p0      = Phrase.fromFile( fP0 )( tx )
             val db      = Database( databaseDir )( tx )
             val filler  = DifferanceDatabaseFiller( db, tv )( tx )
@@ -136,27 +152,34 @@ final class Init private ( /* _phrase0: Phrase, val differance: DifferanceAlgori
          while( keepGoing ) {
 try {
             if( !spatFuts( sector ).isSet ) {
-               logNoTx( "==== meta-diff wait for busy spat sector " + (sector+1) + " ====" )
+               logNoTx( "==== " + identifier + " wait for busy spat sector " + (sector+1) + " ====" )
                spatFuts( sector )()
             }
             // differance process
-            val (spatFut, stepFut) = atomic( "meta-diff difference algorithm step" ) { tx =>
+            val (spatFut, stepFut) = atomic( identifier + " : difference algorithm step" ) { tx =>
                val _spatFut = spat.rotateAndProject( p )( tx )
                val _stepFut = differance.step( tx )
                (_spatFut, _stepFut)
             }
             spatFuts( sector ) = spatFut
-            val dur = atomic( "meta-diff determining rotation duration" ) { tx =>
+            val dur = atomic( identifier + " : determining rotation duration" ) { tx =>
                val olap = overlapMotion.step( tx )
                framesToSeconds( p.length ) / olap
             }
             val t1      = System.currentTimeMillis()
-            logNoTx( "==== meta-diff wait for algorithm step ====" )
-            p = stepFut().get
+            logNoTx( "==== " + identifier + " wait for algorithm step ====" )
+
+            stepFut() match {
+               case FutureResult.Success( _p ) => p = _p
+               case FutureResult.Failure( e ) =>
+                  logNoTx( "==== " + identifier + " : execption in algorithm execution ====" )
+                  e.printStackTrace()
+            }
+
             val dur2    = (System.currentTimeMillis() - t1) * 0.001
             val dur3    = dur - dur2
             if( dur3 > 0.0 ) {
-               logNoTx( "==== meta-diff waiting " + dur3 + " secs to next rotation ====" )
+               logNoTx( "==== " + identifier + " waiting " + dur3 + " secs to next rotation ====" )
                receiveWithin( (dur3 * 1000).toLong ) {
                   case TIMEOUT =>
                }
@@ -166,7 +189,7 @@ try {
 
 } catch {
    case e =>
-      logNoTx( "==== meta-diff caught exception ====" )
+      logNoTx( "==== " + identifier + " : caught exception ====" )
       e.printStackTrace()
       Thread.sleep( 1000 )
 }

@@ -96,7 +96,7 @@ object Tests {
             }
          }
          println( "Test ==== Waiting for Matches ====")
-         val ms = futTgt().get
+         val ms = futTgt().toOption.get
          println( "Test ==== Match Results ====")
          ms.foreach( println _ )
          fun( phrase, ovs, ms )
@@ -132,7 +132,7 @@ object Tests {
          start()
          def act() {
             println( "Test ==== Waiting for Overwrites ====")
-            val ovs = spanFut.apply().get
+            val ovs = spanFut.apply().toOption.get
             println( "Test ==== Results ====")
             ovs.foreach( println _ )
             fun( phrase, ovs )

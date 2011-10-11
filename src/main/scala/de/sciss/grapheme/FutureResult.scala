@@ -60,19 +60,19 @@ object FutureResult {
    sealed trait Result[ +A ] {
       def toOption: Option[ A ]
 
-      /**
-       * Returns the result value in case of success,
-       * or rethrows the exception in case of failure
-       */
-      def get : A
+//      /**
+//       * Returns the result value in case of success,
+//       * or rethrows the exception in case of failure
+//       */
+//      def get : A
    }
    final case class Failure( e: Throwable ) extends Result[ Nothing ] {
       def toOption = None
-      def get = throw e
+//      def get = throw e
    }
    final case class Success[ A ]( value: A ) extends Result[ A ] {
       def toOption = Some( value )
-      def get = value
+//      def get = value
    }
 
    def now[ A ]( value: Result[ A ]) : FutureResult[ A ] = {
