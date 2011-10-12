@@ -49,7 +49,7 @@ object PhraseImpl {
       val fact       = ProcDemiurg.factories.find( _.name == factName ).getOrElse {
          gen( factName ) {
             val pRelease = pControl( "release", ParamSpec( 0, 1, LinWarp, 1 ), 0 )
-            val pAmp = pControl( "amp", ParamSpec( 0.5, 10, LinWarp ), WritingMachine.phraseGain )
+            val pAmp = pControl( "amp", ParamSpec( 0.5, 10, LinWarp ), WritingMachine.phraseBoostDB.dbamp )
             graph {
                val buf     = bufCue( path )
 //               val disk = DiskIn.ar( spec.numChannels, buf.id )

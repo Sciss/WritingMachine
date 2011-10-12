@@ -26,7 +26,6 @@
 package de.sciss.grapheme
 
 import de.sciss.synth.proc.ProcTxn
-import java.io.File
 import de.sciss.strugatzki.Strugatzki
 import collection.immutable.{IndexedSeq => IIdxSeq}
 import de.sciss.osc.TCP
@@ -34,28 +33,32 @@ import swing.Swing
 import de.sciss.nuages.{NuagesFrame, NuagesLauncher}
 import java.awt.event.ActionEvent
 import javax.swing.{JButton, AbstractAction}
+import java.io.File
 
 object WritingMachine {
-   val autoStart           = true
+   private val settings = new WritingMachineSettings
+   import settings._
+
+   val autoStart           = getBool( "auto-start", true )
    val logPanel            = false
-   val masterChannelOffset = 0 // 2
+   val masterChannelOffset = getInt( "master-channel-offset", 0 ) // 2
    val soloChannelOffset   = Option.empty[ Int ] // Some( 10 ) // Some( 0 )
-   val masterNumChannels   = 6 // 9
-   val tvChannelOffset     = 2   // 0
-   val tvNumChannels       = 2
-   val tvPhaseFlip         = true
-   val tvBoostDB           = 0   // decibels
-   val tvUseTestFile       = true // false
-   val phraseGain          = 1.0 // linear amp factor
+   val masterNumChannels   = getInt( "master-num-channels", 6 ) // 9
+   val tvChannelOffset     = getInt( "tv-channel-offset", 2 )   // 0
+   val tvNumChannels       = getInt( "tv-num-channels", 2 )
+   val tvPhaseFlip         = getBool( "tv-phase-flip", true )
+   val tvBoostDB           = getDouble( "tv-boost", 0.0 )   // decibels
+   val tvUseTestFile       = getBool( "tv-use-test-file", true ) // false
+   val phraseBoostDB       = getDouble( "phrase-boost", 0.0 ) // decibels
 //   val strugatzkiDatabase  = new File( "/Users/hhrutz/Documents/devel/LeereNull/feature/" )
    val inDevice            = "MOTU 828mk2"
    val outDevice           = inDevice
    val baseDir             = "/Applications/WritingMachine"
    val databaseDir         = new File( new File( baseDir, "audio_work" ), "database" )
    val testDir             = new File( new File( baseDir, "audio_work" ), "test" )
-   val restartUponTimeout  = true
-   val restartAfterTime    = Some( 20 * 60.0 )
-   val restartUponException= true
+   val restartUponTimeout  = getBool( "restart-upon-timeout", true )
+   val restartAfterTime    = getDouble( "restart-after-time", 20 * 60.0 )
+   val restartUponException= getBool( "restart-upon-exception", true )
 
    val name          = "WritingMachine"
    val version       = 0.10
@@ -151,9 +154,9 @@ actors.Actor.actor {
       if( restartUponTimeout ) ProcTxn.timeoutFun = () => {
          restart()
       }
-      restartAfterTime.foreach { secs =>
+      if( restartAfterTime > 0 ) {
          val t = new java.util.Timer()
-         val millis  = (secs * 1000).toLong
+         val millis  = (restartAfterTime * 1000).toLong
          t.schedule( new java.util.TimerTask {
             def run() {
                restart()
