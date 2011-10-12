@@ -31,7 +31,7 @@ import de.sciss.strugatzki.{FeatureSegmentation, FeatureExtraction, Span => SSpa
 import java.io.File
 
 object DifferanceOverwriteSelectorImpl {
-   val verbose = true
+   val verbose = false
 
    def apply() : DifferanceOverwriteSelector = new  DifferanceOverwriteSelectorImpl()
 

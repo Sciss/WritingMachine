@@ -103,11 +103,19 @@ extends DifferanceOverwriteSelector {
 
                (stre, bestPart( phrase, pos, minFrag, maxFrag, spect )( tx1 ))
             }
-            futSpan.mapSuccess { span =>
-               val newLen  = (span.length * stretch).toLong
-if( verbose ) println( "---stretch from " + formatSeconds( framesToSeconds( span.length )) + " to " + formatSeconds( framesToSeconds( newLen )) + " (" + formatPercent( stretch ) + ")" )
-               val ins     = OverwriteInstruction( span, newLen )
-               coll :+ ins
+//            futSpan.mapSuccess { span =>
+//               val newLen  = (span.length * stretch).toLong
+//if( verbose ) println( "---stretch from " + formatSeconds( framesToSeconds( span.length )) + " to " + formatSeconds( framesToSeconds( newLen )) + " (" + formatPercent( stretch ) + ")" )
+//               val ins     = OverwriteInstruction( span, newLen )
+//               coll :+ ins
+//            }
+            futSpan.map {
+               case FutureResult.Failure( _ ) => coll // :+ None
+               case FutureResult.Success( span ) =>
+                  val newLen  = (span.length * stretch).toLong
+   if( verbose ) println( "---stretch from " + formatSeconds( framesToSeconds( span.length )) + " to " + formatSeconds( framesToSeconds( newLen )) + " (" + formatPercent( stretch ) + ")" )
+                  val ins     = OverwriteInstruction( span, newLen )
+                  coll :+ ins // Some( ins )
             }
          }
       }

@@ -46,13 +46,16 @@ object WritingMachine {
    val tvPhaseFlip         = true
    val tvBoostDB           = 0   // decibels
    val tvUseTestFile       = true // false
+   val phraseGain          = 1.0 // linear amp factor
 //   val strugatzkiDatabase  = new File( "/Users/hhrutz/Documents/devel/LeereNull/feature/" )
    val inDevice            = "MOTU 828mk2"
    val outDevice           = inDevice
    val baseDir             = "/Applications/WritingMachine"
    val databaseDir         = new File( new File( baseDir, "audio_work" ), "database" )
    val testDir             = new File( new File( baseDir, "audio_work" ), "test" )
-   val quitUponTimeout     = true
+   val restartUponTimeout  = true
+   val restartAfterTime    = Some( 20 * 60.0 )
+   val restartUponException= true
 
    val name          = "WritingMachine"
    val version       = 0.10
@@ -130,8 +133,13 @@ actors.Actor.actor {
       NuagesLauncher( cfg )
    }
 
-   def quit() {
+   private def quit() {
       println( "Bye bye..." )
+   }
+
+   def restart() {
+      println( "==== Restarting ====" )
+      sys.exit( 1 )
    }
 
    def shutDownComputer() {
@@ -140,8 +148,17 @@ actors.Actor.actor {
    }
    def booted( r: NuagesLauncher.Ready ) {
       Strugatzki.tmpDir = GraphemeUtil.tmpDir
-      if( quitUponTimeout ) ProcTxn.timeoutFun = () => {
-         sys.exit( 1 )
+      if( restartUponTimeout ) ProcTxn.timeoutFun = () => {
+         restart()
+      }
+      restartAfterTime.foreach { secs =>
+         val t = new java.util.Timer()
+         val millis  = (secs * 1000).toLong
+         t.schedule( new java.util.TimerTask {
+            def run() {
+               restart()
+            }
+         }, millis )
       }
 
 //      FeatureExtraction.verbose = true
@@ -157,6 +174,11 @@ actors.Actor.actor {
       f.bottom.add( new JButton( new AbstractAction( "SHUTDOWN" ) {
          def actionPerformed( e: ActionEvent ) {
             shutDownComputer()
+         }
+      }))
+      f.bottom.add( new JButton( new AbstractAction( "RESTART" ) {
+         def actionPerformed( e: ActionEvent ) {
+            restart()
          }
       }))
    }

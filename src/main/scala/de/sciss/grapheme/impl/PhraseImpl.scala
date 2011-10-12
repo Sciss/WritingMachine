@@ -49,6 +49,7 @@ object PhraseImpl {
       val fact       = ProcDemiurg.factories.find( _.name == factName ).getOrElse {
          gen( factName ) {
             val pRelease = pControl( "release", ParamSpec( 0, 1, LinWarp, 1 ), 0 )
+            val pAmp = pControl( "amp", ParamSpec( 0.5, 10, LinWarp ), WritingMachine.phraseGain )
             graph {
                val buf     = bufCue( path )
 //               val disk = DiskIn.ar( spec.numChannels, buf.id )
@@ -68,7 +69,7 @@ val pDur    = math.max( 0.5, framesToSeconds( spec.numFrames ))
                Done.kr( env ).react {
                   threadAtomic( identifier + " : stop proc" ) { implicit tx => me.stop }
                }
-               Mix.mono( disk ) * env
+               Mix.mono( disk ) * env * pAmp.kr
             }
          }
       }
@@ -98,7 +99,7 @@ val pDur    = math.max( 0.5, framesToSeconds( spec.numFrames ))
                atomic( identifier + " : cache feature extraction" ) { implicit tx =>
                   featureRef.set( Some( res ))
                }
-               res
+               FutureResult.Success( res )
             }
       }
 

@@ -191,7 +191,11 @@ try {
    case e =>
       logNoTx( "==== " + identifier + " : caught exception ====" )
       e.printStackTrace()
-      Thread.sleep( 1000 )
+      if( WritingMachine.restartUponException ) {
+         WritingMachine.restart()
+      } else {
+         Thread.sleep( 1000 )
+      }
 }
 
 //            sector = (sector + 1) % numSectors
