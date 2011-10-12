@@ -59,6 +59,7 @@ object WritingMachine {
    val restartUponTimeout  = getBool( "restart-upon-timeout", true )
    val restartAfterTime    = getDouble( "restart-after-time", 20 * 60.0 )
    val restartUponException= getBool( "restart-upon-exception", true )
+   val supercolliderPath   = getString( "supercollider-path", "" )
 
    val name          = "WritingMachine"
    val version       = 0.10
@@ -89,6 +90,7 @@ object WritingMachine {
       cfg.beforeShutdown   = quit _
       cfg.doneAction       = booted _
       val o                = cfg.serverOptions
+      if( supercolliderPath != "" ) o.programPath = supercolliderPath
       o.host               = "127.0.0.1"
       o.pickPort()
 //      o.transport          = TCP

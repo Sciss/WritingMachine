@@ -22,6 +22,15 @@ class WritingMachineSettings {
       prop
    }
 
+   def getString( name: String, default: String ) : String = {
+      try {
+         val v = properties.getProperty( name )
+         if( v == null ) default else v
+      } catch {
+         case e => default
+      }
+   }
+
    def getBool( name: String, default: Boolean ) : Boolean = {
       try {
          val v = properties.getProperty( name )
