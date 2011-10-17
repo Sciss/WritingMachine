@@ -150,8 +150,14 @@ if( verbose ) println( "---pDur = " + formatSeconds( pDur ) + " -> stable" )
 
                case FeatureSegmentation.Success( coll ) =>
                   if( coll.isEmpty ) {
+if( math.random > 0.1 ) {
                      val e = new RuntimeException( identifier + " process yielded no break" )
                      res.fail( e )
+} else {
+   val len = math.min( spec.numFrames, (math.random * (maxLen - minLen) + minLen).toLong )
+   val start = (math.random * (spec.numFrames - len)).toLong
+   res.succeed( Span( start, start + len ))
+}
                   } else {
                      val b    = if( coll( 0 ).sim.isNaN ) coll( 1 ) else coll( 0 )
                      val len  = atomic( identifier + " : found " + formatSeconds( framesToSeconds( b.pos ))) { tx2 =>

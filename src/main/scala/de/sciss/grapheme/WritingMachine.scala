@@ -49,7 +49,7 @@ object WritingMachine {
    val tvPhaseFlip         = getBool( "tv-phase-flip", true )
    val tvBoostDB           = getDouble( "tv-boost", 0.0 )   // decibels
    val tvUseTestFile       = getBool( "tv-use-test-file", true ) // false
-   val phraseBoostDB       = getDouble( "phrase-boost", 0.0 ) // decibels
+   val phraseBoostDB       = getDouble( "phrase-boost", 3.0 ) // decibels
 //   val strugatzkiDatabase  = new File( "/Users/hhrutz/Documents/devel/LeereNull/feature/" )
    val inDevice            = "MOTU 828mk2"
    val outDevice           = inDevice
@@ -57,9 +57,10 @@ object WritingMachine {
    val databaseDir         = new File( new File( baseDir, "audio_work" ), "database" )
    val testDir             = new File( new File( baseDir, "audio_work" ), "test" )
    val restartUponTimeout  = getBool( "restart-upon-timeout", true )
-   val restartAfterTime    = getDouble( "restart-after-time", 20 * 60.0 )
+   val restartAfterTime    = getDouble( "restart-after-time", 15 * 60.0 )
    val restartUponException= getBool( "restart-upon-exception", true )
    val supercolliderPath   = getString( "supercollider-path", "" )
+   val initialPhraseFill   = getDouble( "initial-phrase-fill", 20.0 )
 
    val name          = "WritingMachine"
    val version       = 0.10

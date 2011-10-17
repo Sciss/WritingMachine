@@ -30,7 +30,7 @@ import de.sciss.synth
 import collection.immutable.{IndexedSeq => IIdxSeq}
 
 object AbstractDifferanceOverwriteSelector {
-   private val verbose = false
+   private val verbose = true
 }
 abstract class AbstractDifferanceOverwriteSelector
 extends DifferanceOverwriteSelector {
@@ -110,7 +110,9 @@ extends DifferanceOverwriteSelector {
 //               coll :+ ins
 //            }
             futSpan.map {
-               case FutureResult.Failure( _ ) => coll // :+ None
+               case FutureResult.Failure( _ ) =>
+if( verbose ) println( "---no best part result for " + i + " / " + num )
+                  coll // :+ None
                case FutureResult.Success( span ) =>
                   val newLen  = (span.length * stretch).toLong
    if( verbose ) println( "---stretch from " + formatSeconds( framesToSeconds( span.length )) + " to " + formatSeconds( framesToSeconds( newLen )) + " (" + formatPercent( stretch ) + ")" )

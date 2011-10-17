@@ -120,7 +120,8 @@ final class Init private ( /* _phrase0: Phrase, val differance: DifferanceAlgori
    private lazy val actor = new Actor {
       def act() {
          for( i <- 0 to 10 ) {
-            val futP0   = atomic( "meta-diff initial tv capture" )( tx => tv.capture( secondsToFrames( 4.0 ))( tx ))
+            val futP0   = atomic( "meta-diff initial tv capture" )( tx =>
+               tv.capture( secondsToFrames( WritingMachine.initialPhraseFill ))( tx ))
             logNoTx( "==== " + identifier + " wait for initial tv capture ====" )
             futP0.apply() match {
                case FutureResult.Failure( e ) =>

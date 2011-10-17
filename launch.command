@@ -32,7 +32,7 @@ lastResult=1
 while [ $lastResult -ge 1 ]
 do
   sleep 4
-  killall scsynth
+#  killall scsynth
   WritingMachine.app/Contents/MacOS/JavaApplicationStub
   lastResult=$?
 done
