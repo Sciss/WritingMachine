@@ -25,14 +25,18 @@
 
 package de.sciss.grapheme
 
-import impl.{DifferanceDatabaseFillerImpl => Impl}
+import de.sciss.grapheme.impl.{DifferanceDatabaseFillerImpl => Impl}
+import de.sciss.lucre.stm.Sys
+
+import scala.concurrent.Future
 
 object DifferanceDatabaseFiller {
-  def apply(db: Database, tv: Television)(implicit tx: Tx): DifferanceDatabaseFiller = Impl(db, tv)
+  def apply[S <: Sys[S]](db: Database[S], tv: Television[S])(implicit tx: S#Tx): DifferanceDatabaseFiller[S] =
+    Impl[S](db, tv)
 }
 
-trait DifferanceDatabaseFiller {
-  def database: Database
+trait DifferanceDatabaseFiller[S <: Sys[S]] {
+  def database: Database[S]
 
-  def perform(implicit tx: Tx): FutureResult[Unit]
+  def perform(implicit tx: S#Tx): Future[Unit]
 }

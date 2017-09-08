@@ -25,12 +25,17 @@
 
 package de.sciss.grapheme
 
-import collection.immutable.{IndexedSeq => Vec}
-import impl.{DifferanceDatabaseThinnerImpl => Impl}
+import de.sciss.grapheme.impl.{DifferanceDatabaseThinnerImpl => Impl}
+import de.sciss.lucre.stm.Sys
+import de.sciss.span.Span
+
+import scala.collection.immutable.{IndexedSeq => Vec}
+import scala.concurrent.Future
 
 object DifferanceDatabaseThinner {
-   def apply( database: Database ) : DifferanceDatabaseThinner = Impl( database )
+  def apply[S <: Sys[S]](database: Database[S]): DifferanceDatabaseThinner[S] = Impl[S](database)
 }
-trait DifferanceDatabaseThinner {
-   def remove( spans: Vec[ Span ])( implicit tx: Tx ) : FutureResult[ Unit ]
+
+trait DifferanceDatabaseThinner[S <: Sys[S]] {
+  def remove(spans: Vec[Span])(implicit tx: S#Tx): Future[Unit]
 }

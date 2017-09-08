@@ -27,62 +27,68 @@ package de.sciss.grapheme
 package impl
 
 import java.io.File
-import de.sciss.synth.io.{AudioFileSpec, AudioFile}
+
+import de.sciss.lucre.stm.Sys
+import de.sciss.lucre.stm.TxnLike.peer
+import de.sciss.synth.io.{AudioFile, AudioFileSpec}
+
+import scala.concurrent.Future
 
 object FileTelevisionImpl {
-   private val identifier  = "file-television-impl"
+  private val identifier = "file-television-impl"
 
-   def apply( f: File ) : Television = {
-      val spec = AudioFile.readSpec( f )
-      require( spec.numChannels == 1, identifier + " : must be mono" )
-      require( spec.numFrames > 0, identifier + " : file is empty" )
-      new FileTelevisionImpl( f, spec )
-   }
+  def apply[S <: Sys[S]](f: File): Television[S] = {
+    val spec = AudioFile.readSpec(f)
+    require(spec.numChannels == 1, s"$identifier : must be mono" )
+    require(spec.numFrames > 0   , s"$identifier : file is empty")
+    new FileTelevisionImpl[S](f, spec)
+  }
 }
-class FileTelevisionImpl private ( f: File, spec: AudioFileSpec ) extends Television {
-   import GraphemeUtil._
-   import FileTelevisionImpl._
 
-//   private val posRef = Ref( 0L )
-   private val posRef = Ref( (math.random * (spec.numFrames - 1)).toLong )
+class FileTelevisionImpl[S <: Sys[S]] private(f: File, spec: AudioFileSpec) extends Television[S] {
 
-   def latency = 0.0
+  import FileTelevisionImpl._
+  import GraphemeUtil._
 
-   def capture( length: Long )( implicit tx: Tx ) : FutureResult[ File ] = {
-      val oldPos = posRef()
-      threadFuture( identifier + " : capture" ) {
-         try {
-            val fNew    = createTempFile( ".aif", None, false )
-            val afNew   = openMonoWrite( fNew )
-            try {
-               val afTV = AudioFile.openRead( f )
-               try {
-                  var pos     = oldPos
-                  var left    = length
-                  afTV.seek( oldPos )
-                  while( left > 0L ) {
-                     val chunkLen = min( spec.numFrames - pos, left )
-                     afTV.copyTo( afNew, chunkLen )
-                     pos += chunkLen
-                     if( pos == spec.numFrames ) {
-                        afTV.seek( 0L )
-                        pos = 0L
-                     }
-                     left -= chunkLen
-                  }
-                  fNew
-               } finally {
-                  afTV.close()
-               }
-//            } catch {
-//               case e =>
-//                  println( "FileTelevisionImpl capture - Oops. exception. Should handle" )
-//                  e.printStackTrace()
-//                  fNew // que puede... XXX
-            } finally {
-               afNew.close()
+  private val posRef = Ref((math.random * (spec.numFrames - 1)).toLong)
+
+  def latency = 0.0
+
+  def capture(length: Long)(implicit tx: S#Tx): Future[File] = {
+    val oldPos = posRef()
+    threadFuture(s"$identifier : capture") {
+      try {
+        val fNew = createTempFile(".aif", None, keep = false)
+        val afNew = openMonoWrite(fNew)
+        try {
+          val afTV = AudioFile.openRead(f)
+          try {
+            var pos = oldPos
+            var left = length
+            afTV.seek(oldPos)
+            while (left > 0L) {
+              val chunkLen = min(spec.numFrames - pos, left)
+              afTV.copyTo(afNew, chunkLen)
+              pos += chunkLen
+              if (pos == spec.numFrames) {
+                afTV.seek(0L)
+                pos = 0L
+              }
+              left -= chunkLen
             }
-         }
+            fNew
+          } finally {
+            afTV.close()
+          }
+          //            } catch {
+          //               case e =>
+          //                  println( "FileTelevisionImpl capture - Oops. exception. Should handle" )
+          //                  e.printStackTrace()
+          //                  fNew // que puede... XXX
+        } finally {
+          afNew.close()
+        }
       }
-   }
+    }
+  }
 }

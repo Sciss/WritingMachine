@@ -26,100 +26,107 @@
 package de.sciss.grapheme
 package impl
 
+import de.sciss.lucre.stm
+import de.sciss.lucre.stm.Sys
+import de.sciss.span.Span
 import de.sciss.synth
+
 import collection.immutable.{IndexedSeq => Vec}
+import scala.concurrent.Future
+import scala.util.{Failure, Success}
 
 object AbstractDifferanceOverwriteSelector {
-   private val verbose = true
+  private val verbose = true
 }
-abstract class AbstractDifferanceOverwriteSelector
-extends DifferanceOverwriteSelector {
-   import GraphemeUtil._
-   import AbstractDifferanceOverwriteSelector._
 
-   private val identifier = "a-overwrite-selector"
+abstract class AbstractDifferanceOverwriteSelector[S <: Sys[S]]
+  extends DifferanceOverwriteSelector[S] {
 
-   /**
+  import GraphemeUtil._
+  import AbstractDifferanceOverwriteSelector._
+
+  protected def cursor: stm.Cursor[S]
+
+  private val identifier = "a-overwrite-selector"
+
+  /**
     * Temporal stretch factor (1 = preserve duration, <1 = shorten, >1 = elongate).
     */
-//   def stretchMotion : Motion
-   def stretchMotion( phrase: Phrase )( implicit tx: Tx ) : Motion
+  def stretchMotion(phrase: Phrase[S])(implicit tx: S#Tx): Motion
 
-   /**
+  /**
     * Spectral weight in strugatzki (0 = temporal breaks, 1 = spectral breaks,
     * 0.5 = mix of both).
     */
-   def spectralMotion : Motion
+  def spectralMotion: Motion
 
-   /**
+  /**
     * Approximate duration of fragments in seconds.
     */
-   def fragmentDurationMotion : Motion
+  def fragmentDurationMotion: Motion
 
-   /**
+  /**
     * Maximum allowed deviation from fragment duration (factor-offset,
     * e.g. 0 = no deviation allowed, 0.5 = 50% deviation allowed).
     */
-   def fragmentDeviationMotion : Motion
+  def fragmentDeviationMotion: Motion
 
-   /**
+  /**
     * Probability skew of fragment positions (power factor, thus
     * 1 = same probability at beginning and ending, >1 = more towards
     * beginning, <1 = more towards ending).
     */
-   def positionMotion : Motion
+  def positionMotion: Motion
 
-   /**
+  /**
     * Amount of parts selected per step.
     */
-   def frequencyMotion : Motion
+  def frequencyMotion: Motion
 
-   def bestPart( phrase: Phrase, center: Long, minLen: Long, maxLen: Long, weight: Double )
-               ( implicit tx: Tx ) : FutureResult[ Span ]
+  def bestPart(phrase: Phrase[S], center: Long, minLen: Long, maxLen: Long, weight: Double)
+              (implicit tx: S#Tx): Future[Span]
 
-   def selectParts( phrase: Phrase )( implicit tx: Tx ) : FutureResult[ Vec[ OverwriteInstruction ]] = {
-      val num        = frequencyMotion.step.toInt
-      val ovrNow     = futureOf( Vec.empty[ OverwriteInstruction ])
-      selectPartsWith( ovrNow, phrase, num )
-   }
+  def selectParts(phrase: Phrase[S])(implicit tx: S#Tx): Future[Vec[OverwriteInstruction]] = {
+    val num = frequencyMotion.step.toInt
+    val ovrNow = futureOf(Vec.empty[OverwriteInstruction])
+    selectPartsWith(ovrNow, phrase, num)
+  }
 
-   private def selectPartsWith( ovrNow: FutureResult[ Vec[ OverwriteInstruction ]], phrase: Phrase,
-                                num : Int ) : FutureResult[ Vec[ OverwriteInstruction ]] = {
-      (0 until num).foldLeft( ovrNow ) { case (futPred, i) =>
-         futPred.flatMapSuccess { coll =>
-            val (stretch, futSpan) = atomic( identifier + " : select parts" ) { tx1 =>
-               import synth._
+  private def selectPartsWith(ovrNow: Future[Vec[OverwriteInstruction]], phrase: Phrase[S],
+                              num: Int): Future[Vec[OverwriteInstruction]] = {
+    (0 until num).foldLeft(ovrNow) { case (futPred, i) =>
+      futPred.flatMap { coll =>
+        val (stretch, futSpan) = cursor.atomic(s"$identifier : select parts") { tx1 =>
+          import synth._
 
-//               val stre    = stretchMotion.step( tx1 )
-               val stre    = stretchMotion( phrase )( tx1 ).step( tx1 )
-               val spect   = spectralMotion.step( tx1 )
-               val fragDur = fragmentDurationMotion.step( tx1 )
-               val fragDev = fragmentDeviationMotion.step( tx1 )
-               val minFrag = secondsToFrames( fragDur / (1 + fragDev) )
-               val maxFrag = secondsToFrames( fragDur * (1 + fragDev) )
+          val stre    = stretchMotion(phrase)(tx1).step(tx1)
+          val spect   = spectralMotion.step(tx1)
+          val fragDur = fragmentDurationMotion.step(tx1)
+          val fragDev = fragmentDeviationMotion.step(tx1)
+          val minFrag = secondsToFrames(fragDur / (1 + fragDev))
+          val maxFrag = secondsToFrames(fragDur * (1 + fragDev))
 
-               val posPow  = positionMotion.step( tx1 )
-               val pos     = random( tx1 ).pow( posPow ).linlin( 0, 1, 0, phrase.length ).toLong
+          val posPow  = positionMotion.step(tx1)
+          val pos     = random.pow(posPow).linlin(0, 1, 0, phrase.length).toLong
 
-               (stre, bestPart( phrase, pos, minFrag, maxFrag, spect )( tx1 ))
+          (stre, bestPart(phrase, pos, minFrag, maxFrag, spect)(tx1))
+        }
+
+        futSpan.transform {
+          case Failure(_) =>
+            if (verbose) println(s"---no best part result for $i / $num")
+            Success(coll) // :+ None
+          case Success(span) =>
+            val newLen = (span.length * stretch).toLong
+            if (verbose) {
+              val fromS = formatSeconds(framesToSeconds(span.length))
+              val toS   = formatSeconds(framesToSeconds(newLen))
+              println(s"---stretch from $fromS to $toS (${formatPercent(stretch)})")
             }
-//            futSpan.mapSuccess { span =>
-//               val newLen  = (span.length * stretch).toLong
-//if( verbose ) println( "---stretch from " + formatSeconds( framesToSeconds( span.length )) + " to " + formatSeconds( framesToSeconds( newLen )) + " (" + formatPercent( stretch ) + ")" )
-//               val ins     = OverwriteInstruction( span, newLen )
-//               coll :+ ins
-//            }
-            futSpan.map {
-               case FutureResult.Failure( _ ) =>
-if( verbose ) println( "---no best part result for " + i + " / " + num )
-                  coll // :+ None
-               case FutureResult.Success( span ) =>
-                  val newLen  = (span.length * stretch).toLong
-   if( verbose ) println( "---stretch from " + formatSeconds( framesToSeconds( span.length )) + " to " + formatSeconds( framesToSeconds( newLen )) + " (" + formatPercent( stretch ) + ")" )
-                  val ins     = OverwriteInstruction( span, newLen )
-                  coll :+ ins // Some( ins )
-            }
-         }
+            val ins = OverwriteInstruction(span, newLen)
+            Success(coll :+ ins) // Some( ins )
+        }
       }
-   }
+    }
+  }
 }

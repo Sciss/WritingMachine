@@ -25,15 +25,15 @@
 
 package de.sciss.grapheme
 
-import de.sciss.synth.proc.ProcTxn
-import de.sciss.strugatzki.Strugatzki
-import collection.immutable.{IndexedSeq => Vec}
-import de.sciss.osc.TCP
-import swing.Swing
-import de.sciss.nuages.{NuagesFrame, NuagesLauncher}
-import java.awt.event.ActionEvent
-import javax.swing.{JButton, AbstractAction}
 import java.io.File
+
+import de.sciss.lucre.stm
+import de.sciss.lucre.stm.Sys
+import de.sciss.lucre.synth.{Sys => SSys}
+import de.sciss.nuages.NuagesView
+import de.sciss.strugatzki.Strugatzki
+
+import scala.swing.{Button, Swing}
 
 object WritingMachine {
   private val settings = new WritingMachineSettings
@@ -78,69 +78,67 @@ object WritingMachine {
 
   def main(args: Array[String]): Unit = {
     args.toSeq match {
-      //         case Seq( "--fut1" ) => Futures.test1()
-
       case _ => launch()
     }
   }
 
   def launch(): Unit = {
     //      sys.props += "actors.enableForkJoin" -> "false"
-
-    val cfg = NuagesLauncher.SettingsBuilder()
-    cfg.beforeShutdown = quit _
-    cfg.doneAction = booted _
-    val o = cfg.serverOptions
-    if (supercolliderPath != "") o.programPath = supercolliderPath
-    o.host = "127.0.0.1"
-    o.pickPort()
-    //      o.transport          = TCP
-    o.deviceNames = Some((inDevice, outDevice))
-    val masterChans = (masterChannelOffset until (masterChannelOffset + masterNumChannels)).toIndexedSeq
-    val soloChans = soloChannelOffset.map(off => Vec(off, off + 1)).getOrElse(Vec.empty)
-    o.outputBusChannels = {
-      val mm = masterChans.max + 1
-      if (soloChans.isEmpty) mm else {
-        math.max(mm, soloChans.max + 1)
-      }
-    }
-    o.inputBusChannels = tvChannelOffset + tvNumChannels
-    cfg.masterChannels = Some(masterChans)
-    cfg.soloChannels = if (soloChans.nonEmpty) Some(soloChans) else None
-    cfg.collector = true
-    val c = cfg.controlSettings
-    c.log = logPanel
-    c.numInputChannels = tvNumChannels
-    c.numOutputChannels = masterNumChannels
-    c.clockAction = { (state, fun) =>
-      if (state) {
-        atomic(name + " : start") { implicit tx => Init.instance.start() }
-      } else {
-        atomic(name + " : stop") { implicit tx => Init.instance.stop() }
-      }
-      fun()
-    }
-
-    val i = c.replSettings
-    i.imports :+= "de.sciss.grapheme._"
-    i.text =
-      """val init = Init.instance
-init.start()
-
-// val phrase = Phrase.fromFile( new java.io.File( "/Users/hhrutz/Desktop/SP_demo/tapes/Affoldra_RoomLp.aif" ))
-// init.spat.rotateAndProject( phrase )
-actors.Actor.actor {
-   val futStep = atomic( "algo step" )( tx => init.differance.step( tx ))
-   println( "==== Awaiting Diff Alg Step ====" )
-   futStep()
-   println( "==== Diff Alg Step Done ====" )
-}
-"""
-    NuagesLauncher(cfg)
+???
+//    val cfg = NuagesLauncher.SettingsBuilder()
+//    cfg.beforeShutdown = quit _
+//    cfg.doneAction = booted _
+//    val o = cfg.serverOptions
+//    if (supercolliderPath != "") o.programPath = supercolliderPath
+//    o.host = "127.0.0.1"
+//    o.pickPort()
+//    //      o.transport          = TCP
+//    o.deviceNames = Some((inDevice, outDevice))
+//    val masterChans = (masterChannelOffset until (masterChannelOffset + masterNumChannels)).toIndexedSeq
+//    val soloChans = soloChannelOffset.map(off => Vec(off, off + 1)).getOrElse(Vec.empty)
+//    o.outputBusChannels = {
+//      val mm = masterChans.max + 1
+//      if (soloChans.isEmpty) mm else {
+//        math.max(mm, soloChans.max + 1)
+//      }
+//    }
+//    o.inputBusChannels = tvChannelOffset + tvNumChannels
+//    cfg.masterChannels = Some(masterChans)
+//    cfg.soloChannels = if (soloChans.nonEmpty) Some(soloChans) else None
+//    cfg.collector = true
+//    val c = cfg.controlSettings
+//    c.log = logPanel
+//    c.numInputChannels = tvNumChannels
+//    c.numOutputChannels = masterNumChannels
+//    c.clockAction = { (state, fun) =>
+//      if (state) {
+//        atomic(s"$name : start") { implicit tx => Init.instance.start() }
+//      } else {
+//        atomic(s"$name : stop") { implicit tx => Init.instance.stop() }
+//      }
+//      fun()
+//    }
+//
+////    val i = c.replSettings
+////    i.imports :+= "de.sciss.grapheme._"
+////    i.text =
+////      """val init = Init.instance
+////        |init.start()
+////        |
+////        |// val phrase = Phrase.fromFile( new java.io.File( "/Users/hhrutz/Desktop/SP_demo/tapes/Affoldra_RoomLp.aif" ))
+////        |// init.spat.rotateAndProject( phrase )
+////        |actors.Actor.actor {
+////        |   val futStep = atomic( "algo step" )( tx => init.differance.step( tx ))
+////        |   println( "==== Awaiting Diff Alg Step ====" )
+////        |   futStep()
+////        |   println( "==== Diff Alg Step Done ====" )
+////        |}
+////        |""".stripMargin
+//    NuagesLauncher(cfg)
   }
 
-  private def quit(): Unit =
-    println("Bye bye...")
+//  private def quit(): Unit =
+//    println("Bye bye...")
 
   def restart(): Unit = {
     println("==== Restarting ====")
@@ -152,40 +150,34 @@ actors.Actor.actor {
     pb.start()
   }
 
-  def booted(r: NuagesLauncher.Ready): Unit = {
+  def booted[S <: SSys[S]](r: NuagesView[S])(implicit cursor: stm.Cursor[S]): Unit = {
     Strugatzki.tmpDir = GraphemeUtil.tmpDir
-    if (restartUponTimeout) ProcTxn.timeoutFun = () => {
-      restart()
-    }
+    if (restartUponTimeout) ???
+//      ProcTxn.timeoutFun = () => {
+//        restart()
+//      }
+
     if (restartAfterTime > 0) {
       val t = new java.util.Timer()
       val millis = (restartAfterTime * 1000).toLong
       t.schedule(new java.util.TimerTask {
-        def run() {
-          restart()
-        }
+        def run(): Unit = restart()
       }, millis)
     }
 
-    //      FeatureExtraction.verbose = true
+    Swing.onEDT(initGUI(r))
 
-    Swing.onEDT(initGUI(r.frame))
-
-    ProcTxn.atomic { implicit tx =>
+    cursor.atomic("init") { implicit tx =>
       Init(r)
     }
   }
 
-  def initGUI(f: NuagesFrame): Unit = {
-    f.bottom.add(new JButton(new AbstractAction("SHUTDOWN") {
-      def actionPerformed(e: ActionEvent) {
-        shutDownComputer()
-      }
-    }))
-    f.bottom.add(new JButton(new AbstractAction("RESTART") {
-      def actionPerformed(e: ActionEvent) {
-        restart()
-      }
-    }))
+  def initGUI[S <: SSys[S]](view: NuagesView[S]): Unit = {
+    view.addSouthComponent(Button("SHUTDOWN") {
+      shutDownComputer()
+    })
+    view.addSouthComponent(Button("RESTART") {
+      restart()
+    })
   }
 }

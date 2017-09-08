@@ -25,31 +25,36 @@
 
 package de.sciss
 
-import de.sciss.lucre.stm.TxnLike
-import de.sciss.synth.proc
+import de.sciss.lucre.stm
+import de.sciss.lucre.stm.{Sys, TxnLike}
+import de.sciss.synth.proc.Proc
 
+import scala.concurrent.ExecutionContext
 import scala.language.implicitConversions
 
 package object grapheme {
-  type Tx = TxnLike // proc.ProcTxn
-  //   type Future[ A ] = scala.actors.Future[ A ]
-  type Ref[A] = proc.Ref[A]
+  type Tx = TxnLike
 
-  object Ref {
-    def apply[A: ClassManifest](init: A): Ref[A] = proc.Ref(init)
+  type Ref[A] = scala.concurrent.stm.Ref[A]
+  val  Ref    = scala.concurrent.stm.Ref
 
-    def empty[A: ClassManifest]: Ref[A] = proc.Ref.make[A]
-  }
+  implicit val executionContext: ExecutionContext = ExecutionContext.global
 
-  def atomic[A](info: => String)(fun: Tx => A): A = {
-    proc.ProcTxn.atomic { tx =>
-      GraphemeUtil.logTx(info)(tx)
-      fun(tx)
+//  def atomic[A](info: => String)(fun: S#Tx => A)(implicit cursor: stm.Cursor[S]): A = {
+//    cursor.step { tx =>
+//      GraphemeUtil.logTx(info)(tx)
+//      fun(tx)
+//    }
+//  }
+
+  implicit final class RichCursor[S <: Sys[S]](private val cursor: stm.Cursor[S]) extends AnyVal {
+    def atomic[A](info: => String)(fun: S#Tx => A): A = {
+      cursor.step { tx =>
+        GraphemeUtil.logTx(info)(tx)
+        fun(tx)
+      }
     }
   }
 
-  //   implicit def wrapFutureResultSeq[ A ]( fs: Vec[ FutureResult[ A ]]) : FutureResult[ Vec[ A ]] =
-  //      FutureResult.enrich( fs )
-
-  implicit def enrichProc(p: proc.Proc): RichProc = RichProc(p)
+  implicit def enrichProc[S <: Sys[S]](p: Proc[S]): RichProc[S] = RichProc(p)
 }

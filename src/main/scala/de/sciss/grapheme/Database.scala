@@ -25,28 +25,33 @@
 
 package de.sciss.grapheme
 
-import collection.immutable.{IndexedSeq => Vec}
-import impl.{DatabaseImpl => Impl}
 import java.io.File
 
+import de.sciss.grapheme.impl.{DatabaseImpl => Impl}
+import de.sciss.lucre.stm
+import de.sciss.lucre.stm.Sys
+
+import scala.collection.immutable.{IndexedSeq => Vec}
+import scala.concurrent.Future
+
 object Database {
-  def apply(dir: File)(implicit tx: Tx): Database = Impl(dir)
+  def apply[S <: Sys[S]](dir: File)(implicit tx: S#Tx, cursor: stm.Cursor[S]): Database[S] = Impl[S](dir)
 }
 
-trait Database {
-  def length(implicit tx: Tx): Long
+trait Database[S <: Sys[S]] {
+  def length(implicit tx: S#Tx): Long
 
-  //   def remove( spans: Vec[ Span ])( implicit tx: Tx ) : FutureResult[ Unit ]
+  implicit def cursor: stm.Cursor[S]
 
-  def append(source: File, offset: Long, length: Long)(implicit tx: Tx): FutureResult[Unit]
+  def append(source: File, offset: Long, length: Long)(implicit tx: S#Tx): Future[Unit]
 
-  def remove(instrs: Vec[RemovalInstruction])(implicit tx: Tx): FutureResult[Unit]
+  def remove(instructions: Vec[RemovalInstruction])(implicit tx: S#Tx): Future[Unit]
 
   /**
     * Returns a directory carrying the strugatzki meta files of
     * the database.
     */
-  def asStrugatziDatabase(implicit tx: Tx): FutureResult[File]
+  def asStrugatziDatabase(implicit tx: S#Tx): Future[File]
 
-  def reader(implicit tx: Tx): FrameReader.Factory
+  def reader(implicit tx: S#Tx): FrameReader.Factory
 }

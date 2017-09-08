@@ -1,7 +1,9 @@
 package de.sciss.grapheme
 
 import java.util.Properties
-import java.io.{FileInputStream, File}
+import java.io.{File, FileInputStream}
+
+import scala.util.control.NonFatal
 
 class WritingMachineSettings {
    private val properties = {
@@ -16,7 +18,7 @@ class WritingMachineSettings {
                is.close()
             }
          } catch {
-            case e => e.printStackTrace()
+            case NonFatal(e) => e.printStackTrace()
          }
       }
       prop
@@ -27,7 +29,7 @@ class WritingMachineSettings {
          val v = properties.getProperty( name )
          if( v == null ) default else v
       } catch {
-         case e => default
+         case NonFatal(_) => default
       }
    }
 
@@ -36,7 +38,7 @@ class WritingMachineSettings {
          val v = properties.getProperty( name )
          if( v == null ) default else v.toBoolean
       } catch {
-         case e => default
+         case NonFatal(_) => default
       }
    }
 
@@ -45,7 +47,7 @@ class WritingMachineSettings {
          val v = properties.getProperty( name )
          if( v == null ) default else v.toInt
       } catch {
-         case e => default
+         case NonFatal(_) => default
       }
    }
 
@@ -54,7 +56,7 @@ class WritingMachineSettings {
          val v = properties.getProperty( name )
          if( v == null ) default else v.toDouble
       } catch {
-         case e => default
+         case NonFatal(_) => default
       }
    }
 }

@@ -25,24 +25,22 @@
 
 package de.sciss.grapheme
 
+import de.sciss.lucre.stm.Sys
 import impl.DifferanceSpatImpl
 import de.sciss.synth.proc.Proc
 
+import scala.concurrent.Future
+
 object DifferanceSpat {
-  def apply(collector: Proc)(implicit tx: Tx): DifferanceSpat = DifferanceSpatImpl(collector)
+  def apply[S <: Sys[S]](collector: Proc[S])(implicit tx: S#Tx): DifferanceSpat[S] =
+    DifferanceSpatImpl(collector)
 }
 
-trait DifferanceSpat {
+trait DifferanceSpat[S <: Sys[S]] {
   /**
     * Projects the given phase onto the next channel. The returned future is
     * resolved, after releasePhrase has been called, so do not forget to call
     * releasePhrase for every channel!
     */
-  def rotateAndProject(phrase: Phrase)(implicit tx: Tx): FutureResult[Unit]
-
-  //   /**
-  //    * Requests that the spatialization releases the currently playing phrase
-  //    * once it reaches the end of a cycle.
-  //    */
-  //   def releasePhrase( implicit tx: Tx ) : Unit
+  def rotateAndProject(phrase: Phrase[S])(implicit tx: S#Tx): Future[Unit]
 }

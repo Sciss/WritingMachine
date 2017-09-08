@@ -25,12 +25,17 @@
 
 package de.sciss.grapheme
 
-import impl.{DifferanceOverwriterImpl => Impl}
+import de.sciss.grapheme.impl.{DifferanceOverwriterImpl => Impl}
+import de.sciss.lucre.stm
+import de.sciss.lucre.stm.Sys
+
+import scala.concurrent.Future
 
 object DifferanceOverwriter {
-   def apply() : DifferanceOverwriter = Impl()
+  def apply[S <: Sys[S]]()(implicit cursor: stm.Cursor[S]): DifferanceOverwriter[S] = Impl()
 }
-trait DifferanceOverwriter {
-   def perform( phrase: Phrase, source: OverwriteInstruction, target: DifferanceDatabaseQuery.Match )
-              ( implicit tx: Tx ) : FutureResult[ Phrase ]
+
+trait DifferanceOverwriter[S <: Sys[S]] {
+  def perform(phrase: Phrase[S], source: OverwriteInstruction, target: DifferanceDatabaseQuery.Match[S])
+             (implicit tx: S#Tx): Future[Phrase[S]]
 }

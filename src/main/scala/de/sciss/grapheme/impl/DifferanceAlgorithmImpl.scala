@@ -26,28 +26,33 @@
 package de.sciss.grapheme
 package impl
 
+import de.sciss.lucre.stm
+import de.sciss.lucre.stm.Sys
+
 object DifferanceAlgorithmImpl {
-   def apply( /* spat: DifferanceSpat, */
-              thinner: DifferanceDatabaseThinner,
-              filler: DifferanceDatabaseFiller,
-              phraseTrace: PhraseTrace,
-              databaseQuery: DifferanceDatabaseQuery,
-              overwriter: DifferanceOverwriter,
-              overwriteSelector: DifferanceOverwriteSelector,
-              startPhrase: Phrase ) : DifferanceAlgorithm = {
+   def apply[S <: Sys[S]]( /* spat: DifferanceSpat, */
+              thinner             : DifferanceDatabaseThinner   [S],
+              filler              : DifferanceDatabaseFiller    [S],
+              phraseTrace         : PhraseTrace                 [S],
+              databaseQuery       : DifferanceDatabaseQuery     [S],
+              overwriter          : DifferanceOverwriter        [S],
+              overwriteSelector   : DifferanceOverwriteSelector [S],
+              startPhrase         : Phrase                      [S]
+                         )(implicit cursor: stm.Cursor[S]) : DifferanceAlgorithm[S] = {
       new DifferanceAlgorithmImpl( /* spat, */ thinner, filler, phraseTrace, databaseQuery, overwriter, overwriteSelector,
                                    startPhrase )
    }
 }
 
-class DifferanceAlgorithmImpl private ( /* val spat: DifferanceSpat, */
-                                        val thinner: DifferanceDatabaseThinner,
-                                        val filler: DifferanceDatabaseFiller,
-                                        val phraseTrace: PhraseTrace,
-                                        val databaseQuery: DifferanceDatabaseQuery,
-                                        val overwriter: DifferanceOverwriter,
-                                        val overwriteSelector: DifferanceOverwriteSelector,
-                                        val startPhrase: Phrase )
-extends AbstractDifferanceAlgorithm {
+class DifferanceAlgorithmImpl[S <: Sys[S]] private ( /* val spat: DifferanceSpat, */
+                                        val thinner           : DifferanceDatabaseThinner   [S],
+                                        val filler            : DifferanceDatabaseFiller    [S],
+                                        val phraseTrace       : PhraseTrace                 [S],
+                                        val databaseQuery     : DifferanceDatabaseQuery     [S],
+                                        val overwriter        : DifferanceOverwriter        [S],
+                                        val overwriteSelector : DifferanceOverwriteSelector [S],
+                                        val startPhrase       : Phrase                      [S]
+                                                   )(implicit val cursor: stm.Cursor[S])
+extends AbstractDifferanceAlgorithm[S] {
 
 }

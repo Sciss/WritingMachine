@@ -25,12 +25,17 @@
 
 package de.sciss.grapheme
 
-import collection.immutable.{IndexedSeq => Vec}
-import impl.{DifferanceOverwriteSelectorImpl => Impl}
+import de.sciss.grapheme.impl.{DifferanceOverwriteSelectorImpl => Impl}
+import de.sciss.lucre.stm
+import de.sciss.lucre.stm.Sys
+
+import scala.collection.immutable.{IndexedSeq => Vec}
+import scala.concurrent.Future
 
 object DifferanceOverwriteSelector {
-   def apply() : DifferanceOverwriteSelector = Impl()
+  def apply[S <: Sys[S]]()(implicit cursor: stm.Cursor[S]): DifferanceOverwriteSelector[S] = Impl()
 }
-trait DifferanceOverwriteSelector {
-   def selectParts( phrase: Phrase )( implicit tx: Tx ) : FutureResult[ Vec[ OverwriteInstruction ]]
+
+trait DifferanceOverwriteSelector[S <: Sys[S]] {
+  def selectParts(phrase: Phrase[S])(implicit tx: S#Tx): Future[Vec[OverwriteInstruction]]
 }

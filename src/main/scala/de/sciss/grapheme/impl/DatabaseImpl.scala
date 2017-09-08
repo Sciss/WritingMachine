@@ -28,9 +28,14 @@ package impl
 
 import java.io.{File, FileFilter}
 
+import de.sciss.lucre.stm
+import de.sciss.lucre.stm.Sys
+import de.sciss.lucre.stm.TxnLike.peer
+import de.sciss.span.Span
 import de.sciss.synth.io.{AudioFile, AudioFileSpec}
 
 import scala.collection.immutable.{IndexedSeq => Vec}
+import scala.concurrent.Future
 import scala.util.control.NonFatal
 
 object DatabaseImpl {
@@ -41,9 +46,9 @@ object DatabaseImpl {
 
   private val identifier  = "database-impl"
 
-  def apply(dir: File)(implicit tx: Tx): Database = {
+  def apply[S <: Sys[S]](dir: File)(implicit tx: S#Tx, cursor: stm.Cursor[S]): Database[S] = {
     val normFile = new File(dir, normName)
-    require(normFile.isFile, "Missing normalization file at " + normFile)
+    require(normFile.isFile, s"Missing normalization file at $normFile")
 
     val arr = dir.listFiles(new FileFilter {
       def accept(f: File): Boolean = f.isDirectory && f.getName.startsWith(dirPrefix)
@@ -55,22 +60,11 @@ object DatabaseImpl {
 
     val /*(*/ spec /*, extr)*/ = subs.headOption match {
       case Some(sub) =>
-        //            val fExtr   = new File( sub, xmlName )
-        //            val fNorm   = new File( sub, normName )
-        //            if( fExtr.isFile && fNorm.isFile ) {
         val fAudio = new File(sub, audioName)
         if (fAudio.isFile) {
           try {
-            //                  val extr       = FeatureExtraction.Settings.fromXMLFile( fExtr )
-            //                  val spec       = AudioFile.readSpec( extr.audioInput )
             val spec = AudioFile.readSpec(fAudio)
             Some((fAudio, spec))
-            //                  val normSpec   = AudioFile.readSpec( fNorm )
-            //                  if( normSpec.numFrames == 2 ) {  // make sure this is there and was fully written
-            //                     (Some( (extr.audioInput, spec) ), Some( fExtr ))
-            //                  } else {
-            //                     (None, None)
-            //                  }
           } catch {
             case NonFatal(e) =>
               e.printStackTrace()
@@ -81,7 +75,7 @@ object DatabaseImpl {
       case None => None // (None, None)
     }
 
-    new DatabaseImpl(dir, normFile, State(spec, None /* extr */))
+    new DatabaseImpl[S](dir, normFile, State(spec, None /* extr */))
   }
 
   /*
@@ -93,10 +87,10 @@ object DatabaseImpl {
     sub.forall(_.delete()) && dir.delete()
   }
 
-  private def copyAudioFile(source: File, target: File)(implicit tx: Tx): FutureResult[Unit] = {
+  private def copyAudioFile(source: File, target: File)(implicit tx: Tx): Future[Unit] = {
     import GraphemeUtil._
 
-    threadFuture(identifier + " : copy file") {
+    threadFuture(s"$identifier : copy file") {
       val afSrc = AudioFile.openRead(source)
       try {
         val afTgt = AudioFile.openWrite(target, afSrc.spec)
@@ -112,49 +106,31 @@ object DatabaseImpl {
     }
   }
 
-  //   final case class Entry( extr: FeatureExtraction.Settings, spec: AudioFileSpec )
   final case class State(spec: Option[(File, AudioFileSpec)], extr: Option[File])
 
 }
 
-class DatabaseImpl private(dir: File, normFile: File, state0: DatabaseImpl.State)
-  extends AbstractDatabase with ExtractionImpl {
+class DatabaseImpl[S <: Sys[S]] private(dir: File, normFile: File, state0: DatabaseImpl.State)
+                                       (implicit val cursor: stm.Cursor[S])
+  extends Database[S] with ExtractionImpl[S] {
 
   import DatabaseImpl._
   import GraphemeUtil._
 
   def identifier: String = DatabaseImpl.identifier
 
-  //   private val extrRef        = Ref( extr0 )
-  //   private val specRef        = Ref( spec0 )
   private val stateRef = Ref(state0)
 
-  //   private val folderRef      = Ref( grapheme0.flatMap( _.extr.metaOutput ).map( _.getParentFile )
-  //      .getOrElse( createDir( dir )))
-
-  //   val removalFadeMotion      = Motion.exprand( 0.100, 1.000 )
-  //   val removalSpectralMotion  = Motion.linrand( 0.20, 0.80 )
-  //   val removalMarginMotion    = Motion.exprand( 0.250, 2.500 )
-  //
-  //   def performRemovals( instrs: Vec[ RemovalInstruction ])( implicit tx: Tx ) : FutureResult[ Unit ] = {
-  //      sys.error( "TODO" )
-  //   }
-  //
-  //   def bestRemoval( span: Span, margin: Long, weight: Double, fade: Long )( implicit tx: Tx ) : RemovalInstruction =
-  //      sys.error( "TODO" )
-
-  def append(appFile: File, offset: Long, length: Long)(implicit tx: Tx): FutureResult[Unit] = {
+  def append(appFile: File, offset: Long, length: Long)(implicit tx: S#Tx): Future[Unit] = {
     val oldFileO = stateRef().spec.map(_._1)
-    threadFuture(identifier + " : append " + formatSeconds(framesToSeconds(length))) {
-      //         atomic( "Database append tx" ) { implicit tx =>
+    threadFuture(s"$identifier : append ${formatSeconds(framesToSeconds(length))}") {
       appendBody(oldFileO, appFile, offset, length)
-      //         }
     }
   }
 
-  def remove(instrs: Vec[RemovalInstruction])(implicit tx: Tx): FutureResult[Unit] = {
+  def remove(instructions: Vec[RemovalInstruction])(implicit tx: S#Tx): Future[Unit] = {
     val len = length
-    val filtered = instrs.filter(i => i.span.nonEmpty && i.span.start >= 0 && i.span.stop <= len)
+    val filtered = instructions.filter(i => i.span.nonEmpty && i.span.start >= 0 && i.span.stop <= len)
     val sorted = filtered.sortBy(_.span.start)
 
     val merged = {
@@ -176,7 +152,7 @@ class DatabaseImpl private(dir: File, normFile: File, state0: DatabaseImpl.State
     val oldFileO = stateRef().spec.map(_._1)
     oldFileO match {
       case Some(f) =>
-        threadFuture(identifier + " : remove") {
+        threadFuture(s"$identifier : remove") {
           // add a dummy instruction to the end, so we can easier traverse the list
           removalBody(f, merged :+ RemovalInstruction(Span(len, len), 0L))
         }
@@ -185,17 +161,16 @@ class DatabaseImpl private(dir: File, normFile: File, state0: DatabaseImpl.State
   }
 
   private def updateLoop(fun: AudioFile => Unit): Unit = {
-    //      try {
-    val sub = createDir(dir, dirPrefix)
-    val fNew = new File(sub, audioName)
+    val sub   = createDir(dir, dirPrefix)
+    val fNew  = new File(sub, audioName)
     val afNew = openMonoWrite(fNew)
     try {
       fun(afNew)
       afNew.close()
-      atomic(identifier + " : update finalize") { tx =>
-        val oldState = stateRef.swap(State(Some((fNew, afNew.spec)), None))(tx)
+      cursor.atomic(s"$identifier : update finalize") { tx =>
+        val oldState = stateRef.swap(State(Some((fNew, afNew.spec)), None))(tx.peer)
         val oldFileO2 = oldState.spec.map(_._1)
-        tx.afterCommit { _ =>
+        tx.afterCommit {
           oldFileO2.foreach { fOld2 =>
             deleteDir(fOld2.getParentFile)
           }
@@ -204,25 +179,19 @@ class DatabaseImpl private(dir: File, normFile: File, state0: DatabaseImpl.State
     } finally {
       if (afNew.isOpen) afNew.close()
     }
-
-    //      } catch {   // FFF
-    //         case e =>
-    //            println( "Database update - Ooops, should handle exceptions" )
-    //            e.printStackTrace()
-    //      }
   }
 
   private def removalBody(fOld: File, entries: Vec[RemovalInstruction]): Unit = {
     import DSP._
 
     updateLoop { afNew =>
-      val afOld = AudioFile.openRead(fOld)
-      var shrink = 0L
-      var pos = 0L
-      val lim = SignalLimiter(secondsToFrames(0.1).toInt)
-      val inBuf = afOld.buffer(8192)
-      val fInBuf = inBuf(0)
-      val outBuf = afOld.buffer(8192)
+      val afOld   = AudioFile.openRead(fOld)
+      var shrink  = 0L
+      var pos     = 0L
+      val lim     = SignalLimiter(secondsToFrames(0.1).toInt)
+      val inBuf   = afOld.buffer(8192)
+      val fInBuf  = inBuf(0)
+      val outBuf  = afOld.buffer(8192)
       val fOutBuf = outBuf(0)
       var written = 0L
       entries.foreach { entry =>
@@ -270,7 +239,7 @@ class DatabaseImpl private(dir: File, normFile: File, state0: DatabaseImpl.State
     }
   }
 
-  private def appendBody(oldFileO: Option[File], appFile: File, off0: Long, len0: Long) {
+  private def appendBody(oldFileO: Option[File], appFile: File, off0: Long, len0: Long): Unit = {
     import DSP._
 
     updateLoop { afNew =>
@@ -314,14 +283,14 @@ class DatabaseImpl private(dir: File, normFile: File, state0: DatabaseImpl.State
     }
   }
 
-  def length(implicit tx: Tx): Long = stateRef().spec.map(_._2.numFrames).getOrElse(0L)
+  def length(implicit tx: S#Tx): Long = stateRef().spec.map(_._2.numFrames).getOrElse(0L)
 
-  def reader(implicit tx: Tx): FrameReader.Factory = {
+  def reader(implicit tx: S#Tx): FrameReader.Factory = {
     val f = stateRef().spec.map(_._1).getOrElse(sys.error(identifier + " : contains no file"))
     FrameReader.Factory(f)
   }
 
-  def asStrugatziDatabase(implicit tx: Tx): FutureResult[File] = {
+  def asStrugatziDatabase(implicit tx: S#Tx): Future[File] = {
     val state = stateRef()
     state.extr match {
       case Some(meta) => futureOf(meta.getParentFile)
@@ -334,9 +303,9 @@ class DatabaseImpl private(dir: File, normFile: File, state0: DatabaseImpl.State
     }
   }
 
-  private def extractAndUpdate(audioInput: File, sub: File): FutureResult[File] = {
-    atomic(identifier + " : extract") { implicit tx =>
-      extract(audioInput, Some(sub), keep = true).mapSuccess { meta =>
+  private def extractAndUpdate(audioInput: File, sub: File): Future[File] = {
+    cursor.atomic(s"$identifier : extract") { implicit tx =>
+      extract(audioInput, Some(sub), keep = true).map { meta =>
         assert(meta.getParentFile == sub)
         updateState(meta)
         sub
@@ -344,8 +313,8 @@ class DatabaseImpl private(dir: File, normFile: File, state0: DatabaseImpl.State
     }
   }
 
-  private def updateState(meta: File) {
-    atomic(identifier + " : cache feature extraction") { implicit tx =>
+  private def updateState(meta: File): Unit = {
+    cursor.atomic(s"$identifier : cache feature extraction") { implicit tx =>
       stateRef.transform(_.copy(extr = Some(meta)))
     }
   }

@@ -25,11 +25,13 @@
 
 package de.sciss.grapheme
 
-final case class RemovalInstruction( span: Span, fade: Long ) {
-   def merge( b: RemovalInstruction ) : Option[ RemovalInstruction ] = {
-      if( span.overlaps( b.span )) {
-         val spanNew = span.unite( b.span )
-         Some( RemovalInstruction( spanNew, if( spanNew.start == span.start ) fade else b.fade ))
-      } else None
-   }
+import de.sciss.span.Span
+
+final case class RemovalInstruction(span: Span, fade: Long) {
+  def merge(b: RemovalInstruction): Option[RemovalInstruction] = {
+    if (span.overlaps(b.span)) {
+      val spanNew = span.union(b.span)
+      Some(RemovalInstruction(spanNew, if (spanNew.start == span.start) fade else b.fade))
+    } else None
+  }
 }

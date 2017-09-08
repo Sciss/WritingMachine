@@ -25,13 +25,17 @@
 
 package de.sciss.grapheme
 
+import de.sciss.lucre.stm.Sys
 import impl.{PhraseTraceImpl => Impl}
+
 import collection.immutable.{IndexedSeq => Vec}
 
 object PhraseTrace {
-   def apply() : PhraseTrace = Impl()
+  def apply[S <: Sys[S]](): PhraseTrace[S] = Impl()
 }
-trait PhraseTrace {
-   def add( phrase: Phrase )( implicit txn: Tx ) : Unit
-   def series( n: Int )( implicit txn: Tx ) : Vec[ Phrase ]
+
+trait PhraseTrace[S <: Sys[S]] {
+  def add(phrase: Phrase[S])(implicit tx: S#Tx): Unit
+
+  def series(n: Int)(implicit tx: S#Tx): Vec[Phrase[S]]
 }

@@ -27,82 +27,88 @@ package de.sciss.grapheme
 package impl
 
 import java.io.File
+
+import de.sciss.lucre.stm
+import de.sciss.lucre.stm.Sys
+import de.sciss.lucre.stm.TxnLike.peer
+import de.sciss.nuages.{LinearWarp, ParamSpec}
 import de.sciss.synth
-import synth.proc.{Proc, ProcFactory}
+import de.sciss.synth.io.AudioFile
+import de.sciss.synth.proc.Proc
+
+import scala.concurrent.Future
 
 object PhraseImpl {
-   import GraphemeUtil._
 
-   private val identifier  = "phrase-impl"
+  import GraphemeUtil._
 
-   def fromFile( file: File )( implicit tx: Tx ) : Phrase = {
-      import synth._
-      import proc._
-      import ugen._
-      import DSL._
+  private val identifier = "phrase-impl"
 
-      val path       = file.getAbsolutePath
-      val spec       = audioFileSpec( path )
-      require( spec.numChannels == 1 )    // we need this now for the overwriter implementation!
+  def fromFile[S <: Sys[S]](file: File)(implicit tx: S#Tx, cursor: stm.Cursor[S]): Phrase[S] = {
+    import synth._
+    import proc._
+    import ugen._
 
-      val factName   = "file-" + fileNameWithoutExtension( file ) // XXX hrmpfff
-      val fact       = ProcDemiurg.factories.find( _.name == factName ).getOrElse {
-         gen( factName ) {
-            val pRelease = pControl( "release", ParamSpec( 0, 1, LinWarp, 1 ), 0 )
-            val pAmp = pControl( "amp", ParamSpec( 0.5, 10, LinWarp ), WritingMachine.phraseBoostDB.dbamp )
-            graph {
-               val buf     = bufCue( path )
-//               val disk = DiskIn.ar( spec.numChannels, buf.id )
-               val disk    = DiskIn.ar( spec.numChannels, buf.id, loop = 1 )
-               val rls     = pRelease.kr
-//               val pDur = spec.numFrames.toDouble / SampleRate.ir
-//               val pDur    = framesToSeconds( spec.numFrames )
-val pDur    = math.max( 0.5, framesToSeconds( spec.numFrames ))
-               val pFreq   = 1.0 / pDur
-               val lTim    = pDur - 1.0
-               val lPhase  = lTim / pDur
-               val lTrig   = Impulse.kr( pFreq, lPhase )
-               val envGate = 1 - Latch.kr( rls, lTrig )
-               val env     = EnvGen.kr( Env.asr( attack = 0.01, release = 1.0, shape = sinShape ), gate = envGate )
-//             val env = Line.kr( 1, 1, dur = pDur )
-               val me      = Proc.local
-               Done.kr( env ).react {
-                  threadAtomic( identifier + " : stop proc" ) { implicit tx => me.stop }
-               }
-               Mix.mono( disk ) * env * pAmp.kr
-            }
-         }
-      }
+    val spec = AudioFile.readSpec(file) // audioFileSpec(path)
+    require(spec.numChannels == 1) // we need this now for the overwriter implementation!
 
-      new Impl( file, fact, spec.numFrames )
-   }
+    val factName = s"file-${fileNameWithoutExtension(file)}" // XXX hrmpfff
+    val fact = ???
+//      ProcDemiurg.factories.find(_.name == factName).getOrElse {
+//      gen(factName) {
+//        val pRelease = pControl("release", ParamSpec(0, 1, LinearWarp, 1), 0)
+//        val pAmp = pControl("amp", ParamSpec(0.5, 10, LinearWarp), WritingMachine.phraseBoostDB.dbamp)
+//        graph {
+//          val buf     = bufCue(path)
+//          val disk    = DiskIn.ar(spec.numChannels, buf.id, loop = 1)
+//          val rls     = pRelease.kr
+//          val pDur    = math.max(0.5, framesToSeconds(spec.numFrames))
+//          val pFreq   = 1.0 / pDur
+//          val lTim    = pDur - 1.0
+//          val lPhase  = lTim / pDur
+//          val lTrig   = Impulse.kr(pFreq, lPhase)
+//          val envGate = 1 - Latch.kr(rls, lTrig)
+//          val env     = EnvGen.kr(Env.asr(attack = 0.01, release = 1.0, curve = Curve.sine), gate = envGate)
+//          val me      = Proc.local
+//          Done.kr(env).react {
+//            threadAtomic(s"$identifier : stop proc") { implicit tx => me.stop }
+//          }
+//          Mix.mono(disk) * env * pAmp.kr
+//        }
+//      }
+//    }
 
-   private final class Impl( file: File, fact: ProcFactory, val length: Long ) extends Phrase with ExtractionImpl {
-      import GraphemeUtil._
+    new Impl[S](file, fact, spec.numFrames)
+  }
 
-      def identifier = PhraseImpl.identifier
+  private final class Impl[S <: Sys[S]](file: File, fact: ProcFactory[S], val length: Long)
+                                       (implicit cursor: stm.Cursor[S])
+    extends Phrase[S] with ExtractionImpl[S] {
 
-      override def toString = "Phrase.fromFile(" + file + ")"
+    import GraphemeUtil._
 
-      def printFormat : String = {
-         "phrase( " + fileNameWithoutExtension( file ) + ", " + formatSeconds( framesToSeconds( length )) + " )"
-      }
+    def identifier: String = PhraseImpl.identifier
 
-      private val featureRef = Ref( Option.empty[ File ])
+    override def toString = s"Phrase.fromFile($file)"
 
-      def player( implicit tx: Tx ) : Proc = fact.make
+    def printFormat: String =
+      s"phrase(${fileNameWithoutExtension(file)}, ${formatSeconds(framesToSeconds(length))})"
 
-      def asStrugatzkiInput( implicit tx: Tx ) : FutureResult[ File ] = featureRef() match {
-         case Some( res ) => futureOf( res )
-         case None =>
-            extract( file, None, false ).mapSuccess { res =>
-               atomic( identifier + " : cache feature extraction" ) { implicit tx =>
-                  featureRef.set( Some( res ))
-               }
-               FutureResult.Success( res )
-            }
-      }
+    private val featureRef = Ref(Option.empty[File])
 
-      def reader( implicit tx: Tx ) : FrameReader.Factory = FrameReader.Factory( file )
-   }
+    def player(implicit tx: S#Tx): Proc[S] = fact.make()
+
+    def asStrugatzkiInput(implicit tx: S#Tx): Future[File] = featureRef() match {
+      case Some(res) => futureOf(res)
+      case None =>
+        extract(file, None, keep = false).map { res =>
+          cursor.atomic(s"$identifier : cache feature extraction") { implicit tx =>
+            featureRef.set(Some(res))
+          }
+          res // Future.Success(res)
+        }
+    }
+
+    def reader(implicit tx: S#Tx): FrameReader.Factory = FrameReader.Factory(file)
+  }
 }

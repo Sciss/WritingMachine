@@ -27,9 +27,14 @@ package de.sciss.grapheme
 
 import java.io.File
 
+import de.sciss.lucre.stm
+import de.sciss.lucre.stm.Sys
+import de.sciss.span.Span
 import de.sciss.synth.io.{AudioFile, AudioFileSpec, AudioFileType, SampleFormat}
 
+import scala.concurrent.{Future, Promise}
 import scala.util.control.NonFatal
+import scala.util.{Failure, Success}
 
 object GraphemeUtil {
   var logTransactions = true
@@ -49,11 +54,10 @@ object GraphemeUtil {
     if (logTransactions) logPrint(text)
 
   def logTx(text: => String)(implicit tx: Tx): Unit =
-    if (logTransactions) tx.afterCommit(_ => logPrint(text))
+    if (logTransactions) tx.afterCommit(logPrint(text))
 
-  private def logPrint(text: String) {
-    println(timeString() + " " + text)
-  }
+  private def logPrint(text: String): Unit =
+    println(s"${timeString()} $text")
 
   def fileNameWithoutExtension(f: File): String = {
     val n = f.getName
@@ -87,11 +91,11 @@ object GraphemeUtil {
 
   def formatSeconds(seconds: Double): String = {
     val millisR = (seconds * 1000).toInt
-    val sb = new StringBuilder(10)
-    val secsR = millisR / 1000
-    val millis = millisR % 1000
-    val mins = secsR / 60
-    val secs = secsR % 60
+    val sb      = new StringBuilder(10)
+    val secsR   = millisR / 1000
+    val millis  = millisR % 1000
+    val mins    = secsR / 60
+    val secs    = secsR % 60
     if (mins > 0) {
       sb.append(mins)
       sb.append(':')
@@ -112,38 +116,31 @@ object GraphemeUtil {
     sb.toString()
   }
 
-  //   def random( implicit tx: Tx ) : Double = math.random // XXX
-  def random(implicit tx: Tx): Double = rng.nextDouble()
+  def random /* (implicit tx: Tx) */: Double = rng.nextDouble()
 
   def sampleRate: Double = 44100.0
 
-  def random(top: Int)(implicit tx: Tx): Int = (random * top).toInt
+  def random(top: Int) /* (implicit tx: Tx) */: Int = (random * top).toInt
 
   def secondsToFrames(secs: Double): Long = (secs * sampleRate + 0.5).toLong
 
   def framesToSeconds(frames: Long): Double = frames / sampleRate
 
-  def max(i: Int, is: Int*): Int = is.foldLeft(i)(_ max _)
+  def max(i: Int    , is: Int*    ): Int    = is.foldLeft(i)(_ max _)
+  def max(n: Long   , ns: Long*   ): Long   = ns.foldLeft(n)(_ max _)
+  def max(d: Double , ds: Double* ): Double = ds.foldLeft(d)(_ max _)
 
-  def max(n: Long, ns: Long*): Long = ns.foldLeft(n)(_ max _)
-
-  def max(d: Double, ds: Double*): Double = ds.foldLeft(d)(_ max _)
-
-  def min(i: Int, is: Int*): Int = is.foldLeft(i)(_ min _)
-
-  def min(n: Long, ns: Long*): Long = ns.foldLeft(n)(_ min _)
-
-  def min(d: Double, ds: Double*): Double = ds.foldLeft(d)(_ min _)
+  def min(i: Int    , is: Int*    ): Int    = is.foldLeft(i)(_ min _)
+  def min(n: Long   , ns: Long*   ): Long   = ns.foldLeft(n)(_ min _)
+  def min(d: Double , ds: Double* ): Double = ds.foldLeft(d)(_ min _)
 
   def openMonoWrite(f: File): AudioFile =
     AudioFile.openWrite(f, AudioFileSpec(AudioFileType.AIFF, SampleFormat.Float, 1, sampleRate))
 
-  //   def strugatzkiDatabase = WritingMachine.strugatzkiDatabase
   def databaseDir: File = WritingMachine.databaseDir
 
   def createTempFile(suffix: String, dir: Option[File], keep: Boolean): File = {
     val res = File.createTempFile("grapheme", suffix, dir.getOrElse(tmpDir))
-    //if( keep ) println( "Created tmp file : " + res )
     if (!keep && deleteTempFilesOnExit) res.deleteOnExit()
     res
   }
@@ -151,48 +148,46 @@ object GraphemeUtil {
   def createDir(parent: File, prefix: String): File = {
     val f = File.createTempFile(prefix, "", parent)
     f.delete()
-    require(f.mkdir(), "Could not create directory : " + f)
+    require(f.mkdir(), s"Could not create directory : $f")
     f
   }
 
-  def futureOf[A](value: A): FutureResult[A] = FutureResult.nowSucceed(value)
+  def futureOf[A](value: A): Future[A] = Future.successful(value)
 
-  def threadFuture[A](name: String)(code: => FutureResult.Result[A])(implicit tx: Tx): FutureResult[A] = {
-    val ev = FutureResult.event[A]()
-    tx.afterCommit { _ =>
+  def threadFuture[A](name: String)(code: => A)(implicit tx: Tx): Future[A] = {
+    val ev = Promise[A]()
+    tx.afterCommit {
       new Thread(name) {
         start()
 
-        override def run() {
-          logNoTx("threadFuture started : " + name)
-          ev.set(try {
-            code
+        override def run(): Unit = {
+          logNoTx(s"threadFuture started : $name")
+          ev.complete(try {
+            val res = code
+            Success(res)
           } catch {
-            case NonFatal(e) => FutureResult.Failure(e)
+            case NonFatal(e) => Failure(e)
           })
         }
       }
     }
-    ev
+    ev.future
   }
 
-  def warnToDo(what: => String) {
-    logNoTx("+++MISSING+++ " + what)
-  }
+  def warnToDo(what: => String): Unit =
+    logNoTx(s"+++MISSING+++ $what")
 
-  def thread(name: String)(code: => Unit) {
+  def thread(name: String)(code: => Unit): Unit = {
     new Thread(name) {
       start()
 
-      override def run() {
-        code
-      }
+      override def run(): Unit = code
     }
   }
 
-  def threadAtomic(info: => String)(fun: Tx => Unit) {
+  def threadAtomic[S <: Sys[S]](info: => String)(fun: S#Tx => Unit)(implicit cursor: stm.Cursor[S]): Unit = {
     thread(info) {
-      atomic(info)(fun(_))
+      cursor.atomic(info)(fun(_))
     }
   }
 }

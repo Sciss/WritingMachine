@@ -25,21 +25,26 @@
 
 package de.sciss.grapheme
 
-import impl.{DifferanceAlgorithmImpl => Impl}
+import de.sciss.grapheme.impl.{DifferanceAlgorithmImpl => Impl}
+import de.sciss.lucre.stm
+import de.sciss.lucre.stm.Sys
+
+import scala.concurrent.Future
 
 object DifferanceAlgorithm {
-   def apply( /* spat: DifferanceSpat, */
-              thinner: DifferanceDatabaseThinner,
-              filler: DifferanceDatabaseFiller,
-              phraseTrace: PhraseTrace,
-              databaseQuery: DifferanceDatabaseQuery,
-              overwriter: DifferanceOverwriter,
-              overwriteSelector: DifferanceOverwriteSelector,
-              startPhrase: Phrase ) : DifferanceAlgorithm = {
-      Impl( /* spat, */ thinner, filler, phraseTrace, databaseQuery, overwriter, overwriteSelector, startPhrase )
-   }
+  def apply[S <: Sys[S]](
+                        thinner           : DifferanceDatabaseThinner   [S],
+                        filler            : DifferanceDatabaseFiller    [S],
+                        phraseTrace       : PhraseTrace                 [S],
+                        databaseQuery     : DifferanceDatabaseQuery     [S],
+                        overwriter        : DifferanceOverwriter        [S],
+                        overwriteSelector : DifferanceOverwriteSelector [S],
+                        startPhrase       : Phrase                      [S]
+                        )(implicit cursor: stm.Cursor[S]): DifferanceAlgorithm[S] = {
+    Impl(/* spat, */ thinner, filler, phraseTrace, databaseQuery, overwriter, overwriteSelector, startPhrase)
+  }
 }
-trait DifferanceAlgorithm {
-   def step( implicit tx: Tx ) : FutureResult[ Phrase ]
-//   def currentPhrase( implicit tx: Tx ) : Phrase
+
+trait DifferanceAlgorithm[S <: Sys[S]] {
+  def step(implicit tx: S#Tx): Future[Phrase[S]]
 }

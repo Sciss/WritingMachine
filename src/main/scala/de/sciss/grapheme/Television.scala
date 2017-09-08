@@ -28,15 +28,21 @@ package de.sciss.grapheme
 import impl.{FileTelevisionImpl => FileImpl, LiveTelevisionImpl => LiveImpl}
 import java.io.File
 
-object Television {
-   def fromFile( f: File ) : Television = FileImpl( f )
-   def live() : Television = LiveImpl()
-}
-trait Television {
-   def capture( length: Long )( implicit tx: Tx ) : FutureResult[ File ]
+import de.sciss.lucre.stm.Sys
 
-   /**
+import scala.concurrent.Future
+
+object Television {
+  def fromFile[S <: Sys[S]](f: File): Television[S] = FileImpl[S](f)
+
+  def live[S <: Sys[S]](): Television[S] = LiveImpl()
+}
+
+trait Television[S <: Sys[S]] {
+  def capture(length: Long)(implicit tx: S#Tx): Future[File]
+
+  /**
     * Latency in capture result in seconds
     */
-   def latency : Double
+  def latency: Double
 }

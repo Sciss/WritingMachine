@@ -2,42 +2,50 @@ package de.sciss.grapheme
 package impl
 
 import java.io.File
+
+import de.sciss.lucre.stm.Sys
+import de.sciss.processor.Processor.{Aborted, Progress, Result}
 import de.sciss.strugatzki.FeatureExtraction
 
-trait ExtractionImpl {
-   import GraphemeUtil._
+import scala.concurrent.{Future, Promise}
+import scala.util.{Failure, Success}
 
-   protected def identifier: String
+trait ExtractionImpl[S <: Sys[S]] {
 
-   /**
+  import GraphemeUtil._
+
+  protected def identifier: String
+
+  /**
     * Starts an extraction process for a given audio file input. The process
     * is started after the transaction commits, and the method returns
     * the future result of the meta file thus generated.
     */
-   protected def extract( audioInput : File, dir: Option[ File ], keep: Boolean )( implicit tx: Tx ) : FutureResult[ File ] = {
-      val res = FutureResult.event[ File ]()
-      tx.afterCommit { _ =>
-         import FeatureExtraction._
-         val set           = SettingsBuilder()
-         set.audioInput    = audioInput
-         set.featureOutput = createTempFile( ".aif", dir, keep )
-         val meta          = createTempFile( "_feat.xml", dir, keep )
-         set.metaOutput    = Some( meta )
-         val process       = apply( set ) {
-            case Aborted =>
-               val e = new RuntimeException( identifier + " process aborted" )
-               res.fail( e )
+  protected def extract(audioInput: File, dir: Option[File], keep: Boolean)(implicit tx: S#Tx): Future[File] = {
+    val res = Promise[File]()
+    tx.afterCommit {
+      import FeatureExtraction._
+      val set           = Config()
+      set.audioInput    = audioInput
+      set.featureOutput = createTempFile(".aif", dir, keep)
+      val meta = createTempFile("_feat.xml", dir, keep)
+      set.metaOutput = Some(meta)
+      val process = apply(set)
+      process.addListener {
+        case Result(_, Failure(Aborted())) =>
+          val e = new RuntimeException(s"$identifier process aborted")
+          res.failure(e)
 
-            case Failure( e ) =>
-               res.fail( e )
+        case Result(_, Failure(e)) =>
+          res.failure(e)
 
-            case Success( _ ) =>
-               res.succeed( meta )
+        case Result(_, Success(_)) =>
+          res.success(meta)
 
-            case Progress( p ) =>
-         }
-         process.start()
+        case Progress(_, _) =>
       }
-      res
-   }
+      process.start()
+    }
+    res.future
+  }
 }

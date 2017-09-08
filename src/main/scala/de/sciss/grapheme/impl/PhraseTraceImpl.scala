@@ -26,23 +26,25 @@
 package de.sciss.grapheme
 package impl
 
+import de.sciss.lucre.stm.Sys
+
 import scala.collection.immutable.{IndexedSeq => Vec}
 
 object PhraseTraceImpl {
   private val identifier = "phrase-trace-impl"
 
-  def apply(): PhraseTrace = new PhraseTraceImpl()
+  def apply[S <: Sys[S]](): PhraseTrace[S] = new PhraseTraceImpl[S]()
 }
 
-final class PhraseTraceImpl private() extends PhraseTrace {
+final class PhraseTraceImpl[S <: Sys[S]] private() extends PhraseTrace[S] {
 
   import GraphemeUtil._
   import PhraseTraceImpl._
 
-  def add(phrase: Phrase)(implicit txn: Tx): Unit =
+  def add(phrase: Phrase[S])(implicit tx: S#Tx): Unit =
     warnToDo(s"$identifier : add")
 
-  def series(n: Int)(implicit txn: Tx): Vec[Phrase] = {
+  def series(n: Int)(implicit tx: S#Tx): Vec[Phrase[S]] = {
     //      warnToDo( "PhraseTraceImpl : series" )
     //      Vec.empty
     sys.error("TODO")

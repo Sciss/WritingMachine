@@ -28,41 +28,51 @@ package impl
 
 import java.io.File
 
-abstract class AbstractDifferanceDatabaseFiller extends DifferanceDatabaseFiller {
-   import GraphemeUtil._
+import de.sciss.lucre.stm
+import de.sciss.lucre.stm.Sys
 
-   private val identifier = "a-database-filler"
+import scala.concurrent.Future
 
-   /**
+abstract class AbstractDifferanceDatabaseFiller[S <: Sys[S]] extends DifferanceDatabaseFiller[S] {
+
+  import GraphemeUtil._
+
+  protected final def cursor: stm.Cursor[S] = database.cursor
+
+  private[this] val identifier = "a-database-filler"
+
+  /**
     * Target database length in seconds.
     */
-   def durationMotion : Motion
+  def durationMotion: Motion
 
-   def database : Database
-   def television : Television
-   def maxCaptureDur : Double
+  def database: Database[S]
 
-   def perform( implicit tx: Tx ) : FutureResult[ Unit ] = {
-      val tgtLen  = secondsToFrames( durationMotion.step )
-      val dbLen   = database.length
-      val inc0    = tgtLen - dbLen
-      val maxF    = secondsToFrames( maxCaptureDur )
-      val inc     = min( inc0, maxF )
+  def television: Television[S]
 
-      logTx( identifier + " : gathering " + formatSeconds( framesToSeconds( inc )))
+  def maxCaptureDur: Double
 
-      if( inc > 0 ) {
-         television.capture( inc ).flatMapSuccess { f =>
-            performWithFile( f, secondsToFrames( television.latency ), inc )
-         }
-      } else {
-         futureOf( () )
+  final def perform(implicit tx: S#Tx): Future[Unit] = {
+    val tgtLen  = secondsToFrames(durationMotion.step)
+    val dbLen   = database.length
+    val inc0    = tgtLen - dbLen
+    val maxF    = secondsToFrames(maxCaptureDur)
+    val inc     = min(inc0, maxF)
+
+    logTx(s"$identifier : gathering ${formatSeconds(framesToSeconds(inc))}")
+
+    if (inc > 0) {
+      television.capture(inc).flatMap { f =>
+        performWithFile(f, secondsToFrames(television.latency), inc)
       }
-   }
+    } else {
+      futureOf(())
+    }
+  }
 
-   private def performWithFile( file: File, off: Long, inc: Long ) : FutureResult[ Unit ] = {
-      atomic( identifier + " : appending " + formatSeconds( framesToSeconds( inc ))) { tx1 =>
-         database.append( file, off, inc )( tx1 )
-      }
-   }
+  private def performWithFile(file: File, off: Long, inc: Long): Future[Unit] = {
+    cursor.atomic(s"$identifier : appending ${formatSeconds(framesToSeconds(inc))}") { tx1 =>
+      database.append(file, off, inc)(tx1)
+    }
+  }
 }
