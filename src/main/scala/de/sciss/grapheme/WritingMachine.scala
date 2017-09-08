@@ -4,19 +4,7 @@
  *
  *  Copyright (c) 2011-2017 Hanns Holger Rutz. All rights reserved.
  *
- *  This software is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU General Public License
- *  as published by the Free Software Foundation; either
- *  version 2, june 1991 of the License, or (at your option) any later version.
- *
- *  This software is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- *  General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public
- *  License (gpl.txt) along with this software; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *  This software is published under the GNU General Public License v3+
  *
  *
  *  For further information, please contact Hanns Holger Rutz at
@@ -28,10 +16,11 @@ package de.sciss.grapheme
 import java.io.File
 
 import de.sciss.lucre.stm
-import de.sciss.lucre.stm.Sys
-import de.sciss.lucre.synth.{Sys => SSys}
-import de.sciss.nuages.NuagesView
+import de.sciss.lucre.synth.{InMemory, Sys => SSys}
+import de.sciss.nuages.{Nuages, NuagesFrame, NuagesView}
 import de.sciss.strugatzki.Strugatzki
+import de.sciss.synth.Server
+import de.sciss.synth.proc.{AuralSystem, Folder}
 
 import scala.swing.{Button, Swing}
 
@@ -57,34 +46,21 @@ object WritingMachine {
   val baseDir             : String      = "/Applications/WritingMachine"
   val databaseDir         : File        = new File(new File(baseDir, "audio_work"), "database")
   val testDir             : File        = new File(new File(baseDir, "audio_work"), "test")
-  val restartUponTimeout  : Boolean     = getBool("restart-upon-timeout", default = true)
   val restartAfterTime    : Double      = getDouble("restart-after-time", 15 * 60.0)
   val restartUponException: Boolean     = getBool("restart-upon-exception", default = true)
   val supercolliderPath   : String      = getString("supercollider-path", "")
   val initialPhraseFill   : Double      = getDouble("initial-phrase-fill", 20.0)
 
-  val name = "WritingMachine"
-  val version = 0.10
-  val copyright = "(C)opyright 2011 Hanns Holger Rutz"
-  val isSnapshot = true
-
-  def versionString: String = {
-    val s = (version + 0.001).toString.substring(0, 4)
-    if (isSnapshot) s + "-SNAPSHOT" else s
-  }
-
-  def printInfo(): Unit =
-    println("\n" + name + " v" + versionString + "\n" + copyright + ". All rights reserved.\n")
-
   def main(args: Array[String]): Unit = {
     args.toSeq match {
-      case _ => launch()
+      case _ =>
+        type S = InMemory
+        implicit val system: S = InMemory()
+        launch[S]()
     }
   }
 
-  def launch(): Unit = {
-    //      sys.props += "actors.enableForkJoin" -> "false"
-???
+  def launch[S <: SSys[S]]()(implicit cursor: stm.Cursor[S]): Unit = {
 //    val cfg = NuagesLauncher.SettingsBuilder()
 //    cfg.beforeShutdown = quit _
 //    cfg.doneAction = booted _
@@ -135,6 +111,19 @@ object WritingMachine {
 ////        |}
 ////        |""".stripMargin
 //    NuagesLauncher(cfg)
+
+    cursor.step { implicit tx =>
+      val f     = Folder[S]
+      val n     = Nuages[S](Nuages.Surface.Folder(f))
+      val nCfg  = Nuages.Config()
+      implicit val aural: AuralSystem = AuralSystem()
+      import de.sciss.synth.proc.WorkspaceHandle.Implicits._
+      val _view = NuagesView[S](n, nCfg)
+      /* val frame = */ NuagesFrame(_view, undecorated = false /* true */)
+      val aCfg  = Server.Config()
+      aural.start(aCfg)
+      _view.panel.transport.play()
+    }
   }
 
 //  private def quit(): Unit =
@@ -152,10 +141,6 @@ object WritingMachine {
 
   def booted[S <: SSys[S]](r: NuagesView[S])(implicit cursor: stm.Cursor[S]): Unit = {
     Strugatzki.tmpDir = GraphemeUtil.tmpDir
-    if (restartUponTimeout) ???
-//      ProcTxn.timeoutFun = () => {
-//        restart()
-//      }
 
     if (restartAfterTime > 0) {
       val t = new java.util.Timer()

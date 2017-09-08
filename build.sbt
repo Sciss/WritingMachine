@@ -11,5 +11,6 @@ resolvers       += "Oracle Repository" at "http://download.oracle.com/maven"  //
 libraryDependencies ++= Seq(
   "de.sciss" %% "wolkenpumpe" % "2.18.0",
   "de.sciss" %% "strugatzki"  % "2.16.0",
-  "de.sciss" %% "span"        % "1.3.3"  // yeah, fuck you, too, sbt
+  "de.sciss" %% "span"        % "1.3.3",
+  "de.sciss" %  "submin"      % "0.2.1"
 )
