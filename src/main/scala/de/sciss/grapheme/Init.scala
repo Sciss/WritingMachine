@@ -17,17 +17,12 @@ import java.io.File
 
 import de.sciss.lucre.stm
 import de.sciss.lucre.stm.Sys
-import de.sciss.lucre.stm.TxnLike.peer
 import de.sciss.lucre.synth.{Sys => SSys}
-import de.sciss.nuages.{ControlPanel, NuagesView}
-import de.sciss.synth
+import de.sciss.nuages.NuagesView
 import de.sciss.synth.proc.Proc
-import de.sciss.synth.{AudioBus, Server}
 
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
-import scala.concurrent.stm.TMap
-import scala.swing.Swing
 import scala.util.control.NonFatal
 import scala.util.{Failure, Success}
 
@@ -36,16 +31,9 @@ object Init {
 
   private val identifier = "meta-diff"
 
-  private val instanceRef = TMap.empty[Sys[_], Init[_]] // Ref.make[Init[S]]
-
-  def instance[S <: Sys[S]](implicit tx: S#Tx): Init[S] = instanceRef(tx.system).asInstanceOf[Init[S]]
-
   def apply[S <: SSys[S]](r: NuagesView[S])(implicit tx: S#Tx): Init[S] = {
-    require(!instanceRef.contains(tx.system))
-
-    val panel = r.panel // .frame.panel
     val coll = ??? : Proc[S] // panel.collector.getOrElse(sys.error("Requires nuages to use collector"))
-    val spat = DifferanceSpat(coll)
+    val spat = DifferanceSpat[S](coll)
     val tv = if (tvUseTestFile) {
       Television.fromFile[S](new File(testDir, "euronews.aif"))
     } else {
@@ -53,47 +41,7 @@ object Init {
     }
     import r.cursor
     val i = new Init[S](/* start, diff, */ spat, tv)
-    instanceRef.put(tx.system, i) // set(i)
-
-    tx.afterCommit {
-      val s = Server.default
-      startMeterSynth(
-        r.controlPanel,
-        AudioBus(s, s.config.outputBusChannels + tvChannelOffset, tvNumChannels),
-        ??? // panel.masterBus.get
-      )
-      if (autoStart) Swing.onEDT {
-        ??? // r.controlPanel.startClock()
-      }
-    }
     i
-  }
-
-  private def startMeterSynth(ctrl: ControlPanel, inBus: AudioBus, outBus: AudioBus): Unit = {
-    import synth._
-    import ugen._
-
-    val s = inBus.server
-
-    val df = SynthDef("post-master") {
-      val inSig     = In.ar(inBus.index, inBus.numChannels)
-      val outSig    = In.ar(outBus.index, outBus.numChannels)
-      val sig       = Flatten(Seq(outSig, inSig))
-      val meterTr   = Impulse.kr(20)
-      val peak      = Peak.kr(sig, meterTr)
-      val rms       = A2K.kr(Lag.ar(sig.squared, 0.1))
-      val meterData = Zip(peak, rms) // XXX correct?
-      SendReply.kr(meterTr, meterData, "/meters")
-    }
-    val syn = ??? : Synth // df.play(s, addAction = addToTail)
-    val synID = syn.id
-    ???
-//    OSCResponder.add({
-//      case Message("/meters", `synID`, 0, values@_*) =>
-//        Swing.onEDT {
-//          ctrl.meterUpdate(values.map(_.asInstanceOf[Float])(collection.breakOut))
-//        }
-//    }, s)
   }
 }
 

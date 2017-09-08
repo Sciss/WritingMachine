@@ -19,6 +19,7 @@ import de.sciss.lucre.stm
 import de.sciss.lucre.synth.{InMemory, Sys => SSys}
 import de.sciss.nuages.{Nuages, NuagesFrame, NuagesView}
 import de.sciss.strugatzki.Strugatzki
+import de.sciss.submin.Submin
 import de.sciss.synth.Server
 import de.sciss.synth.proc.{AuralSystem, Folder}
 
@@ -52,12 +53,10 @@ object WritingMachine {
   val initialPhraseFill   : Double      = getDouble("initial-phrase-fill", 20.0)
 
   def main(args: Array[String]): Unit = {
-    args.toSeq match {
-      case _ =>
-        type S = InMemory
-        implicit val system: S = InMemory()
-        launch[S]()
-    }
+    Submin.install(true)
+    type S = InMemory
+    implicit val system: S = InMemory()
+    launch[S]()
   }
 
   def launch[S <: SSys[S]]()(implicit cursor: stm.Cursor[S]): Unit = {
@@ -112,7 +111,7 @@ object WritingMachine {
 ////        |""".stripMargin
 //    NuagesLauncher(cfg)
 
-    cursor.step { implicit tx =>
+    val r = cursor.step { implicit tx =>
       val f     = Folder[S]
       val n     = Nuages[S](Nuages.Surface.Folder(f))
       val nCfg  = Nuages.Config()
@@ -123,7 +122,10 @@ object WritingMachine {
       val aCfg  = Server.Config()
       aural.start(aCfg)
       _view.panel.transport.play()
+      aural.whenStarted(_ => booted[S](_view))
+      _view
     }
+    Swing.onEDT(initGUI(r))
   }
 
 //  private def quit(): Unit =
@@ -149,8 +151,6 @@ object WritingMachine {
         def run(): Unit = restart()
       }, millis)
     }
-
-    Swing.onEDT(initGUI(r))
 
     cursor.atomic("init") { implicit tx =>
       Init(r)
