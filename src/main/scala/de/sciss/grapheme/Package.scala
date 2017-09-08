@@ -2,7 +2,7 @@
  *  package grapheme
  *  (WritingMachine)
  *
- *  Copyright (c) 2011 Hanns Holger Rutz. All rights reserved.
+ *  Copyright (c) 2011-2017 Hanns Holger Rutz. All rights reserved.
  *
  *  This software is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -25,28 +25,31 @@
 
 package de.sciss
 
-import synth.proc
-import collection.immutable.{IndexedSeq => IIdxSeq}
+import de.sciss.lucre.stm.TxnLike
+import de.sciss.synth.proc
+
+import scala.language.implicitConversions
 
 package object grapheme {
-   type Tx = proc.ProcTxn
-//   type Future[ A ] = scala.actors.Future[ A ]
-   type Ref[ A ] = proc.Ref[ A ]
+  type Tx = TxnLike // proc.ProcTxn
+  //   type Future[ A ] = scala.actors.Future[ A ]
+  type Ref[A] = proc.Ref[A]
 
-   object Ref {
-      def apply[ A : ClassManifest ]( init: A ) : Ref[ A ] = proc.Ref( init )
-      def empty[ A : ClassManifest ] : Ref[ A ] = proc.Ref.make[ A ]
-   }
+  object Ref {
+    def apply[A: ClassManifest](init: A): Ref[A] = proc.Ref(init)
 
-   def atomic[ A ]( info: => String )( fun: Tx => A ) : A = {
-      proc.ProcTxn.atomic { tx =>
-         GraphemeUtil.logTx( info )( tx )
-         fun( tx )
-      }
-   }
+    def empty[A: ClassManifest]: Ref[A] = proc.Ref.make[A]
+  }
 
-//   implicit def wrapFutureResultSeq[ A ]( fs: IIdxSeq[ FutureResult[ A ]]) : FutureResult[ IIdxSeq[ A ]] =
-//      FutureResult.enrich( fs )
+  def atomic[A](info: => String)(fun: Tx => A): A = {
+    proc.ProcTxn.atomic { tx =>
+      GraphemeUtil.logTx(info)(tx)
+      fun(tx)
+    }
+  }
 
-   implicit def enrichProc( p: proc.Proc ) : RichProc = RichProc( p )
+  //   implicit def wrapFutureResultSeq[ A ]( fs: Vec[ FutureResult[ A ]]) : FutureResult[ Vec[ A ]] =
+  //      FutureResult.enrich( fs )
+
+  implicit def enrichProc(p: proc.Proc): RichProc = RichProc(p)
 }

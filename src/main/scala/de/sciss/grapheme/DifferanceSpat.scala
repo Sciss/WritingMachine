@@ -2,7 +2,7 @@
  *  DifferanceSpat.scala
  *  (WritingMachine)
  *
- *  Copyright (c) 2011 Hanns Holger Rutz. All rights reserved.
+ *  Copyright (c) 2011-2017 Hanns Holger Rutz. All rights reserved.
  *
  *  This software is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -29,19 +29,20 @@ import impl.DifferanceSpatImpl
 import de.sciss.synth.proc.Proc
 
 object DifferanceSpat {
-   def apply( collector: Proc )( implicit tx: Tx ) : DifferanceSpat = DifferanceSpatImpl( collector )
+  def apply(collector: Proc)(implicit tx: Tx): DifferanceSpat = DifferanceSpatImpl(collector)
 }
+
 trait DifferanceSpat {
-   /**
+  /**
     * Projects the given phase onto the next channel. The returned future is
     * resolved, after releasePhrase has been called, so do not forget to call
     * releasePhrase for every channel!
     */
-   def rotateAndProject( phrase: Phrase )( implicit tx: Tx ) : FutureResult[ Unit ]
+  def rotateAndProject(phrase: Phrase)(implicit tx: Tx): FutureResult[Unit]
 
-//   /**
-//    * Requests that the spatialization releases the currently playing phrase
-//    * once it reaches the end of a cycle.
-//    */
-//   def releasePhrase( implicit tx: Tx ) : Unit
+  //   /**
+  //    * Requests that the spatialization releases the currently playing phrase
+  //    * once it reaches the end of a cycle.
+  //    */
+  //   def releasePhrase( implicit tx: Tx ) : Unit
 }

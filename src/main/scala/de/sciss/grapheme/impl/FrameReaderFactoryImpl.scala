@@ -2,7 +2,7 @@
  *  FrameReaderFactoryImpl.scala
  *  (WritingMachine)
  *
- *  Copyright (c) 2011 Hanns Holger Rutz. All rights reserved.
+ *  Copyright (c) 2011-2017 Hanns Holger Rutz. All rights reserved.
  *
  *  This software is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -27,24 +27,28 @@ package de.sciss.grapheme
 package impl
 
 import java.io.File
+
 import de.sciss.synth.io.{AudioFile, Frames}
 
 object FrameReaderFactoryImpl {
-   def apply( file: File ) : FrameReader.Factory = new FrameReader.Factory {
-      def open() : FrameReader = {
-         val af = AudioFile.openRead( file )
-         new ReaderImpl( af )
+  def apply(file: File): FrameReader.Factory = new FrameReader.Factory {
+    def open(): FrameReader = {
+      val af = AudioFile.openRead(file)
+      new ReaderImpl(af)
+    }
+  }
+
+  private final class ReaderImpl(af: AudioFile) extends FrameReader {
+    override def toString = s"FrameReader(${af.file.getOrElse("?")})"
+
+    def read(buf: Frames, off: Long, len: Int): Unit = {
+      if (off != af.position) {
+        af.position = off
       }
-   }
+      af.read(buf, 0, len)
+    }
 
-   private final class ReaderImpl( af: AudioFile ) extends FrameReader {
-      override def toString = "FrameReader(" + af.file.getOrElse( "?" ) + ")"
-
-      def read( buf: Frames, off: Long, len: Int ) {
-         if( off != af.position ) { af.position = off }
-         af.read( buf, 0, len )
-      }
-
-      def close() { af.close() }
-   }
+    def close(): Unit =
+      af.close()
+  }
 }

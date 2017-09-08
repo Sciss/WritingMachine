@@ -2,7 +2,7 @@
  *  AbstractDifferanceDatabaseThinner.scala
  *  (WritingMachine)
  *
- *  Copyright (c) 2011 Hanns Holger Rutz. All rights reserved.
+ *  Copyright (c) 2011-2017 Hanns Holger Rutz. All rights reserved.
  *
  *  This software is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -26,7 +26,7 @@
 package de.sciss.grapheme
 package impl
 
-import collection.immutable.{IndexedSeq => IIdxSeq}
+import collection.immutable.{IndexedSeq => Vec}
 
 //object AbstractDifferanceDatabaseThinner {
 //   private final case class Entry( span: Span, fadeIn: Long, fadeOut: Long ) {
@@ -66,7 +66,7 @@ abstract class AbstractDifferanceDatabaseThinner extends DifferanceDatabaseThinn
    def inFader( off: Long, len: Long ) : SignalFader
    def outFader( off: Long, len: Long ) : SignalFader
 
-   def remove( spans: IIdxSeq[ Span ])( implicit tx: Tx ) : FutureResult[ Unit ] = {
+   def remove( spans: Vec[ Span ])( implicit tx: Tx ) : FutureResult[ Unit ] = {
       val dbLen   = database.length
       val instrs  = spans.map { span =>
          val shrink     = shrinkMotion.step

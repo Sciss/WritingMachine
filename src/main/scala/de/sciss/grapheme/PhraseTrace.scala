@@ -2,7 +2,7 @@
  *  PhraseTrace.scala
  *  (WritingMachine)
  *
- *  Copyright (c) 2011 Hanns Holger Rutz. All rights reserved.
+ *  Copyright (c) 2011-2017 Hanns Holger Rutz. All rights reserved.
  *
  *  This software is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -26,12 +26,12 @@
 package de.sciss.grapheme
 
 import impl.{PhraseTraceImpl => Impl}
-import collection.immutable.{IndexedSeq => IIdxSeq}
+import collection.immutable.{IndexedSeq => Vec}
 
 object PhraseTrace {
    def apply() : PhraseTrace = Impl()
 }
 trait PhraseTrace {
    def add( phrase: Phrase )( implicit txn: Tx ) : Unit
-   def series( n: Int )( implicit txn: Tx ) : IIdxSeq[ Phrase ]
+   def series( n: Int )( implicit txn: Tx ) : Vec[ Phrase ]
 }

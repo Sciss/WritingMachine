@@ -2,7 +2,7 @@
  *  WritingMachine.scala
  *  (WritingMachine)
  *
- *  Copyright (c) 2011 Hanns Holger Rutz. All rights reserved.
+ *  Copyright (c) 2011-2017 Hanns Holger Rutz. All rights reserved.
  *
  *  This software is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -27,7 +27,7 @@ package de.sciss.grapheme
 
 import de.sciss.synth.proc.ProcTxn
 import de.sciss.strugatzki.Strugatzki
-import collection.immutable.{IndexedSeq => IIdxSeq}
+import collection.immutable.{IndexedSeq => Vec}
 import de.sciss.osc.TCP
 import swing.Swing
 import de.sciss.nuages.{NuagesFrame, NuagesLauncher}
@@ -36,95 +36,95 @@ import javax.swing.{JButton, AbstractAction}
 import java.io.File
 
 object WritingMachine {
-   private val settings = new WritingMachineSettings
-   import settings._
+  private val settings = new WritingMachineSettings
 
-   val autoStart           = getBool( "auto-start", true )
-   val logPanel            = false
-   val masterChannelOffset = getInt( "master-channel-offset", 0 ) // 2
-   val soloChannelOffset   = Option.empty[ Int ] // Some( 10 ) // Some( 0 )
-   val masterNumChannels   = getInt( "master-num-channels", 6 ) // 9
-   val tvChannelOffset     = getInt( "tv-channel-offset", 2 )   // 0
-   val tvNumChannels       = getInt( "tv-num-channels", 2 )
-   val tvPhaseFlip         = getBool( "tv-phase-flip", true )
-   val tvBoostDB           = getDouble( "tv-boost", 0.0 )   // decibels
-   val tvUseTestFile       = getBool( "tv-use-test-file", true ) // false
-   val phraseBoostDB       = getDouble( "phrase-boost", 3.0 ) // decibels
-//   val strugatzkiDatabase  = new File( "/Users/hhrutz/Documents/devel/LeereNull/feature/" )
-   val inDevice            = "MOTU 828mk2"
-   val outDevice           = inDevice
-   val baseDir             = "/Applications/WritingMachine"
-   val databaseDir         = new File( new File( baseDir, "audio_work" ), "database" )
-   val testDir             = new File( new File( baseDir, "audio_work" ), "test" )
-   val restartUponTimeout  = getBool( "restart-upon-timeout", true )
-   val restartAfterTime    = getDouble( "restart-after-time", 15 * 60.0 )
-   val restartUponException= getBool( "restart-upon-exception", true )
-   val supercolliderPath   = getString( "supercollider-path", "" )
-   val initialPhraseFill   = getDouble( "initial-phrase-fill", 20.0 )
+  import settings._
 
-   val name          = "WritingMachine"
-   val version       = 0.10
-   val copyright     = "(C)opyright 2011 Hanns Holger Rutz"
-   val isSnapshot    = true
+  val autoStart           : Boolean     = getBool("auto-start", default = true)
+  val logPanel            : Boolean     = false
+  val masterChannelOffset : Int         = getInt("master-channel-offset", 0) // 2
+  val soloChannelOffset   : Option[Int] = Option.empty // Some( 10 ) // Some( 0 )
+  val masterNumChannels   : Int         = getInt("master-num-channels", 6) // 9
+  val tvChannelOffset     : Int         = getInt("tv-channel-offset", 2) // 0
+  val tvNumChannels       : Int         = getInt("tv-num-channels", 2)
+  val tvPhaseFlip         : Boolean     = getBool("tv-phase-flip", default = true)
+  val tvBoostDB           : Double      = getDouble("tv-boost", 0.0) // decibels
+  val tvUseTestFile       : Boolean     = getBool("tv-use-test-file", default = true) // false
+  val phraseBoostDB       : Double      = getDouble("phrase-boost", 3.0) // decibels
+  //   val strugatzkiDatabase  = new File( "/Users/hhrutz/Documents/devel/LeereNull/feature/" )
+  val inDevice            : String      = "MOTU 828mk2"
+  val outDevice           : String      = inDevice
+  val baseDir             : String      = "/Applications/WritingMachine"
+  val databaseDir         : File        = new File(new File(baseDir, "audio_work"), "database")
+  val testDir             : File        = new File(new File(baseDir, "audio_work"), "test")
+  val restartUponTimeout  : Boolean     = getBool("restart-upon-timeout", default = true)
+  val restartAfterTime    : Double      = getDouble("restart-after-time", 15 * 60.0)
+  val restartUponException: Boolean     = getBool("restart-upon-exception", default = true)
+  val supercolliderPath   : String      = getString("supercollider-path", "")
+  val initialPhraseFill   : Double      = getDouble("initial-phrase-fill", 20.0)
 
-   def versionString = {
-      val s = (version + 0.001).toString.substring( 0, 4 )
-      if( isSnapshot ) s + "-SNAPSHOT" else s
-   }
+  val name = "WritingMachine"
+  val version = 0.10
+  val copyright = "(C)opyright 2011 Hanns Holger Rutz"
+  val isSnapshot = true
 
-   def printInfo() {
-      println( "\n" + name + " v" + versionString + "\n" + copyright + ". All rights reserved.\n" )
-   }
+  def versionString: String = {
+    val s = (version + 0.001).toString.substring(0, 4)
+    if (isSnapshot) s + "-SNAPSHOT" else s
+  }
 
-   def main( args: Array[ String ]) {
-      args.toSeq match {
-//         case Seq( "--fut1" ) => Futures.test1()
+  def printInfo(): Unit =
+    println("\n" + name + " v" + versionString + "\n" + copyright + ". All rights reserved.\n")
 
-         case _ => launch()
+  def main(args: Array[String]): Unit = {
+    args.toSeq match {
+      //         case Seq( "--fut1" ) => Futures.test1()
+
+      case _ => launch()
+    }
+  }
+
+  def launch(): Unit = {
+    //      sys.props += "actors.enableForkJoin" -> "false"
+
+    val cfg = NuagesLauncher.SettingsBuilder()
+    cfg.beforeShutdown = quit _
+    cfg.doneAction = booted _
+    val o = cfg.serverOptions
+    if (supercolliderPath != "") o.programPath = supercolliderPath
+    o.host = "127.0.0.1"
+    o.pickPort()
+    //      o.transport          = TCP
+    o.deviceNames = Some((inDevice, outDevice))
+    val masterChans = (masterChannelOffset until (masterChannelOffset + masterNumChannels)).toIndexedSeq
+    val soloChans = soloChannelOffset.map(off => Vec(off, off + 1)).getOrElse(Vec.empty)
+    o.outputBusChannels = {
+      val mm = masterChans.max + 1
+      if (soloChans.isEmpty) mm else {
+        math.max(mm, soloChans.max + 1)
       }
-   }
-
-   def launch() {
-//      sys.props += "actors.enableForkJoin" -> "false"
-
-      val cfg = NuagesLauncher.SettingsBuilder()
-      cfg.beforeShutdown   = quit _
-      cfg.doneAction       = booted _
-      val o                = cfg.serverOptions
-      if( supercolliderPath != "" ) o.programPath = supercolliderPath
-      o.host               = "127.0.0.1"
-      o.pickPort()
-//      o.transport          = TCP
-      o.deviceNames        = Some( (inDevice, outDevice) )
-      val masterChans      = (masterChannelOffset until (masterChannelOffset + masterNumChannels)).toIndexedSeq
-      val soloChans        = soloChannelOffset.map( off => IIdxSeq( off, off + 1 )).getOrElse( IIdxSeq.empty )
-      o.outputBusChannels  = {
-         val mm = masterChans.max + 1
-         if( soloChans.isEmpty ) mm else {
-            math.max( mm, soloChans.max + 1 )
-         }
+    }
+    o.inputBusChannels = tvChannelOffset + tvNumChannels
+    cfg.masterChannels = Some(masterChans)
+    cfg.soloChannels = if (soloChans.nonEmpty) Some(soloChans) else None
+    cfg.collector = true
+    val c = cfg.controlSettings
+    c.log = logPanel
+    c.numInputChannels = tvNumChannels
+    c.numOutputChannels = masterNumChannels
+    c.clockAction = { (state, fun) =>
+      if (state) {
+        atomic(name + " : start") { implicit tx => Init.instance.start() }
+      } else {
+        atomic(name + " : stop") { implicit tx => Init.instance.stop() }
       }
-      o.inputBusChannels   = tvChannelOffset + tvNumChannels
-      cfg.masterChannels   = Some( masterChans )
-      cfg.soloChannels     = if( soloChans.nonEmpty ) Some( soloChans ) else None
-      cfg.collector        = true
-      val c                = cfg.controlSettings
-      c.log                = logPanel
-      c.numInputChannels   = tvNumChannels
-      c.numOutputChannels  = masterNumChannels
-      c.clockAction        = { (state, fun) =>
-         if( state ) {
-            atomic( name + " : start" ) { implicit tx => Init.instance.start() }
-         } else {
-            atomic( name + " : stop" )  { implicit tx => Init.instance.stop() }
-         }
-         fun()
-      }
+      fun()
+    }
 
-      val i                = c.replSettings
-      i.imports          :+= "de.sciss.grapheme._"
-      i.text               =
-"""val init = Init.instance
+    val i = c.replSettings
+    i.imports :+= "de.sciss.grapheme._"
+    i.text =
+      """val init = Init.instance
 init.start()
 
 // val phrase = Phrase.fromFile( new java.io.File( "/Users/hhrutz/Desktop/SP_demo/tapes/Affoldra_RoomLp.aif" ))
@@ -136,56 +136,56 @@ actors.Actor.actor {
    println( "==== Diff Alg Step Done ====" )
 }
 """
-      NuagesLauncher( cfg )
-   }
+    NuagesLauncher(cfg)
+  }
 
-   private def quit() {
-      println( "Bye bye..." )
-   }
+  private def quit(): Unit =
+    println("Bye bye...")
 
-   def restart() {
-      println( "==== Restarting ====" )
-      sys.exit( 1 )
-   }
+  def restart(): Unit = {
+    println("==== Restarting ====")
+    sys.exit(1)
+  }
 
-   def shutDownComputer() {
-      val pb = new ProcessBuilder( "/bin/sh", new File( "shutdown.sh" ).getAbsolutePath )
-      pb.start()
-   }
-   def booted( r: NuagesLauncher.Ready ) {
-      Strugatzki.tmpDir = GraphemeUtil.tmpDir
-      if( restartUponTimeout ) ProcTxn.timeoutFun = () => {
-         restart()
+  def shutDownComputer(): Unit = {
+    val pb = new ProcessBuilder("/bin/sh", new File("shutdown.sh").getAbsolutePath)
+    pb.start()
+  }
+
+  def booted(r: NuagesLauncher.Ready): Unit = {
+    Strugatzki.tmpDir = GraphemeUtil.tmpDir
+    if (restartUponTimeout) ProcTxn.timeoutFun = () => {
+      restart()
+    }
+    if (restartAfterTime > 0) {
+      val t = new java.util.Timer()
+      val millis = (restartAfterTime * 1000).toLong
+      t.schedule(new java.util.TimerTask {
+        def run() {
+          restart()
+        }
+      }, millis)
+    }
+
+    //      FeatureExtraction.verbose = true
+
+    Swing.onEDT(initGUI(r.frame))
+
+    ProcTxn.atomic { implicit tx =>
+      Init(r)
+    }
+  }
+
+  def initGUI(f: NuagesFrame): Unit = {
+    f.bottom.add(new JButton(new AbstractAction("SHUTDOWN") {
+      def actionPerformed(e: ActionEvent) {
+        shutDownComputer()
       }
-      if( restartAfterTime > 0 ) {
-         val t = new java.util.Timer()
-         val millis  = (restartAfterTime * 1000).toLong
-         t.schedule( new java.util.TimerTask {
-            def run() {
-               restart()
-            }
-         }, millis )
+    }))
+    f.bottom.add(new JButton(new AbstractAction("RESTART") {
+      def actionPerformed(e: ActionEvent) {
+        restart()
       }
-
-//      FeatureExtraction.verbose = true
-
-      Swing.onEDT( initGUI( r.frame ))
-
-      ProcTxn.atomic { implicit tx =>
-         Init( r )
-      }
-   }
-
-   def initGUI( f: NuagesFrame ) {
-      f.bottom.add( new JButton( new AbstractAction( "SHUTDOWN" ) {
-         def actionPerformed( e: ActionEvent ) {
-            shutDownComputer()
-         }
-      }))
-      f.bottom.add( new JButton( new AbstractAction( "RESTART" ) {
-         def actionPerformed( e: ActionEvent ) {
-            restart()
-         }
-      }))
-   }
+    }))
+  }
 }

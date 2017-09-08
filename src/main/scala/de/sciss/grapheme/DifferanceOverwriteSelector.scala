@@ -2,7 +2,7 @@
  *  DifferanceOverwriteSelector.scala
  *  (WritingMachine)
  *
- *  Copyright (c) 2011 Hanns Holger Rutz. All rights reserved.
+ *  Copyright (c) 2011-2017 Hanns Holger Rutz. All rights reserved.
  *
  *  This software is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -25,12 +25,12 @@
 
 package de.sciss.grapheme
 
-import collection.immutable.{IndexedSeq => IIdxSeq}
+import collection.immutable.{IndexedSeq => Vec}
 import impl.{DifferanceOverwriteSelectorImpl => Impl}
 
 object DifferanceOverwriteSelector {
    def apply() : DifferanceOverwriteSelector = Impl()
 }
 trait DifferanceOverwriteSelector {
-   def selectParts( phrase: Phrase )( implicit tx: Tx ) : FutureResult[ IIdxSeq[ OverwriteInstruction ]]
+   def selectParts( phrase: Phrase )( implicit tx: Tx ) : FutureResult[ Vec[ OverwriteInstruction ]]
 }

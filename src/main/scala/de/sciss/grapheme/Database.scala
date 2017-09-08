@@ -2,7 +2,7 @@
  *  Database.scala
  *  (WritingMachine)
  *
- *  Copyright (c) 2011 Hanns Holger Rutz. All rights reserved.
+ *  Copyright (c) 2011-2017 Hanns Holger Rutz. All rights reserved.
  *
  *  This software is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -25,26 +25,28 @@
 
 package de.sciss.grapheme
 
-import collection.immutable.{IndexedSeq => IIdxSeq}
+import collection.immutable.{IndexedSeq => Vec}
 import impl.{DatabaseImpl => Impl}
 import java.io.File
 
 object Database {
-   def apply( dir: File )( implicit tx: Tx ) : Database = Impl( dir )
+  def apply(dir: File)(implicit tx: Tx): Database = Impl(dir)
 }
+
 trait Database {
-   def length( implicit tx: Tx ): Long
+  def length(implicit tx: Tx): Long
 
-//   def remove( spans: IIdxSeq[ Span ])( implicit tx: Tx ) : FutureResult[ Unit ]
+  //   def remove( spans: Vec[ Span ])( implicit tx: Tx ) : FutureResult[ Unit ]
 
-   def append( source: File, offset: Long, length: Long )( implicit tx: Tx ) : FutureResult[ Unit ]
-   def remove( instrs: IIdxSeq[ RemovalInstruction ])( implicit tx: Tx ) : FutureResult[ Unit ]
+  def append(source: File, offset: Long, length: Long)(implicit tx: Tx): FutureResult[Unit]
 
-   /**
+  def remove(instrs: Vec[RemovalInstruction])(implicit tx: Tx): FutureResult[Unit]
+
+  /**
     * Returns a directory carrying the strugatzki meta files of
     * the database.
     */
-   def asStrugatziDatabase( implicit tx: Tx ) : FutureResult[ File ]
+  def asStrugatziDatabase(implicit tx: Tx): FutureResult[File]
 
-   def reader( implicit tx: Tx ) : FrameReader.Factory
+  def reader(implicit tx: Tx): FrameReader.Factory
 }

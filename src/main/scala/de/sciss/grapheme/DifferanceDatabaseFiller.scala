@@ -2,7 +2,7 @@
  *  DifferanceDatabaseFiller.scala
  *  (WritingMachine)
  *
- *  Copyright (c) 2011 Hanns Holger Rutz. All rights reserved.
+ *  Copyright (c) 2011-2017 Hanns Holger Rutz. All rights reserved.
  *
  *  This software is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -28,9 +28,11 @@ package de.sciss.grapheme
 import impl.{DifferanceDatabaseFillerImpl => Impl}
 
 object DifferanceDatabaseFiller {
-   def apply( db: Database, tv: Television )( implicit tx: Tx ) : DifferanceDatabaseFiller = Impl( db, tv )
+  def apply(db: Database, tv: Television)(implicit tx: Tx): DifferanceDatabaseFiller = Impl(db, tv)
 }
+
 trait DifferanceDatabaseFiller {
-   def database : Database
-   def perform( implicit tx: Tx ) : FutureResult[ Unit ]
+  def database: Database
+
+  def perform(implicit tx: Tx): FutureResult[Unit]
 }

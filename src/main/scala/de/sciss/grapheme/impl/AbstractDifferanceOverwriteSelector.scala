@@ -2,7 +2,7 @@
  *  AbstractDifferanceOverwriteSelector.scala
  *  (WritingMachine)
  *
- *  Copyright (c) 2011 Hanns Holger Rutz. All rights reserved.
+ *  Copyright (c) 2011-2017 Hanns Holger Rutz. All rights reserved.
  *
  *  This software is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -27,7 +27,7 @@ package de.sciss.grapheme
 package impl
 
 import de.sciss.synth
-import collection.immutable.{IndexedSeq => IIdxSeq}
+import collection.immutable.{IndexedSeq => Vec}
 
 object AbstractDifferanceOverwriteSelector {
    private val verbose = true
@@ -77,14 +77,14 @@ extends DifferanceOverwriteSelector {
    def bestPart( phrase: Phrase, center: Long, minLen: Long, maxLen: Long, weight: Double )
                ( implicit tx: Tx ) : FutureResult[ Span ]
 
-   def selectParts( phrase: Phrase )( implicit tx: Tx ) : FutureResult[ IIdxSeq[ OverwriteInstruction ]] = {
+   def selectParts( phrase: Phrase )( implicit tx: Tx ) : FutureResult[ Vec[ OverwriteInstruction ]] = {
       val num        = frequencyMotion.step.toInt
-      val ovrNow     = futureOf( IIdxSeq.empty[ OverwriteInstruction ])
+      val ovrNow     = futureOf( Vec.empty[ OverwriteInstruction ])
       selectPartsWith( ovrNow, phrase, num )
    }
 
-   private def selectPartsWith( ovrNow: FutureResult[ IIdxSeq[ OverwriteInstruction ]], phrase: Phrase,
-                                num : Int ) : FutureResult[ IIdxSeq[ OverwriteInstruction ]] = {
+   private def selectPartsWith( ovrNow: FutureResult[ Vec[ OverwriteInstruction ]], phrase: Phrase,
+                                num : Int ) : FutureResult[ Vec[ OverwriteInstruction ]] = {
       (0 until num).foldLeft( ovrNow ) { case (futPred, i) =>
          futPred.flatMapSuccess { coll =>
             val (stretch, futSpan) = atomic( identifier + " : select parts" ) { tx1 =>

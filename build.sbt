@@ -1,22 +1,15 @@
-name            := "writingmachine"
-
-appbundleName   := "WritingMachine"
-
+name            := "WritingMachine"
 organization    := "de.sciss"
+version         := "0.2.0-SNAPSHOT"
+scalaVersion    := "2.12.3"
+licenses        := Seq("GPL v3+" -> url("http://www.gnu.org/licenses/gpl-3.0.txt"))
 
-version         := "0.10-SNAPSHOT"
+scalacOptions  ++= Seq("-deprecation", "-unchecked", "-feature", "-encoding", "utf8", "-Xfuture", "-Xlint")
 
-scalaVersion    := "2.9.1"
-
-resolvers += "Clojars Repository" at "http://clojars.org/repo"
+resolvers       += "Oracle Repository" at "http://download.oracle.com/maven"  // required for sleepycat
 
 libraryDependencies ++= Seq(
-   "de.sciss" %% "nuagespompe" % "0.10",
-   "de.sciss" %% "strugatzki" % "0.14-SNAPSHOT"
+  "de.sciss" %% "wolkenpumpe" % "2.18.0",
+  "de.sciss" %% "strugatzki"  % "2.16.0",
+  "de.sciss" %% "span"        % "1.3.3"  // yeah, fuck you, too, sbt
 )
-
-retrieveManaged := true
-
-scalacOptions ++= Seq( "-deprecation", "-unchecked" )
-
-seq( appbundleSettings: _* )

@@ -2,7 +2,7 @@
  *  AbstractDifferanceAlgorithm.scala
  *  (WritingMachine)
  *
- *  Copyright (c) 2011 Hanns Holger Rutz. All rights reserved.
+ *  Copyright (c) 2011-2017 Hanns Holger Rutz. All rights reserved.
  *
  *  This software is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -27,7 +27,7 @@ package de.sciss.grapheme
 package impl
 
 import collection.breakOut
-import collection.immutable.{IndexedSeq => IIdxSeq}
+import collection.immutable.{IndexedSeq => Vec}
 
 abstract class AbstractDifferanceAlgorithm extends DifferanceAlgorithm {
    import GraphemeUtil._
@@ -54,12 +54,12 @@ abstract class AbstractDifferanceAlgorithm extends DifferanceAlgorithm {
    }
 
    private def mapOverwrites( p: Phrase /*, fut0: FutureResult[ Unit ]*/ )
-                            ( instrs: IIdxSeq[ OverwriteInstruction ]) : FutureResult[ Phrase ] = {
+                            ( instrs: Vec[ OverwriteInstruction ]) : FutureResult[ Phrase ] = {
 
       val futFill = atomic( identifier + " : filler.perform" )( tx5 => filler.perform( tx5 ))
 
       val ovs     = instrs.sortBy( _.span.start )
-      val tgtNow  = futFill.mapSuccess( _ => FutureResult.Success( IIdxSeq.empty[ Option[ DifferanceDatabaseQuery.Match ]]))
+      val tgtNow  = futFill.mapSuccess( _ => FutureResult.Success( Vec.empty[ Option[ DifferanceDatabaseQuery.Match ]]))
       val futTgt  = ovs.foldLeft( tgtNow ) { case (futTgt1, ov) =>
          futTgt1.flatMapSuccess { coll =>
             atomic( identifier + " : database query " + ov.printFormat ) { tx2 =>

@@ -2,7 +2,7 @@
  *  PhraseTraceImpl.scala
  *  (WritingMachine)
  *
- *  Copyright (c) 2011 Hanns Holger Rutz. All rights reserved.
+ *  Copyright (c) 2011-2017 Hanns Holger Rutz. All rights reserved.
  *
  *  This software is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -26,24 +26,25 @@
 package de.sciss.grapheme
 package impl
 
-import collection.immutable.{IndexedSeq => IIdxSeq}
+import scala.collection.immutable.{IndexedSeq => Vec}
 
 object PhraseTraceImpl {
-   private val identifier  = "phrase-trace-impl"
+  private val identifier = "phrase-trace-impl"
 
-   def apply() : PhraseTrace = new PhraseTraceImpl()
+  def apply(): PhraseTrace = new PhraseTraceImpl()
 }
-final class PhraseTraceImpl private () extends PhraseTrace {
-   import GraphemeUtil._
-   import PhraseTraceImpl._
 
-   def add( phrase: Phrase )( implicit txn: Tx ) {
-      warnToDo( identifier + " : add" )
-   }
+final class PhraseTraceImpl private() extends PhraseTrace {
 
-   def series( n: Int )( implicit txn: Tx ) : IIdxSeq[ Phrase ] = {
-//      warnToDo( "PhraseTraceImpl : series" )
-//      IIdxSeq.empty
-      sys.error( "TODO" )
-   }
+  import GraphemeUtil._
+  import PhraseTraceImpl._
+
+  def add(phrase: Phrase)(implicit txn: Tx): Unit =
+    warnToDo(s"$identifier : add")
+
+  def series(n: Int)(implicit txn: Tx): Vec[Phrase] = {
+    //      warnToDo( "PhraseTraceImpl : series" )
+    //      Vec.empty
+    sys.error("TODO")
+  }
 }

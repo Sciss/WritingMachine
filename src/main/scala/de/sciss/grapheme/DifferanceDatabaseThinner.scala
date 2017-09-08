@@ -2,7 +2,7 @@
  *  DifferanceDatabaseThinner.scala
  *  (WritingMachine)
  *
- *  Copyright (c) 2011 Hanns Holger Rutz. All rights reserved.
+ *  Copyright (c) 2011-2017 Hanns Holger Rutz. All rights reserved.
  *
  *  This software is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -25,12 +25,12 @@
 
 package de.sciss.grapheme
 
-import collection.immutable.{IndexedSeq => IIdxSeq}
+import collection.immutable.{IndexedSeq => Vec}
 import impl.{DifferanceDatabaseThinnerImpl => Impl}
 
 object DifferanceDatabaseThinner {
    def apply( database: Database ) : DifferanceDatabaseThinner = Impl( database )
 }
 trait DifferanceDatabaseThinner {
-   def remove( spans: IIdxSeq[ Span ])( implicit tx: Tx ) : FutureResult[ Unit ]
+   def remove( spans: Vec[ Span ])( implicit tx: Tx ) : FutureResult[ Unit ]
 }
