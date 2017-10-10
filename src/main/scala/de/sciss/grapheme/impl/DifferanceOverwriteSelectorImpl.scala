@@ -163,14 +163,14 @@ final class DifferanceOverwriteSelectorImpl[S <: Sys[S]]()(implicit val cursor: 
 //          }
 
           val s = if (b.pos <= center) {
-            val stop0 = max(center, b.pos + len / 2)
-            val start = max(0L, stop0 - len)
-            val stop = min(spec.numFrames, start + len)
+            val stop0   = max(center, b.pos + len / 2)
+            val start   = max(0L, stop0 - len)
+            val stop    = min(spec.numFrames, start + len)
             Span(start, stop)
           } else {
-            val start0 = min(center, b.pos - len / 2)
-            val stop = min(spec.numFrames, start0 + len)
-            val start = max(0L, stop - len)
+            val start0  = min(center, b.pos - len / 2)
+            val stop    = min(spec.numFrames, start0 + len)
+            val start   = max(0L, stop - len)
             Span(start, stop)
           }
           res.success(s)

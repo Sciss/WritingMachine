@@ -45,37 +45,35 @@ class FileTelevisionImpl[S <: Sys[S]] private(f: File, spec: AudioFileSpec) exte
   def capture(length: Long)(implicit tx: S#Tx): Future[File] = {
     val oldPos = posRef()
     threadFuture(s"$identifier : capture") {
+      val fNew = createTempFile(".aif", None, keep = false)
+      val afNew = openMonoWrite(fNew)
       try {
-        val fNew = createTempFile(".aif", None, keep = false)
-        val afNew = openMonoWrite(fNew)
+        val afTV = AudioFile.openRead(f)
         try {
-          val afTV = AudioFile.openRead(f)
-          try {
-            var pos = oldPos
-            var left = length
-            afTV.seek(oldPos)
-            while (left > 0L) {
-              val chunkLen = min(spec.numFrames - pos, left)
-              afTV.copyTo(afNew, chunkLen)
-              pos += chunkLen
-              if (pos == spec.numFrames) {
-                afTV.seek(0L)
-                pos = 0L
-              }
-              left -= chunkLen
+          var pos = oldPos
+          var left = length
+          afTV.seek(oldPos)
+          while (left > 0L) {
+            val chunkLen = min(spec.numFrames - pos, left)
+            afTV.copyTo(afNew, chunkLen)
+            pos += chunkLen
+            if (pos == spec.numFrames) {
+              afTV.seek(0L)
+              pos = 0L
             }
-            fNew
-          } finally {
-            afTV.close()
+            left -= chunkLen
           }
-          //            } catch {
-          //               case e =>
-          //                  println( "FileTelevisionImpl capture - Oops. exception. Should handle" )
-          //                  e.printStackTrace()
-          //                  fNew // que puede... XXX
+          fNew
         } finally {
-          afNew.close()
+          afTV.close()
         }
+        //            } catch {
+        //               case e =>
+        //                  println( "FileTelevisionImpl capture - Oops. exception. Should handle" )
+        //                  e.printStackTrace()
+        //                  fNew // que puede... XXX
+      } finally {
+        afNew.close()
       }
     }
   }

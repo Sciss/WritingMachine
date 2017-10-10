@@ -13,8 +13,7 @@
 
 package de.sciss.grapheme
 
-import java.io.File
-
+import de.sciss.file._
 import de.sciss.lucre.stm
 import de.sciss.lucre.synth.{InMemory, Sys => SSys}
 import de.sciss.nuages.{Nuages, NuagesFrame, NuagesView}
@@ -42,14 +41,12 @@ object WritingMachine {
   val tvUseTestFile       : Boolean     = getBool("tv-use-test-file", default = true) // false
   val phraseBoostDB       : Double      = getDouble("phrase-boost", 3.0) // decibels
   //   val strugatzkiDatabase  = new File( "/Users/hhrutz/Documents/devel/LeereNull/feature/" )
-  val inDevice            : String      = "MOTU 828mk2"
-  val outDevice           : String      = inDevice
-  val baseDir             : String      = "/Applications/WritingMachine"
-  val databaseDir         : File        = new File(new File(baseDir, "audio_work"), "database")
-  val testDir             : File        = new File(new File(baseDir, "audio_work"), "test")
+  val audioDevice         : String      = "Wr_t_ngM_ch_n_"
+  val baseDir             : File        = file("/") / "data" / "projects" / "Wr_t_ngM_ch_n_"
+  val databaseDir         : File        = baseDir / "audio_work" / "database"
+  val testDir             : File        = baseDir / "audio_work" / "test"
   val restartAfterTime    : Double      = getDouble("restart-after-time", 15 * 60.0)
   val restartUponException: Boolean     = getBool("restart-upon-exception", default = true)
-  val supercolliderPath   : String      = getString("supercollider-path", "")
   val initialPhraseFill   : Double      = getDouble("initial-phrase-fill", 20.0)
 
   def main(args: Array[String]): Unit = {
@@ -153,7 +150,7 @@ object WritingMachine {
     }
 
     cursor.atomic("init") { implicit tx =>
-      Init(r)
+      Init(r).start()
     }
   }
 

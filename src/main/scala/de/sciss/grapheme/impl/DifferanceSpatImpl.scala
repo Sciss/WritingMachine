@@ -27,30 +27,23 @@ object DifferanceSpatImpl {
 
     val numCh = WritingMachine.masterNumChannels
 
-//    val dummyF = gen("$dummy")(graph {
-//      Silent.ar
-//    })
+    val dsl = DSL[S]
+    import dsl._
+
     val diffs = Vec.tabulate(numCh) { ch =>
-//      val fact = filter(/* "spat-" + */ (ch + 1).toString) {
-//        graph { in: In =>
-//          val sig = if (ch == 0) {
-//            Seq(in, Silent.ar(numCh - 1))
-//          } else if (ch == numCh - 1) {
-//            Seq(Silent.ar(numCh - 1), in)
-//          } else {
-//            Seq(Silent.ar(ch), in, Silent.ar(numCh - 1 - ch))
-//          }
-//          Flatten(sig)
-//        }
-//      }
-//      val p = fact.make
-//      //         p.control( "chan" ).v = ch
-//      val dummy = dummyF.make
-//      dummy ~> p ~> collector
-//      p.play
-//      dummy.dispose
-//      p
-      ???
+      val p = filter(s"out-${ch + 1}", numChannels = 1) { in =>
+        val sig = if (ch == 0) {
+          Seq(in, Silent.ar(numCh - 1))
+        } else if (ch == numCh - 1) {
+          Seq(Silent.ar(numCh - 1), in)
+        } else {
+          Seq(Silent.ar(ch), in, Silent.ar(numCh - 1 - ch))
+        }
+        Flatten(sig)
+      }
+
+      p ~> collector
+      p
     }
 
     new DifferanceSpatImpl[S](diffs)

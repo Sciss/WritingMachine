@@ -53,11 +53,11 @@ abstract class AbstractDifferanceAlgorithm[S <: Sys[S]] extends DifferanceAlgori
   private def mapOverwrites(p: Phrase[S] /*, fut0: Future[ Unit ]*/)
                            (instructions: Vec[OverwriteInstruction]): Future[Phrase[S]] = {
 
-    val futFill = cursor.atomic(s"$identifier : filler.perform")(tx5 => filler.perform(tx5))
+    val futFill: Future[Unit] = cursor.atomic(s"$identifier : filler.perform")(tx5 => filler.perform(tx5))
 
-    val ovs: Seq[OverwriteInstruction] = instructions.sortBy(_.span.start)
+    val ovs: Vec[OverwriteInstruction] = instructions.sortBy(_.span.start)
     val tgtNow: Future[Vec[Option[Match[S]]]] = futFill.map(_ => Vec.empty[Option[Match[S]]])
-    val futTgt = ovs.foldLeft(tgtNow) { case (futTgt1, ov) =>
+    val futTgt: Future[Vec[Option[Match[S]]]] = ovs.foldLeft(tgtNow) { case (futTgt1, ov) =>
       futTgt1.flatMap { coll =>
         cursor.atomic(s"$identifier : database query ${ov.printFormat}") { implicit tx =>
           val futOne = databaseQuery.find(p, ov)
@@ -73,7 +73,7 @@ abstract class AbstractDifferanceAlgorithm[S <: Sys[S]] extends DifferanceAlgori
       }
     }
     val pNow = futureOf(p)
-    val futPNew = futTgt.flatMap { targets0 =>
+    val futPNew: Future[Phrase[S]] = futTgt.flatMap { targets0 =>
       val targets = targets0.collect({ case Some(tgt) => tgt })
       (ovs zip targets).foldRight(pNow) { case ((ov, target), futP1) =>
         futP1.flatMap { p1 =>

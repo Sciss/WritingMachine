@@ -84,7 +84,7 @@ abstract class AbstractDifferanceOverwriteSelector[S <: Sys[S]]
                               num: Int): Future[Vec[OverwriteInstruction]] = {
     (0 until num).foldLeft(ovrNow) { case (futPred, i) =>
       futPred.flatMap { coll =>
-        val (stretch, futSpan) = cursor.atomic(s"$identifier : select parts") { tx1 =>
+        val (stretch: Double, futSpan: Future[Span]) = cursor.atomic(s"$identifier : select parts") { tx1 =>
           import synth._
 
           val stre    = stretchMotion(phrase)(tx1).step(tx1)
@@ -97,7 +97,7 @@ abstract class AbstractDifferanceOverwriteSelector[S <: Sys[S]]
           val posPow  = positionMotion.step(tx1)
           val pos     = random.pow(posPow).linlin(0, 1, 0, phrase.length).toLong
 
-          (stre, bestPart(phrase, pos, minFrag, maxFrag, spect)(tx1))
+          (stre, bestPart(phrase, center = pos, minLen = minFrag, maxLen = maxFrag, weight = spect)(tx1))
         }
 
         futSpan.transform {

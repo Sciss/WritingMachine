@@ -32,7 +32,7 @@ object Init {
   private val identifier = "meta-diff"
 
   def apply[S <: SSys[S]](r: NuagesView[S])(implicit tx: S#Tx): Init[S] = {
-    val coll = ??? : Proc[S] // panel.collector.getOrElse(sys.error("Requires nuages to use collector"))
+    val coll = Proc[S] // panel.collector.getOrElse(sys.error("Requires nuages to use collector"))
     val spat = DifferanceSpat[S](coll)
     val tv = if (tvUseTestFile) {
       Television.fromFile[S](new File(testDir, "euronews.aif"))
@@ -57,21 +57,23 @@ final class Init[S <: Sys[S]] private(/* _phrase0: Phrase, val differance: Diffe
 
   var keepGoing = true
 
-  private def act(): Unit = new Thread {
-    override def run(): Unit = {
-      val futP0 = cursor.atomic("meta-diff initial tv capture")(tx =>
-        tv.capture(secondsToFrames(WritingMachine.initialPhraseFill))(tx))
-      logNoTx(s"==== $identifier wait for initial tv capture ====")
-      futP0.onComplete {
-        case Failure(e) =>
-          logNoTx(s"==== $identifier initial capture failed: ====")
-          e.printStackTrace()
-          Thread.sleep(1000)
-        case Success(fP0) => actWithFile(fP0)
+  private def act(): Unit = {
+    val t = new Thread {
+      override def run(): Unit = {
+        val futP0 = cursor.atomic("meta-diff initial tv capture") { implicit tx =>
+          tv.capture(secondsToFrames(WritingMachine.initialPhraseFill))
+        }
+        logNoTx(s"==== $identifier wait for initial tv capture ====")
+        futP0.onComplete {
+          case Failure(e) =>
+            logNoTx(s"==== $identifier initial capture failed: ====")
+            e.printStackTrace()
+            Thread.sleep(1000)
+          case Success(fP0) => actWithFile(fP0)
+        }
       }
     }
-
-    start()
+    t.start()
   }
 
   private def actWithFile(fP0: File): Unit = {
@@ -89,13 +91,13 @@ final class Init[S <: Sys[S]] private(/* _phrase0: Phrase, val differance: Diffe
       }
 
     var p = _p0
-    val spatFuts = Array.fill(numSectors)(futureOf(()))
+    val spatFutures = Array.fill(numSectors)(futureOf(()))
     var sector = 0
     while (keepGoing) {
       try {
-        if (!spatFuts(sector).isCompleted) {
+        if (!spatFutures(sector).isCompleted) {
           logNoTx(s"==== $identifier wait for busy spat sector ${sector + 1} ====")
-          Await.ready(spatFuts(sector), Duration.Inf)
+          Await.ready(spatFutures(sector), Duration.Inf)
         }
         // differance process
         val (spatFut, stepFut) =
@@ -105,10 +107,10 @@ final class Init[S <: Sys[S]] private(/* _phrase0: Phrase, val differance: Diffe
             (_spatFut, _stepFut)
           }
 
-        spatFuts(sector) = spatFut
+        spatFutures(sector) = spatFut
         val dur = cursor.atomic(s"$identifier : determining rotation duration") { tx =>
-          val olap = overlapMotion.step(tx)
-          framesToSeconds(p.length) / olap
+          val oLap = overlapMotion.step(tx)
+          framesToSeconds(p.length) / oLap
         }
         val t1 = System.currentTimeMillis()
         logNoTx(s"==== $identifier wait for algorithm step ====")
