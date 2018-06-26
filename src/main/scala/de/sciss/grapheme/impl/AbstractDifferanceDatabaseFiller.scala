@@ -51,7 +51,7 @@ abstract class AbstractDifferanceDatabaseFiller[S <: Sys[S]] extends DifferanceD
 
     if (inc > 0) {
       television.capture(inc).flatMap { f =>
-        performWithFile(f, secondsToFrames(television.latency), inc)
+        performWithFile(f, off = secondsToFrames(television.latency), inc = inc)
       }
     } else {
       futureOf(())
